@@ -1,0 +1,49 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-04-03 10:14:08.412051",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "poll_management_section",
+  "clear_all_polls"
+ ],
+ "fields": [
+  {
+   "default": "0",
+   "description": "Selecting this will clear all poll data, including votes and results, on weekly basis.",
+   "fieldname": "clear_all_polls",
+   "fieldtype": "Check",
+   "label": "Clear All Polls"
+  },
+  {
+   "fieldname": "poll_management_section",
+   "fieldtype": "Section Break",
+   "label": "Poll Management"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-04-07 10:27:38.324030",
+ "modified_by": "avishna@gmail.com",
+ "module": "antPoll",
+ "name": "Poll Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

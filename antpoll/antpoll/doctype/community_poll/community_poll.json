@@ -1,0 +1,106 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:COMM-POLL-{MM}-{####}",
+ "creation": "2025-04-01 17:36:02.446643",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "status",
+  "column_break_wcjk",
+  "route",
+  "show_voting_result",
+  "poll_options_section",
+  "questions",
+  "qr_code_tab",
+  "quest_qr"
+ ],
+ "fields": [
+  {
+   "fieldname": "route",
+   "fieldtype": "Data",
+   "label": "Route",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_wcjk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "\nOpen\nClosed\nReopen",
+   "read_only": 1
+  },
+  {
+   "fieldname": "poll_options_section",
+   "fieldtype": "Section Break",
+   "label": "Poll Questions"
+  },
+  {
+   "fieldname": "qr_code_tab",
+   "fieldtype": "Tab Break",
+   "label": "QR Code"
+  },
+  {
+   "fieldname": "questions",
+   "fieldtype": "Table",
+   "label": "Questions",
+   "options": "Question Items"
+  },
+  {
+   "fieldname": "quest_qr",
+   "fieldtype": "Attach Image",
+   "label": "quest qr",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "show_voting_result",
+   "fieldtype": "Check",
+   "label": "Show Voting Result"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-04-07 17:36:41.137533",
+ "modified_by": "Administrator",
+ "module": "antPoll",
+ "name": "Community Poll",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [
+  {
+   "color": "Green",
+   "title": "Open"
+  },
+  {
+   "color": "Red",
+   "title": "Closed"
+  },
+  {
+   "color": "Blue",
+   "title": "Reopen"
+  }
+ ]
+}

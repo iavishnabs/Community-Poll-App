@@ -1,0 +1,77 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:VOTE-{poll}-{###}",
+ "creation": "2025-04-01 17:41:32.163437",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "poll",
+  "user",
+  "quest_id",
+  "column_break_farg",
+  "option",
+  "vote_date"
+ ],
+ "fields": [
+  {
+   "fieldname": "poll",
+   "fieldtype": "Link",
+   "label": "Poll",
+   "options": "Community Poll"
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User"
+  },
+  {
+   "fieldname": "column_break_farg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "option",
+   "fieldtype": "Data",
+   "label": "Option"
+  },
+  {
+   "default": "Now",
+   "fieldname": "vote_date",
+   "fieldtype": "Datetime",
+   "label": "Vote Date"
+  },
+  {
+   "fieldname": "quest_id",
+   "fieldtype": "Link",
+   "label": "Quest ID",
+   "options": "Poll Question"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-04-07 14:58:11.919566",
+ "modified_by": "Administrator",
+ "module": "antPoll",
+ "name": "Poll Vote",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

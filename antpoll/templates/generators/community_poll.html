@@ -1,0 +1,268 @@
+<style>
+    .poll-container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: #fff;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        
+    }
+    progress {
+        height: 100%;
+        border: none;
+        border-radius: 5px;
+        background-color: #eee;
+    }
+    
+    /* For Chrome, Safari, Edge */
+    progress::-webkit-progress-bar {
+        background-color: #eee;
+        border-radius: 5px;
+    }
+    
+    progress::-webkit-progress-value {
+        background-color: #CDE8E8; /* Your color */
+        border-radius: 5px;
+    }
+    
+    /* For Firefox */
+    progress::-moz-progress-bar {
+        background-color: #CDE8E8; /* Your color */
+    }
+    h1 {
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    
+    p {
+        font-size: 14px;
+        color: #666;
+    }
+    
+    .poll-options {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .poll-option {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 5px;
+        background: #f9f9f9;
+    }
+    .poll-option .optionn{
+        width:150px;
+    }
+    
+    .progress-bar-container {
+        flex-grow: 1;
+        background-color: #eee;
+        border-radius: 5px;
+        overflow: hidden;
+        
+        height: 20px;
+        margin: 0 10px;
+    }
+    
+    .progress-bar {
+        height: 100%;
+        background-color: #4CAF50;
+        text-align: center;
+        line-height: 20px;
+        color: white;
+        transition: width 0.5s;
+        box-shadow: 0px 4px 10px #a0dbdb !important;
+        font-size: 12px;
+    }
+    
+    .vote-button {
+        background: #088F8F;
+        color: rgb(235, 235, 235);
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        transition: background 0.3s;
+    }
+    
+    .vote-button:hover {
+        background: #202020;
+        color: whitesmoke;
+    }
+    
+    
+    </style>
+    
+    {% extends "templates/web.html" %}
+    {% block page_content %}
+
+    <title>{{ title }}</title>
+    <div class="poll-container">
+        <a href="/app/community-poll/view/list">Back to All Polls</a>
+        <hr>
+        {% if frappe.form_dict.quest %}
+          <h5><strong>Q: </strong>{{ current_question.question  }}</h5><br><br>
+        
+        {% endif %}
+        <h6>Options</h6><br>
+        <ul class="poll-options">
+            {% for opt in options %}
+                <li class="poll-option">
+                    <span class="optionn"><strong>{{ opt.option }}</strong></span>
+                    &nbsp;&nbsp;
+                    
+                    <div style="background-color:#f1f1f1; border-radius: 5px; width: 100%; height: 25px; position: relative;">
+                        {% if show_result %}
+                        <progress id="progress-bar-{{ opt.option }}" value="{{ opt.percent }}" max="100" style="width: 100%; height: 25px;"></progress>
+                        <span id="percent-label-{{ opt.option }}"
+                              style="position: absolute; left: 5px; top: 50%; transform: translateY(-50%); color: black; font-weight: bold;">
+                            {{ opt.percent }}%
+                        </span>
+                        {% endif %}
+                    </div>
+                
+                
+                    
+                    &nbsp;&nbsp;
+                    <button class="vote-button" data-option="{{ opt.option }}">Vote</button>
+                </li>
+            {% endfor %}
+        </ul>
+     
+     {% if next_question_url %}
+     {% if show_result %}
+         <br>
+         <a href="{{ next_question_url }}" class="btn btn-outline-info" style="border:1px solid #06caca;">
+             NEXT &rarr;
+         </a>
+     {% elif is_optional %}
+         <br>
+         <a href="{{ next_question_url }}" class="btn btn-outline-dark" style="border:1px solid #191a1a;">
+             SKIP &rarr;
+         </a>
+     {% endif %}
+    {% endif %}
+ 
+    </div>
+    
+        <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      if (!urlParams.get("quest")) {
+        window.location.href = window.location.pathname + "?quest={{ doc.questions[0].question }}";
+      }
+    
+        function showCustomToast(message) {
+            let toast = document.createElement("div");
+            toast.id = "custom-toast";
+            toast.style.position = "fixed";
+            toast.style.top = "40%";
+            toast.style.left = "50%";
+            toast.style.transform = "translateX(-50%)";
+            toast.style.backgroundColor = "#F8F8F8";
+            toast.style.color = "#000";
+            toast.style.padding = "40px 80px";
+            toast.style.borderRadius = "10px";
+            toast.style.boxShadow = "0px 4px 6px #F0F0F0";
+            toast.style.zIndex = "9999";
+            toast.style.fontSize = "16px";
+            toast.style.textAlign = "center";
+            toast.style.opacity = "1";
+            toast.style.transition = "opacity 0.5s ease-in-out";
+            toast.style.display = "flex";
+            toast.style.flexDirection = "column";
+            toast.style.alignItems = "center";
+            toast.style.justifyContent = "center";
+            toast.style.gap = "10px";
+            let icon = document.createElement("img");
+            icon.src = "/assets/antpoll/images/righticon.svg"; 
+            icon.style.width = "34px";
+            icon.style.height = "34px";
+    
+            let text = document.createElement("span");
+            text.innerText = message;
+            toast.appendChild(icon);
+            toast.appendChild(text);
+            document.body.appendChild(toast);
+         }
+
+         document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".vote-button").forEach(button => {
+        button.addEventListener("click", function () {
+            let optionName = this.getAttribute("data-option");
+            let pollId = "{{ name }}";
+            let questId = "{{ current_question.name }}";
+            let user = "{{ frappe.session.user }}";
+
+            if (user === "Guest") {
+                alert("You must be logged in to vote.");
+                return;
+            }
+
+            frappe.call({
+                method: "antpoll.antpoll.doctype.community_poll.community_poll.cast_vote",
+                args: {
+                    poll_id: pollId,
+                    qst_id: questId,
+                    option_name: optionName
+                },
+                callback: function (response) {
+                    if (response.message) {
+                        
+                        const data = response.message;
+                        const voteMsg = data.VoteMsg;
+                        const selected = data.selected_option;
+                        const totalVotes = data.total_votes;
+                      
+
+                        // Update vote count
+                        const voteCountElement = document.getElementById(`vote-count-${selected.option}`);
+                        if (voteCountElement) {
+                            voteCountElement.innerText = selected.vote_count;
+                        }
+
+                        // Update total votes
+                        const totalVotesElement = document.getElementById("total_votes");
+                        if (totalVotesElement) {
+                            totalVotesElement.innerText = totalVotes;
+                        }
+
+                        // Update progress bar
+                        const progressBarElement = document.getElementById(`progress-bar-${selected.option}`);
+                        if (progressBarElement) {
+                            progressBarElement.value = selected.percent.toFixed(2);
+                        }
+
+                        // Show vote success message
+                        showCustomToast(voteMsg);
+
+                        // Redirect to next question or home
+                        setTimeout(() => {
+                            if (data.next_question) {
+                                // Redirect to next question in the same poll
+                                window.location.href = `/${pollId}?quest=${data.next_question}`;
+                            } else {
+                                // No more questions, redirect to homepage
+                                window.location.href = "/";
+                            }
+                        }, 1200);
+                    } else {
+                        alert("Something went wrong. No valid response received.");
+                    }
+                }
+            });
+        });
+    });
+});
+
+        </script>
+    {% endblock %}
+    
