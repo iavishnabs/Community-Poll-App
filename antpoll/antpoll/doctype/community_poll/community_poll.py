@@ -166,3 +166,23 @@ def cast_vote(poll_id, qst_id, option_name):
         "total_votes": total_votes,
         "next_question": next_question_name  # None if no more questions
     }
+
+
+@frappe.whitelist()
+def track_poll_question_view(question_name,poll_id):
+    user = frappe.session.user
+    if user and user != "Guest":
+        if not frappe.db.exists("Poll Question View", {"quest_id": question_name,"poll":poll_id,"user": user}):
+            doc = frappe.new_doc("Poll Question View")
+            doc.quest_id = question_name
+            doc.poll = poll_id
+            doc.user = user
+            doc.save(ignore_permissions=True)
+            frappe.db.commit()
+
+            frappe.db.sql("""
+                    UPDATE `tabPoll Question`
+                    SET total_view = total_view + 1
+                    WHERE name = %s
+                """, (question_name,))
+            frappe.db.commit()

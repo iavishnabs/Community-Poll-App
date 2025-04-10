@@ -114,6 +114,7 @@
         
         {% endif %}
         <h6>Options</h6><br>
+
         <ul class="poll-options">
             {% for opt in options %}
                 <li class="poll-option">
@@ -129,8 +130,6 @@
                         </span>
                         {% endif %}
                     </div>
-                
-                
                     
                     &nbsp;&nbsp;
                     {% if poll_status != "Closed" %}
@@ -196,74 +195,90 @@
             document.body.appendChild(toast);
          }
 
-         document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".vote-button").forEach(button => {
-        button.addEventListener("click", function () {
-            let optionName = this.getAttribute("data-option");
-            let pollId = "{{ name }}";
-            let questId = "{{ current_question.name }}";
-            let user = "{{ frappe.session.user }}";
+        document.addEventListener("DOMContentLoaded", function () {
+            
+        const questionName = "{{ current_question.name }}";
+        const currentUser = "{{ frappe.session.user }}";
+        const questionOwner = "{{ current_question.owner }}";
+        const pollId = "{{ name }}";
 
-            if (user === "Guest") {
-                alert("You must be logged in to vote.");
-                return;
-            }
-
+        if (currentUser !== "Guest" && currentUser !== questionOwner) {
             frappe.call({
-                method: "antpoll.antpoll.doctype.community_poll.community_poll.cast_vote",
+                method: "antpoll.antpoll.doctype.community_poll.community_poll.track_poll_question_view",
                 args: {
+                    question_name: questionName,
                     poll_id: pollId,
-                    qst_id: questId,
-                    option_name: optionName
-                },
-                callback: function (response) {
-                    if (response.message) {
-                        
-                        const data = response.message;
-                        const voteMsg = data.VoteMsg;
-                        const selected = data.selected_option;
-                        const totalVotes = data.total_votes;
-                      
-
-                        // Update vote count
-                        const voteCountElement = document.getElementById(`vote-count-${selected.option}`);
-                        if (voteCountElement) {
-                            voteCountElement.innerText = selected.vote_count;
-                        }
-
-                        // Update total votes
-                        const totalVotesElement = document.getElementById("total_votes");
-                        if (totalVotesElement) {
-                            totalVotesElement.innerText = totalVotes;
-                        }
-
-                        // Update progress bar
-                        const progressBarElement = document.getElementById(`progress-bar-${selected.option}`);
-                        if (progressBarElement) {
-                            progressBarElement.value = selected.percent.toFixed(2);
-                        }
-
-                        // Show vote success message
-                        showCustomToast(voteMsg);
-
-                        // Redirect to next question or home
-                        setTimeout(() => {
-                            if (data.next_question) {
-                                // Redirect to next question in the same poll
-                                window.location.href = `/${pollId}?quest=${data.next_question}`;
-                            } else {
-                                // No more questions, redirect to homepage
-                                window.location.href = "/";
-                            }
-                        }, 1200);
-                    } else {
-                        alert("Something went wrong. No valid response received.");
-                    }
                 }
             });
+        }
+
+        document.querySelectorAll(".vote-button").forEach(button => {
+            button.addEventListener("click", function () {
+                let optionName = this.getAttribute("data-option");
+                let pollId = "{{ name }}";
+                let questId = "{{ current_question.name }}";
+                let user = "{{ frappe.session.user }}";
+
+                if (user === "Guest") {
+                    alert("You must be logged in to vote.");
+                    return;
+                }
+
+                frappe.call({
+                    method: "antpoll.antpoll.doctype.community_poll.community_poll.cast_vote",
+                    args: {
+                        poll_id: pollId,
+                        qst_id: questId,
+                        option_name: optionName
+                    },
+                    callback: function (response) {
+                        if (response.message) {
+                            
+                            const data = response.message;
+                            const voteMsg = data.VoteMsg;
+                            const selected = data.selected_option;
+                            const totalVotes = data.total_votes;
+                        
+
+                            // Update vote count
+                            const voteCountElement = document.getElementById(`vote-count-${selected.option}`);
+                            if (voteCountElement) {
+                                voteCountElement.innerText = selected.vote_count;
+                            }
+
+                            // Update total votes
+                            const totalVotesElement = document.getElementById("total_votes");
+                            if (totalVotesElement) {
+                                totalVotesElement.innerText = totalVotes;
+                            }
+
+                            // Update progress bar
+                            const progressBarElement = document.getElementById(`progress-bar-${selected.option}`);
+                            if (progressBarElement) {
+                                progressBarElement.value = selected.percent.toFixed(2);
+                            }
+
+                            // Show vote success message
+                            showCustomToast(voteMsg);
+
+                            // Redirect to next question or home
+                            setTimeout(() => {
+                                if (data.next_question) {
+                                    // Redirect to next question in the same poll
+                                    window.location.href = `/${pollId}?quest=${data.next_question}`;
+                                } else {
+                                    // No more questions, redirect to homepage
+                                    window.location.href = "/";
+                                }
+                            }, 1200);
+                        } else {
+                            alert("Something went wrong. No valid response received.");
+                        }
+                    }
+                });
+            });
         });
-    });
-});
+        });
 
         </script>
     {% endblock %}

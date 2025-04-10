@@ -59,6 +59,7 @@
   },
   {
    "default": "0",
+   "depends_on": "route",
    "fieldname": "show_voting_result",
    "fieldtype": "Check",
    "label": "Show Voting Result"
@@ -66,7 +67,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-07 17:36:41.137533",
+ "modified": "2025-04-10 17:58:01.611279",
  "modified_by": "Administrator",
  "module": "antPoll",
  "name": "Community Poll",
