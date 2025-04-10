@@ -19,6 +19,7 @@ class CommunityPoll(WebsiteGenerator):
     def get_context(self, context):
         context.name = self.name
         context.poll_status = self.status
+        print("status is",context.poll_status)
         context.title = self.name
 
         questions = self.questions
@@ -35,6 +36,10 @@ class CommunityPoll(WebsiteGenerator):
         current_question_text = questions[current_index].question.strip()
         current_question = frappe.get_doc("Poll Question", {"question": current_question_text})
         context.current_question = current_question
+        print("\n\n\n")
+        print("question--",context.current_question.question)
+        print("\n\n\n")
+
         context.options = current_question.options
         context.is_optional = questions[current_index].optional
 
