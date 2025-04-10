@@ -19,9 +19,8 @@ class CommunityPoll(WebsiteGenerator):
     def get_context(self, context):
         context.name = self.name
         context.poll_status = self.status
-        print("\n\n\n\n")
         print("status is",context.poll_status)
-        context.title =  self.name
+        context.title = self.name
 
         questions = self.questions
         quest_param = frappe.form_dict.get("quest")

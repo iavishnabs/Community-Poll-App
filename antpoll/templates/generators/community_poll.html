@@ -133,7 +133,9 @@
                 
                     
                     &nbsp;&nbsp;
+                    {% if poll_status != "Closed" %}
                     <button class="vote-button" data-option="{{ opt.option }}">Vote</button>
+                    {% endif %}
                 </li>
             {% endfor %}
         </ul>
