@@ -16,18 +16,23 @@
   {
    "fieldname": "poll",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Poll",
    "options": "Community Poll"
   },
   {
    "fieldname": "user",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "User",
    "options": "User"
   },
   {
    "fieldname": "quest_id",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Quest ID",
    "options": "Poll Question"
   },
@@ -39,12 +44,14 @@
    "default": "Now",
    "fieldname": "date",
    "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Date"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-10 17:19:31.725203",
+ "modified": "2025-04-11 09:25:24.367812",
  "modified_by": "Administrator",
  "module": "antPoll",
  "name": "Poll Question View",

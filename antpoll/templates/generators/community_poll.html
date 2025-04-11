@@ -196,23 +196,22 @@
          }
 
         document.addEventListener("DOMContentLoaded", function () {
-            
+        console.log("loaded!!!!!")
         const questionName = "{{ current_question.name }}";
         const currentUser = "{{ frappe.session.user }}";
         const questionOwner = "{{ current_question.owner }}";
         const pollId = "{{ name }}";
 
-        if (currentUser !== "Guest" && currentUser !== questionOwner) {
-            frappe.call({
-                method: "antpoll.antpoll.doctype.community_poll.community_poll.track_poll_question_view",
-                args: {
-                    question_name: questionName,
-                    poll_id: pollId,
-                }
-            });
-        }
+        frappe.call({
+            method: "antpoll.antpoll.doctype.community_poll.community_poll.track_poll_question_view",
+            args: {
+                question_name: questionName,
+                poll_id: pollId,
+            }
+        });
 
         document.querySelectorAll(".vote-button").forEach(button => {
+            console.log("button clicked")
             button.addEventListener("click", function () {
                 let optionName = this.getAttribute("data-option");
                 let pollId = "{{ name }}";
