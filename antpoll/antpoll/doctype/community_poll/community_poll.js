@@ -53,7 +53,22 @@ frappe.ui.form.on("Community Poll", {
                
             });
         }, 'Poll Actions');
-
+        frm.add_custom_button('Share QR', () => {
+            const qrUrl = frm.doc.quest_qr;
+        
+            if (qrUrl) {
+                window.open(qrUrl, '_blank');
+            } else {
+                frappe.msgprint(__('QR Code not available.'));
+            }
+        }, 'Poll Actions');
+        
+        frm.add_custom_button('Share the Poll', () => {
+            frm.set_value('show_voting_result',1).then(() => {
+                frm.save();
+                
+            });
+        }, 'Poll Actions');
         frm.add_custom_button('End', () => {
             frm.set_value('status', 'Closed').then(() => {
                 frm.save();
@@ -61,11 +76,20 @@ frappe.ui.form.on("Community Poll", {
             });
         }, 'Poll Actions');
 
-        frm.add_custom_button('Share the Poll', () => {
-            frm.set_value('show_voting_result',1).then(() => {
+        const btn = frm.add_custom_button(__('Share Leaderboard'), function() {
+            frm.set_value('show_leaderboard',1).then(() => {
                 frm.save();
                 
             });
-        }, 'Poll Actions');
+        });
+        
+        // Style the button
+        btn.css({
+            'background-color': 'black',
+            'color': '#FFFFFF',
+            'border-color': 'white'
+        });
+        
+        
     }
 });

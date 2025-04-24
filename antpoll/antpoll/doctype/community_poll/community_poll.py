@@ -1,14 +1,17 @@
+from datetime import timedelta
 import frappe
 from frappe.website.website_generator import WebsiteGenerator 
 import qrcode  
 import os
 from frappe.utils.file_manager import save_file 
+from frappe.utils import now_datetime
 import urllib.parse
+from urllib.parse import quote
+
 
 class CommunityPoll(WebsiteGenerator):
 
     def is_published(self):
-        frappe.throw("hrllo")
         return self.status in ["Open", "Reopen"]
     
     website = frappe._dict(
@@ -17,16 +20,30 @@ class CommunityPoll(WebsiteGenerator):
     )
 
     def get_context(self, context):
+        if frappe.session.user != "Guest":
+            context.userr = "True"
+        else:
+            context.userr = "False"
+
         context.name = self.name
         context.poll_status = self.status
-        print("status is",context.poll_status)
         context.title = self.name
 
-        questions = self.questions
+        context.leaderboard = self.show_leaderboard
+
+        settings = frappe.get_doc("Poll Settings", "Poll Settings") 
+        context.right_color = settings.right_color
+        context.wrong_color = settings.wrong_color
+
+        # questions = self.questions
+        questions = self.questions or []
+        if not questions:
+            frappe.throw("No questions available for this poll.")
         quest_param = frappe.form_dict.get("quest")
         current_index = 0
 
         if quest_param:
+            print("\n\n",quest_param,"\n\n")
             decoded_quest = urllib.parse.unquote(quest_param).strip()
             for i, q in enumerate(questions):
                 if q.question.strip() == decoded_quest:
@@ -36,27 +53,40 @@ class CommunityPoll(WebsiteGenerator):
         current_question_text = questions[current_index].question.strip()
         current_question = frappe.get_doc("Poll Question", {"question": current_question_text})
         context.current_question = current_question
-        print("\n\n\n")
-        print("question--",context.current_question.question)
-        print("\n\n\n")
+        print("\n\n\n",current_question)
+        
 
         context.options = current_question.options
-        context.is_optional = questions[current_index].optional
-
-        if self.show_voting_result:
-            context.show_result = True
-        else:
-            context.show_result = False
-
         context.show_result = self.show_voting_result
+        
+        user_logged_in = frappe.session.user != "Guest"
+        if user_logged_in:
+            context.base_template = "templates/web.html"
+        else:
+            context.base_template = "templates/no_login.html"
+            form_path = "/join-community/new"
+            context.web_form_url = frappe.utils.get_url() + form_path \
+                + "?redirect-to=" + urllib.parse.quote(f"/{self.name}?quest={current_question}")
 
-         # For "Next" button logic
+        # For "Next" button logic
         if current_index + 1 < len(questions):
             next_question_text = urllib.parse.quote(questions[current_index + 1].question.strip())
             context.next_question_url = f"?quest={next_question_text}"
         else:
             context.next_question_url = None
 
+        # if context.next_question_url and frappe.session.user == "Administrator":
+        #     frappe.publish_realtime(
+        #         event="poll_question_change",
+        #         message={"quest": questions[current_index + 1].question.strip()},
+        #         user="*"
+        #     )
+
+        user = frappe.session.user  # Current logged-in user
+        
+        roles = frappe.get_roles(user)
+        if "Poll Admin" in roles:
+            context.is_poll_admin = "True"
         return context
 
     def after_insert(self):
@@ -69,8 +99,6 @@ class CommunityPoll(WebsiteGenerator):
             return
 
         first_question_text = self.questions[0].question.strip()
-        print("\n\n\n")
-        print(first_question_text)
 
         # URL encode the question text
         question_slug = urllib.parse.quote(first_question_text)
@@ -87,13 +115,9 @@ class CommunityPoll(WebsiteGenerator):
             self.qr_code = saved_file.file_url
             frappe.db.set_value(self.doctype, self.name, "quest_qr", saved_file.file_url)
 
-
 @frappe.whitelist()
 def cast_vote(poll_id, qst_id, option_name):
-    print("\n\n\n")
-    print(poll_id)
-    print(qst_id,)
-    print(option_name)
+    print("\n\n\nvote method called")
 
     user = frappe.session.user
     if user == "Guest":
@@ -124,24 +148,41 @@ def cast_vote(poll_id, qst_id, option_name):
             selected_option = option
 
     total_votes = sum([opt.vote_count for opt in poll_question.options])
+    iscorrect = None
 
     for option in poll_question.options:
         option.percent = round((option.vote_count / total_votes) * 100, 2) if total_votes else 0
+        if option.option == option_name:
+            iscorrect = option.is_correct
 
-    # Save the updated poll question
     poll_question.total_vote_count = total_votes
     poll_question.save()
 
-    # Create a vote record
+    poll = frappe.get_doc("Community Poll", poll_id)
+    poll_creation = poll.creation
+    current_time = now_datetime()
+    time_difference = current_time - poll_creation
+    time_only = str(time_difference).split('.')[0]
+
+    # Check if there's any previous vote for this poll and question
+    existing_votes = frappe.get_all(
+        "Poll Vote", 
+        filters={"poll": poll_id, "quest_id": qst_id},
+        fields=["vote_time"]
+    )
+
+    # Create the new vote document
     vote_doc = frappe.get_doc({
         "doctype": "Poll Vote",
         "poll": poll_id,
         "quest_id": qst_id,
         "option": option_name,
-        "user": user
+        "is_correct": iscorrect,
+         "vote_time": time_difference,  # store timedelta directly
+        "user": user,
+        # "is_first": is_first  # Set the is_first field based on the check
     })
     vote_doc.insert(ignore_permissions=True)
-
 
     poll = frappe.get_doc("Community Poll", poll_id)
 
@@ -153,8 +194,6 @@ def cast_vote(poll_id, qst_id, option_name):
     next_question_name = None
     if current_index is not None and current_index + 1 < len(questions):
         next_question_name = questions[current_index + 1].question
-
-    print("Next question:", next_question_name)
 
     return {
         "VoteMsg": "Thank you for voting!",
@@ -189,3 +228,40 @@ def track_poll_question_view(question_name,poll_id):
                         WHERE name = %s
                     """, (question_name,))
                 frappe.db.commit()
+
+
+
+@frappe.whitelist(allow_guest=False)
+def advance_poll(quest):
+    # Load questions
+    questions = frappe.get_all("Poll Question", fields=["question"])
+    texts = [q.question.strip() for q in questions]
+    print("Loaded Questions:", texts)
+
+    # Find current question index
+    try:
+        idx = texts.index(quest)
+        print("Question index found at:", idx)
+    except ValueError:
+        frappe.throw("Unknown question")
+
+    # If no next question, stop
+    if idx + 1 >= len(texts):
+        frappe.throw("End of poll")
+        return {"message": "end"}  # End of poll message
+
+    # Get next question
+    next_text = texts[idx + 1]
+    print("Next question to broadcast:", next_text)
+
+    # Broadcasting event to all users
+    print("Publishing real-time event...")
+    frappe.publish_realtime(
+        event="hlo",
+        message={"quest": next_text},
+        user="viji@gmail.com"  # Broadcast to all users
+    )
+    print("Event successfully published")
+
+    return {"next": next_text}  # Return the next question to admin
+

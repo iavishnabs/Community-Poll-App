@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_guest_to_view": 1,
  "allow_rename": 1,
  "autoname": "format:COMM-POLL-{MM}-{####}",
  "creation": "2025-04-01 17:36:02.446643",
@@ -9,9 +10,11 @@
   "status",
   "column_break_wcjk",
   "route",
-  "show_voting_result",
   "poll_options_section",
   "questions",
+  "publication",
+  "show_voting_result",
+  "show_leaderboard",
   "qr_code_tab",
   "quest_qr"
  ],
@@ -63,11 +66,24 @@
    "fieldname": "show_voting_result",
    "fieldtype": "Check",
    "label": "Show Voting Result"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_leaderboard",
+   "fieldtype": "Check",
+   "label": "Show Leaderboard"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "publication",
+   "fieldtype": "Section Break",
+   "label": "Publication"
   }
  ],
+ "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-10 17:58:01.611279",
+ "modified": "2025-04-23 13:12:50.108175",
  "modified_by": "Administrator",
  "module": "antPoll",
  "name": "Community Poll",

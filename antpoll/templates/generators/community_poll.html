@@ -1,167 +1,343 @@
 <style>
-    .poll-container {
-        max-width: 800px;
-        margin: auto;
-        padding: 20px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        background: #fff;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        
+    body {
+      background-color: #f2edf3 !important;
+      background: #f2edf3;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+    /* overflow: hidden;  */
+     
     }
-    progress {
-        height: 100%;
-        border: none;
-        border-radius: 5px;
-        background-color: #eee;
-    }
+   
+    .next-button-container {
+    text-align: center;
+    margin-top: 30px;
+}
+.poll-wrapper {
+    height: 100vh;
     
-    /* For Chrome, Safari, Edge */
-    progress::-webkit-progress-bar {
-        background-color: #eee;
-        border-radius: 5px;
-    }
-    
-    progress::-webkit-progress-value {
-        background-color: #CDE8E8; /* Your color */
-        border-radius: 5px;
-    }
-    
-    /* For Firefox */
-    progress::-moz-progress-bar {
-        background-color: #CDE8E8; /* Your color */
-    }
-    h1 {
-        font-size: 24px;
-        font-weight: bold;
-        text-align: center;
-        margin-bottom: 15px;
-    }
-    
-    p {
-        font-size: 14px;
-        color: #666;
-    }
-    
-    .poll-options {
-        list-style: none;
-        padding: 0;
-    }
-    
-    .poll-option {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 15px;
-        padding: 10px;
-        border-radius: 5px;
-        background: #f9f9f9;
-    }
-    .poll-option .optionn{
-        width:150px;
-    }
-    
-    .progress-bar-container {
-        flex-grow: 1;
-        background-color: #eee;
-        border-radius: 5px;
-        overflow: hidden;
-        
-        height: 20px;
-        margin: 0 10px;
-    }
-    
-    .progress-bar {
-        height: 100%;
-        background-color: #4CAF50;
-        text-align: center;
-        line-height: 20px;
+}
+    .next-button {
+        background-color: #5D5FEF;
+
         color: white;
-        transition: width 0.5s;
-        box-shadow: 0px 4px 10px #a0dbdb !important;
-        font-size: 12px;
-    }
-    
-    .vote-button {
-        background: #088F8F;
-        color: rgb(235, 235, 235);
+        padding: 10px 30px;
+        font-size: 16px;
         border: none;
-        padding: 8px 15px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 14px;
+        border-radius: 6px;
+        text-decoration: none;
         font-weight: bold;
-        transition: background 0.3s;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        display: inline-block;
     }
-    
-    .vote-button:hover {
-        background: #202020;
-        color: whitesmoke;
-    }
-    
-    
-    </style>
-    
-    {% extends "templates/web.html" %}
-    {% block page_content %}
 
-    <title>{{ title }}</title>
-    <div class="poll-container">
-        <a href="/app/community-poll/view/list">Back to All Polls</a>
-        <hr>
+    .next-button:hover {
+        background-color: #0056b3;
+        color: white;
+        transform: translateY(-2px);
+    }  
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      padding: 2rem;
+      margin: auto;
+    }
+  
+    .card {
+      background: #f2edf3;
+      border-radius: 16px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      padding: 1.5rem;
+      
+    }
+    .dashboard-2col {
+    display: grid;
+    grid-template-columns: repeat(2, 600px); 
+    gap: 2rem; 
+    justify-content: space-between; 
+    width: 100%; 
+}
+
+.card-result, .card-leaderb {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.card-result, .card-leaderb {
+    max-width: 600px;
+    width: 600px;
+} 
+
+
+    .title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: rgb(15, 15, 15);
+    }
+  
+    .poll-options {
+      list-style: none;
+      padding: 0;
+    }
+  
+    .poll-option {
+      margin-bottom: 1.5rem;
+    }
+  
+    .custom-progress-bar-container {
+      background: #f1f1f1;
+      height: 24px;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+  
+    .custom-progress-bar {
+      height: 100%;
+      border-radius: 12px;
+      text-align: right;
+      padding-right: 8px;
+      color: #fff;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+    }
+  
+    .legend {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+  
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+  
+    .legend-color {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+  
+    .vote-button {
+      background-color: #5D5FEF;
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+  
+    canvas {
+      max-width: 100%;
+    }
+  </style>
+  
+  {% extends base_template %}
+  
+  {% block page_content %}
+  <div class="poll-wrapper">
+  <div class="dashboard">
+  
+    <!-- Question and Progress Bars -->
+    <div class="card">
         {% if frappe.form_dict.quest %}
-          <h5><strong>Q: </strong>{{ current_question.question  }}</h5><br><br>
+        <div class="title" style="margin-bottom: 30px;">Q: {{ current_question.question }} </div>
         
-        {% endif %}
-        <h6>Options</h6><br>
 
-        <ul class="poll-options">
+        <ul class="poll-options" style="list-style: none; padding: 0;">
             {% for opt in options %}
-                <li class="poll-option">
-                    <span class="optionn"><strong>{{ opt.option }}</strong></span>
-                    &nbsp;&nbsp;
-                    
-                    <div style="background-color:#f1f1f1; border-radius: 5px; width: 100%; height: 25px; position: relative;">
-                        {% if show_result %}
-                        <progress id="progress-bar-{{ opt.option }}" value="{{ opt.percent }}" max="100" style="width: 100%; height: 25px;"></progress>
-                        <span id="percent-label-{{ opt.option }}"
-                              style="position: absolute; left: 5px; top: 50%; transform: translateY(-50%); color: black; font-weight: bold;">
-                            {{ opt.percent }}%
-                        </span>
-                        {% endif %}
+            <li class="poll-option" style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+                
+                <!-- Option Name -->
+                <span class="optionn" style="min-width: 150px; font-weight: bold;">
+                    {{ opt.option }}
+                </span>
+        
+                <!-- Progress Bar -->
+                <div style="flex-grow: 1; position: relative; height: 25px; background-color: #f1f1f1; border-radius: 5px; overflow: hidden;">
+                    {% if show_result %}
+                    <div style="height: 100%; width: 100%; background-color: {% if opt.is_correct %}{{ right_color }}{% else %}{{ wrong_color }}{% endif %};">
+
                     </div>
-                    
-                    &nbsp;&nbsp;
-                    {% if poll_status != "Closed" %}
-                    <button class="vote-button" data-option="{{ opt.option }}">Vote</button>
+                   
                     {% endif %}
-                </li>
+                </div>
+        
+                <!-- Vote Button -->
+                {% if poll_status != "Closed" %}
+                <button class="vote-button" data-option="{{ opt.option }}" style="padding: 5px 10px; margin-left: 10px; cursor: pointer;">
+                    Vote
+                </button>
+                {% endif %}
+        
+            </li>
             {% endfor %}
         </ul>
+        
+       
+  
+        {% if next_question_url and is_poll_admin == "True" %}
+        <div class="next-button-container">
+            <a href="{{ next_question_url }}" class="next-button">NEXT →</a>
+        </div>
+        {% endif %}
+        {% endif %}
+         </div>
+  
+    <!-- Donut and Leaderboard Section -->
+    <div class="dashboard-2col">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <!-- Results Breakdown -->
+      {% if show_result  %}
+      <div class="card card-result">
+        <div class="title">Results Breakdown</div>
+        <canvas id="donutChart" width="300" height="300"></canvas>
+      </div>
      
-     {% if next_question_url %}
-     {% if show_result %}
-         <br>
-         <a href="{{ next_question_url }}" class="btn btn-outline-info" style="border:1px solid #06caca;">
-             NEXT &rarr;
-         </a>
-     {% elif is_optional %}
-         <br>
-         <a href="{{ next_question_url }}" class="btn btn-outline-dark" style="border:1px solid #191a1a;">
-             SKIP &rarr;
-         </a>
-     {% endif %}
-    {% endif %}
- 
-    </div>
+
+      <script>
+    const ctxDonut = document.getElementById('donutChart').getContext('2d');
+      const donutChart = new Chart(ctxDonut, {
+        type: 'doughnut',
+        data: {
+          labels: [
+            {% for opt in options %}
+              "{{ opt.option }}"{% if not loop.last %},{% endif %}
+            {% endfor %}
+          ],
+          datasets: [{
+            data: [
+              {% for opt in options %}
+                {{ opt.percent }}{% if not loop.last %},{% endif %}
+              {% endfor %}
+            ],
+            backgroundColor: [
+              {% for opt in options %}
+                {% if loop.index == 1 %}"#FF6B6B"
+                {% elif loop.index == 2 %}"#4ECDC4"
+                {% elif loop.index == 3 %}"#FFD93D"
+                {% elif loop.index == 4 %}"#5D5FEF"
+                {% else %}"#ccc"{% endif %}
+                {% if not loop.last %},{% endif %}
+              {% endfor %}
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          cutout: '60%',
+          plugins: {
+            legend: {
+              position: 'bottom',
+            }
+          }
+        }
+      });
+      </script>
+      {% endif %}
+
+      <!-- Leaderboard -->
+      {% if leaderboard %}
+      <div class="card card-leaderb">
+        <div class="title">Leaderboard</div>
+        <canvas id="leaderboardChart" width="400" height="300"></canvas>
+      </div>
+
+      <script>
+        async function loadLeaderboardData() {
+  try {
+    const response = await fetch('/api/method/frappe.desk.leaderboard.get_energy_point_leaderboard?date_range=["2023-01-01","2025-12-31"]&limit=5');
+    const result = await response.json();
+    console.log("Leaderboard Data:", result);
+
+    if (result.message && Array.isArray(result.message)) {
+      // Ensure we only take the first 5 entries (in case the API returns more)
+      const top5Data = result.message.slice(0, 5); // Get the first 5 items
+      // Extract labels (names) and data (points) from the top 5 API response
+      const labels = top5Data.map(user => user.name);
+      const data = top5Data.map(user => user.value);
+
+      // Render the chart with the extracted data
+      renderLeaderboardChart(labels, data);
+    } else {
+      console.error("Invalid leaderboard data format:", result);
+    }
+  } catch (error) {
+    console.error("Failed to load leaderboard data:", error);
+  }
+}
+
+function renderLeaderboardChart(labels, data) {
+  // Create the leaderboard chart using the extracted labels and data
+  const ctxLeaderboard = document.getElementById('leaderboardChart').getContext('2d');
+
+  new Chart(ctxLeaderboard, {
+    type: 'bar',
+    data: {
+      labels: labels, // User names
+      datasets: [{
+        label: 'Points',
+        data: data, // Points
+        backgroundColor: 'rgba(128, 90, 213, 0.7)',
+        borderColor: 'rgba(128, 90, 213, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      indexAxis: 'x', // Swap axes by setting indexAxis to 'x'
+      scales: {
+        x: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Name' // Labels (user names) on the X-axis
+          }
+        },
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Points' // Points on the Y-axis
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          display: false
+        }
+      }
+    }
+  });
+}
+
+// Load leaderboard data when the page content is loaded
+window.addEventListener('DOMContentLoaded', loadLeaderboardData);
+      </script>
+      {% endif %}
+    </div> 
     
-        <script>
+  </div>
+</div>
+
+    <script>
+        
       const urlParams = new URLSearchParams(window.location.search);
       if (!urlParams.get("quest")) {
         window.location.href = window.location.pathname + "?quest={{ doc.questions[0].question }}";
       }
     
-        function showCustomToast(message) {
+            function showCustomToast(message) {
             let toast = document.createElement("div");
             toast.id = "custom-toast";
             toast.style.position = "fixed";
@@ -183,17 +359,26 @@
             toast.style.alignItems = "center";
             toast.style.justifyContent = "center";
             toast.style.gap = "10px";
+
             let icon = document.createElement("img");
             icon.src = "/assets/antpoll/images/righticon.svg"; 
             icon.style.width = "34px";
             icon.style.height = "34px";
-    
+
             let text = document.createElement("span");
             text.innerText = message;
             toast.appendChild(icon);
             toast.appendChild(text);
             document.body.appendChild(toast);
-         }
+
+            setTimeout(() => {
+                toast.style.opacity = "0";  
+                setTimeout(() => {
+                    toast.remove();  
+                }, 500);  
+            }, 3000);  
+        }
+
 
         document.addEventListener("DOMContentLoaded", function () {
         console.log("loaded!!!!!")
@@ -202,6 +387,13 @@
         const questionOwner = "{{ current_question.owner }}";
         const pollId = "{{ name }}";
 
+        let user = "{{ frappe.session.user }}";
+
+        if (user === "Guest") {
+                    alert("You must be logged in to vote.");
+                    return;
+                }
+                else{
         frappe.call({
             method: "antpoll.antpoll.doctype.community_poll.community_poll.track_poll_question_view",
             args: {
@@ -209,7 +401,7 @@
                 poll_id: pollId,
             }
         });
-
+    }
         document.querySelectorAll(".vote-button").forEach(button => {
             console.log("button clicked")
             button.addEventListener("click", function () {
@@ -222,7 +414,7 @@
                     alert("You must be logged in to vote.");
                     return;
                 }
-
+                else{
                 frappe.call({
                     method: "antpoll.antpoll.doctype.community_poll.community_poll.cast_vote",
                     args: {
@@ -260,25 +452,26 @@
                             // Show vote success message
                             showCustomToast(voteMsg);
 
-                            // Redirect to next question or home
-                            setTimeout(() => {
-                                if (data.next_question) {
-                                    // Redirect to next question in the same poll
-                                    window.location.href = `/${pollId}?quest=${data.next_question}`;
-                                } else {
-                                    // No more questions, redirect to homepage
-                                    window.location.href = "/";
-                                }
-                            }, 1200);
+                         
                         } else {
                             alert("Something went wrong. No valid response received.");
                         }
                     }
                 });
+            }
             });
         });
         });
 
-        </script>
+//
+
+
+
+
+
+
+
+
+</script>
+   
     {% endblock %}
-    

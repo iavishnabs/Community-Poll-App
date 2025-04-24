@@ -6,7 +6,12 @@
  "engine": "InnoDB",
  "field_order": [
   "poll_management_section",
-  "clear_all_polls"
+  "clear_all_polls",
+  "poll_answer_config",
+  "wrong_color",
+  "right_color",
+  "column_break_ircs",
+  "multi_correct_choices"
  ],
  "fields": [
   {
@@ -20,13 +25,41 @@
    "fieldname": "poll_management_section",
    "fieldtype": "Section Break",
    "label": "Poll Management"
+  },
+  {
+   "default": "0",
+   "description": "Allow users to select more than one answer option.",
+   "fieldname": "multi_correct_choices",
+   "fieldtype": "Check",
+   "label": "Allow Multiple Selections"
+  },
+  {
+   "fieldname": "column_break_ircs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Color used to highlight correct answers.",
+   "fieldname": "right_color",
+   "fieldtype": "Color",
+   "label": "Right Color"
+  },
+  {
+   "description": "Color used to highlight incorrect answers.",
+   "fieldname": "wrong_color",
+   "fieldtype": "Color",
+   "label": "Wrong Color"
+  },
+  {
+   "fieldname": "poll_answer_config",
+   "fieldtype": "Section Break",
+   "label": "Poll Answer Configuration"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-04-07 10:27:38.324030",
- "modified_by": "avishna@gmail.com",
+ "modified": "2025-04-22 16:12:44.164143",
+ "modified_by": "Administrator",
  "module": "antPoll",
  "name": "Poll Settings",
  "owner": "Administrator",

@@ -11,7 +11,9 @@
   "quest_id",
   "column_break_farg",
   "option",
-  "vote_date"
+  "is_correct",
+  "is_first",
+  "vote_time"
  ],
  "fields": [
   {
@@ -36,21 +38,33 @@
    "label": "Option"
   },
   {
-   "default": "Now",
-   "fieldname": "vote_date",
-   "fieldtype": "Datetime",
-   "label": "Vote Date"
-  },
-  {
    "fieldname": "quest_id",
    "fieldtype": "Link",
    "label": "Quest ID",
    "options": "Poll Question"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_correct",
+   "fieldtype": "Check",
+   "label": "Is Correct"
+  },
+  {
+   "default": "Now",
+   "fieldname": "vote_time",
+   "fieldtype": "Time",
+   "label": "Vote Time"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_first",
+   "fieldtype": "Check",
+   "label": "Is First"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-07 14:58:11.919566",
+ "modified": "2025-04-23 00:32:41.175522",
  "modified_by": "Administrator",
  "module": "antPoll",
  "name": "Poll Vote",
