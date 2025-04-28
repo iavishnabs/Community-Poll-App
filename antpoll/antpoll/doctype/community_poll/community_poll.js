@@ -5,18 +5,7 @@ frappe.ui.form.on("Community Poll", {
     // ID assign to route  
   
     refresh: function(frm) {
-        
-        // QR Code View
-        if (frm.image_preview) {
-            frm.image_preview.remove();
-        }
-        if (frm.doc.quest_qr && frm.doc.quest_qr.startsWith("/")) {
-            let image_url = frappe.urllib.get_full_url(frm.doc.quest_qr);
-            frm.image_preview = $('<div style="text-align:center; margin-top: 20px;">\
-                <img src="' + image_url + '" style="max-width: 100%; height: auto; border: 1px solid #ddd; padding: 10px; border-radius: 6px;" />\
-            </div>').insertAfter(frm.fields_dict.quest_qr.$wrapper);
-        }
-
+       
         // Check if the user has the role "Poll User"
         if (!frappe.user.has_role('Administrator') && frappe.user.has_role("Poll User")) {
 
@@ -53,22 +42,8 @@ frappe.ui.form.on("Community Poll", {
                
             });
         }, 'Poll Actions');
-        frm.add_custom_button('Share QR', () => {
-            const qrUrl = frm.doc.quest_qr;
         
-            if (qrUrl) {
-                window.open(qrUrl, '_blank');
-            } else {
-                frappe.msgprint(__('QR Code not available.'));
-            }
-        }, 'Poll Actions');
-        
-        frm.add_custom_button('Share the Poll', () => {
-            frm.set_value('show_voting_result',1).then(() => {
-                frm.save();
-                
-            });
-        }, 'Poll Actions');
+  ;
         frm.add_custom_button('End', () => {
             frm.set_value('status', 'Closed').then(() => {
                 frm.save();
@@ -76,12 +51,6 @@ frappe.ui.form.on("Community Poll", {
             });
         }, 'Poll Actions');
 
-        const btn = frm.add_custom_button(__('Share Leaderboard'), function() {
-            frm.set_value('show_leaderboard',1).then(() => {
-                frm.save();
-                
-            });
-        });
         
         // Style the button
         btn.css({
@@ -91,5 +60,76 @@ frappe.ui.form.on("Community Poll", {
         });
         
         
+    },
+    validate: function(frm) {
+        if (frm.doc.status == "Open" || frm.doc.status == "Reopen") {
+            frm.doc.is_published = 1;
+        } 
+    }
+    
+
+});
+
+
+frappe.ui.form.on('Question Items', {
+    form_render(frm, cdt, cdn) {
+        const d = locals[cdt][cdn];
+
+        // only proceed if there's a QR URL
+        if (d.qr) {
+            // build the full URL
+            const image_url = frappe.urllib.get_full_url(d.qr);
+
+            // inject the image into your qr_preview HTML field
+            const html = `
+                <div style="width:100px; text-align:center; margin-top:10px;">
+                    <img src="${image_url}" 
+                         style="width:100px; height:auto; 
+                                border:1px solid #ddd; padding:5px; 
+                                border-radius:6px;" />
+                </div>`;
+            // this is how you set it on the grid form
+            frm.cur_grid.grid_form.fields_dict.qr_preview.$wrapper.html(html);
+        }
+
+        if (d.name && frm.doc.name) {
+            // Call server method to get vote data
+            frappe.call({
+                method: "antpoll.antpoll.doctype.community_poll.community_poll.get_option_vote_data",
+                args: {
+                    poll_id: frm.doc.name,
+                    question_name: d.question
+                },
+                callback: function (r) {
+                    if (r.message) {
+                        const options_data = r.message;
+
+                        let table_html = `
+                           <p style="margin:10px 0px; color:black; font-size:17px;">Result Summary</p>
+                            <table class="table table-bordered table-striped" style="margin-top: 10px;">
+                                <thead>
+                                    <tr>
+                                        <th>Option</th>
+                                        <th>Votes</th>
+                                        <th>Percentage</th>
+                                    </tr>
+                                </thead>
+                                <tbody>`;
+
+                        for (let opt of options_data) {
+                            table_html += `
+                                <tr>
+                                    <td>${opt.option}</td>
+                                    <td>${opt.count}</td>
+                                    <td>${opt.percent}%</td>
+                                </tr>`;
+                        }
+
+                        table_html += `</tbody></table>`;
+                        frm.cur_grid.grid_form.fields_dict.options_result.$wrapper.html(table_html);
+                    }
+                }
+            });
+        }
     }
 });

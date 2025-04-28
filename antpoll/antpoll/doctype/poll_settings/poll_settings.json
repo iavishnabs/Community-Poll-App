@@ -8,10 +8,8 @@
   "poll_management_section",
   "clear_all_polls",
   "poll_answer_config",
-  "wrong_color",
-  "right_color",
-  "column_break_ircs",
-  "multi_correct_choices"
+  "multi_correct_choices",
+  "default_leaderboard"
  ],
  "fields": [
   {
@@ -31,34 +29,26 @@
    "description": "Allow users to select more than one answer option.",
    "fieldname": "multi_correct_choices",
    "fieldtype": "Check",
+   "hidden": 1,
    "label": "Allow Multiple Selections"
-  },
-  {
-   "fieldname": "column_break_ircs",
-   "fieldtype": "Column Break"
-  },
-  {
-   "description": "Color used to highlight correct answers.",
-   "fieldname": "right_color",
-   "fieldtype": "Color",
-   "label": "Right Color"
-  },
-  {
-   "description": "Color used to highlight incorrect answers.",
-   "fieldname": "wrong_color",
-   "fieldtype": "Color",
-   "label": "Wrong Color"
   },
   {
    "fieldname": "poll_answer_config",
    "fieldtype": "Section Break",
    "label": "Poll Answer Configuration"
+  },
+  {
+   "default": "0",
+   "description": "When enabled, the default leaderboard will be displayed based on user performance.",
+   "fieldname": "default_leaderboard",
+   "fieldtype": "Check",
+   "label": "Enable Default Leaderboard"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-04-22 16:12:44.164143",
+ "modified": "2025-04-28 11:22:08.391574",
  "modified_by": "Administrator",
  "module": "antPoll",
  "name": "Poll Settings",

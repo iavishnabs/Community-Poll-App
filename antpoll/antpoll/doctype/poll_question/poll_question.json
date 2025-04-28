@@ -1,16 +1,14 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
- "autoname": "field:question",
  "creation": "2025-04-07 10:31:45.773425",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "question",
-  "description",
   "column_break_lcmz",
-  "total_vote_count",
-  "total_view",
+  "description",
   "section_break_icex",
   "options"
  ],
@@ -34,18 +32,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "total_vote_count",
-   "fieldtype": "Int",
-   "in_list_view": 1,
-   "label": "Total Vote Count"
-  },
-  {
-   "fieldname": "total_view",
-   "fieldtype": "Int",
-   "in_list_view": 1,
-   "label": "Total View"
-  },
-  {
    "fieldname": "section_break_icex",
    "fieldtype": "Section Break"
   },
@@ -59,11 +45,10 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-07 10:57:56.578030",
+ "modified": "2025-04-28 15:57:32.738080",
  "modified_by": "Administrator",
  "module": "antPoll",
  "name": "Poll Question",
- "naming_rule": "By fieldname",
  "owner": "avishna@gmail.com",
  "permissions": [
   {

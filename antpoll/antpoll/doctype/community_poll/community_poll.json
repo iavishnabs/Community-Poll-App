@@ -7,14 +7,12 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "status",
-  "column_break_wcjk",
   "route",
+  "column_break_wcjk",
+  "status",
+  "is_published",
   "poll_options_section",
   "questions",
-  "publication",
-  "show_voting_result",
-  "show_leaderboard",
   "qr_code_tab",
   "quest_qr"
  ],
@@ -62,28 +60,17 @@
   },
   {
    "default": "0",
-   "depends_on": "route",
-   "fieldname": "show_voting_result",
+   "depends_on": "eval:doc.status == \"Open\" || doc.status == \"Reopen\"",
+   "fieldname": "is_published",
    "fieldtype": "Check",
-   "label": "Show Voting Result"
-  },
-  {
-   "default": "0",
-   "fieldname": "show_leaderboard",
-   "fieldtype": "Check",
-   "label": "Show Leaderboard"
-  },
-  {
-   "collapsible": 1,
-   "fieldname": "publication",
-   "fieldtype": "Section Break",
-   "label": "Publication"
+   "label": "Published",
+   "read_only": 1
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-23 13:12:50.108175",
+ "modified": "2025-04-28 10:05:53.862220",
  "modified_by": "Administrator",
  "module": "antPoll",
  "name": "Community Poll",

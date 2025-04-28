@@ -7,29 +7,72 @@
  "engine": "InnoDB",
  "field_order": [
   "question",
-  "optional"
+  "qst_status",
+  "qr",
+  "qr_preview",
+  "column_break_ktda",
+  "total_view",
+  "total_vote_count",
+  "section_break_gdgy",
+  "options_result"
  ],
  "fields": [
-  {
-   "default": "0",
-   "fieldname": "optional",
-   "fieldtype": "Check",
-   "in_list_view": 1,
-   "label": "Optional"
-  },
   {
    "fieldname": "question",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Questions",
    "options": "Poll Question"
+  },
+  {
+   "fieldname": "qr",
+   "fieldtype": "Attach Image",
+   "label": "QR"
+  },
+  {
+   "fieldname": "qr_preview",
+   "fieldtype": "HTML",
+   "label": "Qr Preview"
+  },
+  {
+   "default": "Open",
+   "fieldname": "qst_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "\nOpen\nClosed"
+  },
+  {
+   "fieldname": "column_break_ktda",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_view",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Total View"
+  },
+  {
+   "fieldname": "total_vote_count",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Total Vote Count"
+  },
+  {
+   "fieldname": "section_break_gdgy",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "options_result",
+   "fieldtype": "HTML",
+   "label": "Options"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-04-07 13:38:58.321814",
+ "modified": "2025-04-28 17:03:03.348751",
  "modified_by": "Administrator",
  "module": "antPoll",
  "name": "Question Items",
