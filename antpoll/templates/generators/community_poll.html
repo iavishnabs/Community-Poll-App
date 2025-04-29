@@ -37,349 +37,327 @@
             width: 100%;
           }
           
-          .card-result, .card-leaderb {
-            box-sizing: border-box;
-            height: auto;
-          }
+        .card-result, .card-leaderb {
+          box-sizing: border-box;
+          height: auto;
+        }
           
-          /* Specific styles for Result card */
-          .card-result {
-            display: flex;
-            flex-direction: column; /* Arrange inside vertically */
-            max-width: 400px;
-            width: 100%;
-            background: #f9f9f9; /* optional, light background */
-            padding: 1rem; /* some padding inside */
-            border-radius: 8px; /* rounded corners */
-          }
-          
-          /* Inside .card-result, two sections: answer and chart */
-          .card-result-answer {
-            margin-bottom: 1rem; /* gap between answer and chart */
-            font-size: 1.2rem;
-            font-weight: bold;
-            padding: 20px 10px;
-          }
-          .card-result-answer .anss{
-            background: #e0c6f8;
-            color: #561d71;
-            padding: 20px;
-          }
-          
-          .card-result-chart {
-            flex: 1; /* Chart takes remaining space */
-          }
-          
+        /* Specific styles for Result card */
+        .card-result {
+          display: flex;
+          flex-direction: column; /* Arrange inside vertically */
+          max-width: 400px;
+          width: 100%;
+          background: #f9f9f9; /* optional, light background */
+          padding: 1rem; /* some padding inside */
+          border-radius: 8px; /* rounded corners */
+        }
           /* Specific styles for Leaderboard card */
           .card-leaderb {
-            max-width: 800px;
-            width: 100%;
-            background: #ffffff; /* optional */
-            padding: 1rem;
-            border-radius: 8px;
-          }
-          
-        #total-view-count {
-          top: 20px;
-          right: 20px;
-          font-weight: bold;
-          font-size: 1rem;
-          color: #fff;
-        }
-      
-        .card-qstn {
-          background: transparent;
-          box-shadow: none;
-          padding: 0;
-          padding: 12px 16px;
-
-          background: linear-gradient(135deg, #C33764 0%, #561d71 100%);
-        }
-      
-        .title {
-          font-size: 1.4rem;
-          font-weight: 700;
-          margin-bottom: 30px;
-          color: #fff;
-          padding: 12px 16px;
-        }
-      
-        .poll-options {
-          list-style: none;
-          padding: 0;
-          margin: 0 auto;
-        }
-      
-        .poll-option {
-          display: flex;
-          gap: 15px;
-          margin-bottom: 20px;
-          background: rgba(255, 255, 255, 0.15);
-          padding: 12px 16px;
-          border-radius: 12px;
-        }
-      
-        .poll-option input[type="radio"] {
-          width: 20px;
-          height: 20px;
-          accent-color: #ffffff;
-        }
-      
-        .poll-option label {
-          flex-grow: 1;
-          font-weight: bold;
-          color: #fff;
-          cursor: pointer;
-        }
-      
-        .poll-option div {
-          flex-grow: 1;
-          height: 8px;
-          background: #ffffff40;
-          border-radius: 4px;
-          overflow: hidden;
-        }
-      
-        .poll-option div > div {
-          height: 100%;
-          background: #ffffff80;
-        }
-        .optionn{
-            width:1080px;
-        }
-        #submit-vote-button {
-            display: none;
-          }
-        .next-btn-text, .next-btnn-mobile{
-        display: none;
-        }
-
-
-      
-        #submit-vote-button, #result-button ,.next-btnn{
-          background: #ffffff;
-          color: #561d71;
-          padding: 10px 24px;
-          font-size: 16px;
-          font-weight: bold;
+          max-width: 800px;
+          width: 100%;
+          background: #ffffff; /* optional */
+          padding: 1rem;
           border-radius: 8px;
-          border:1px solid #e0c6f8;;
-          margin-top: 20px;
-          cursor: pointer;
-          transition: 0.3s;
         }
-      
-        #submit-vote-button:hover, #result-button:hover , .next-btnn:hover{
-          background: #e0c6f8;;
-        }
-        .next-btn-sec {
-            display: flex;
-            justify-content: right;
-            margin-top: 0.5rem; /* adds space above the button */
-          }
-          
-          .next-btnn {
-            margin-top: 0; 
-            padding: 10px 100px;
-          }
-          
-        /* QR Code Section */
-        .card-qr {
-          background: transparent;
-          margin: 1rem auto 0;
-          text-align: center;
-        }
-      
-        .card-qr img {
-          max-width: 250px;
-          height: auto;
-          border-radius: 12px;
-          box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
-        }
-       
-        @media (max-width: 991px) {
-        .next-btn-text, .next-btnn-mobile{
-            display: inline-block;
-            }
-            a.next-btnn-mobile{
-                justify-content: center;
-                text-align: center;
-                 display:flex;
-                background: #ffffff;
-                color: #561d71;
-                font-size: 16px;
-                font-weight: bold;
-                width: auto;
-                margin-left: 300px;
-                margin-right: 300px;
-                border-radius: 8px;
-                padding: 8px 15px;
-                border:1px solid #e0c6f8;;
-                margin-top: 2px;
-                cursor: pointer;
-            }
-          .dashboard-2col {
-            display: none;
-          }
-          .dashboard-2col-qstn {
-            padding: 1.5rem;
-          }
-          .poll-options {
-            padding: 0 10px;
-          }
-          .title {
-            font-size: 1rem;
-            font-weight: 600;
-          }
-          .poll-option {
-            font-size: 0.8rem;
-            width: 600px;
-          }
-        
-            .next-btn-text {
-                font-size: 15px;
-                justify-content: center;
-                text-align: center;
-                font-weight: 600;
-                margin-top: 200px;
-            }
-            .next-btnn{
-                display: none;
-            }
-     
-        }
-     
-        @media (min-width: 350px) and (max-width: 740px) {
-            a.next-btnn-mobile{
-                justify-content: center;
-                text-align: center;
-                 display:flex;
-                background: #ffffff;
-                color: #561d71;
-                font-size: 16px;
-                font-weight: bold;
-                width: auto;
-                margin-left: 100px;
-                margin-right: 100px;
-                border-radius: 8px;
-                padding: 8px 10px;
-                border:1px solid #e0c6f8;;
-                margin-top: 2px;
-                cursor: pointer;
-            }
-            .next-btnn{
-                display: none;
-            }
-            .next-btn-text {
-                font-size: 15px;
-                justify-content: center;
-                text-align: center;
-                font-weight: 600;
-                margin-top: 200px;
-            }
-            
               
-            .dashboard-2col {
-              display: none;
+        /* Inside .card-result, two sections: answer and chart */
+        .card-result-answer {
+          margin-bottom: 1rem; /* gap between answer and chart */
+          font-size: 1.2rem;
+          font-weight: bold;
+          padding: 20px 10px;
+        }
+        .card-result-answer .anss{
+          background: #e0c6f8;
+          color: #561d71;
+          padding: 20px;
+        }
+        
+        .card-result-chart {
+          flex: 1; /* Chart takes remaining space */
+        }
+
+      #total-view-count {
+        top: 20px;
+        right: 20px;
+        font-weight: bold;
+        font-size: 1rem;
+        color: #fff;
+      }
+    
+      .card-qstn {
+        background: transparent;
+        box-shadow: none;
+        padding: 0;
+        padding: 12px 16px;
+        background: linear-gradient(135deg, #8f57d3 0%, #067da5 100%);
+        /* background: linear-gradient(135deg, #C33764 0%, #561d71 100%);*/
+      }
+    
+      .title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 30px;
+        color: #fff;
+        padding: 12px 16px;
+      }
+    
+      .poll-options {
+        list-style: none;
+        padding: 0;
+        margin: 0 auto;
+      }
+    
+      .poll-option {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+        background: rgba(255, 255, 255, 0.15);
+        padding: 12px 16px;
+        border-radius: 12px;
+      }
+    
+      .poll-option input[type="radio"] {
+        width: 20px;
+        height: 20px;
+        accent-color: #ffffff;
+      }
+    
+      .poll-option label {
+        flex-grow: 1;
+        font-weight: bold;
+        color: #fff;
+        cursor: pointer;
+      }
+    
+      .poll-option div {
+        flex-grow: 1;
+        height: 8px;
+        background: #ffffff40;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+    
+      .poll-option div > div {
+        height: 100%;
+        background: #ffffff80;
+      }
+      .optionn{
+          width:1080px;
+      }
+      #submit-vote-button {
+          display: none;
+        }
+      .next-btn-text, .next-btnn-mobile{
+      display: none;
+      }
+
+
+    
+      #submit-vote-button, #result-button ,.next-btnn{
+        background: #ffffff;
+        color: #561d71;
+        padding: 10px 24px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 8px;
+        border:1px solid #e0c6f8;;
+        margin-top: 20px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+    
+      #submit-vote-button:hover, #result-button:hover , .next-btnn:hover{
+        background: #e0c6f8;;
+      }
+      .next-btn-sec {
+          display: flex;
+          justify-content: right;
+          margin-top: 0.5rem; /* adds space above the button */
+        }
+        
+        .next-btnn {
+          margin-top: 0; 
+          padding: 10px 100px;
+        }
+        
+      /* QR Code Section */
+      .card-qr {
+        background: transparent;
+        margin: 1rem auto 0;
+        text-align: center;
+      }
+    
+      .card-qr img {
+        max-width: 250px;
+        height: auto;
+        border-radius: 12px;
+        box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+      }
+      
+      @media (max-width: 991px) {
+      .next-btn-text, .next-btnn-mobile{
+        display: inline-block;
+        }
+        a.next-btnn-mobile{
+            justify-content: center;
+            text-align: center;
+              display:flex;
+            background: #ffffff;
+            color: #561d71;
+            font-size: 16px;
+            font-weight: bold;
+            width: auto;
+            margin-left: 300px;
+            margin-right: 300px;
+            border-radius: 8px;
+            padding: 8px 15px;
+            border:1px solid #e0c6f8;;
+            margin-top: 2px;
+            cursor: pointer;
+        }
+        .dashboard-2col {
+          display: none;
+        }
+        .dashboard-2col-qstn {
+          padding: 1.5rem;
+        }
+        .poll-options {
+          padding: 0 10px;
+        }
+        .title {
+          font-size: 1rem;
+          font-weight: 600;
+        }
+        .poll-option {
+          font-size: 0.8rem;
+          width: 600px;
+        }
+      
+        .next-btn-text {
+            font-size: 15px;
+            justify-content: center;
+            text-align: center;
+            font-weight: 600;
+            margin-top: 200px;
+        }
+        .next-btnn{
+            display: none;
+        }
+    
+      }
+    
+      @media (min-width: 350px) and (max-width: 740px) {
+        a.next-btnn-mobile{
+            justify-content: center;
+            text-align: center;
+              display:flex;
+            background: #ffffff;
+            color: #561d71;
+            font-size: 16px;
+            font-weight: bold;
+            width: auto;
+            margin-left: 100px;
+            margin-right: 100px;
+            border-radius: 8px;
+            padding: 8px 10px;
+            border:1px solid #e0c6f8;;
+            margin-top: 2px;
+            cursor: pointer;
+        }
+        .next-btnn{
+            display: none;
+        }
+        .next-btn-text {
+            font-size: 15px;
+            justify-content: center;
+            text-align: center;
+            font-weight: 600;
+            margin-top: 200px;
+        }
+        
+          
+        .dashboard-2col {
+          display: none;
+        }
+        .next-btn-sec{
+            display: block;
             }
-            .next-btn-sec{
-                display: block;
-                }
-            .dashboard-2col-qstn {
-              padding: 1.5rem;
-            }
-            .poll-options {
-              padding: 0 10px;
-            }
-            .title {
-              font-size: 1rem;
-              font-weight: 600;
-            }
-            .poll-option {
-              font-size: 0.8rem;
-              width: 240px;
-            }
-       
-          }
- 
-      </style>
+        .dashboard-2col-qstn {
+          padding: 1.5rem;
+        }
+        .poll-options {
+          padding: 0 10px;
+        }
+        .title {
+          font-size: 1rem;
+          font-weight: 600;
+        }
+        .poll-option {
+          font-size: 0.8rem;
+          width: 240px;
+        }
+      
+      }
+
+    </style>
   
   
   {% extends base_template %}
-  
   {% block page_content %}
+
   <div  class="poll-wrapper">
   <div class="dashboard">
     {% if qstn_status == "Open" or qstn_status == "Reopen" or is_poll_admin != "True"  %}
 
- <!-- Question and Progress Bars -->
-<div class="dashboard-2col-qstn">
-{% if is_poll_admin == "True"  %}
-<h4 style="color:black;" id="total-view-count">People Joined: {{ viewers }}</h4>
-{% else %}
-<br><br><br>
-{% endif %}
-  <!-- QR Code Card -->
-   {% if frappe.form_dict.quest %}
-         
-
+  <!-- Question and Progress Bars -->
+  <div class="dashboard-2col-qstn">
+    {% if is_poll_admin == "True"  %}
+    <h4 style="color:black;" id="total-view-count">People Joined: {{ viewers }}</h4>
+    {% else %}
+    <br><br><br>
+    {% endif %}
+    <!-- QR Code Card -->
+    {% if frappe.form_dict.quest %}
+          
   <!-- Existing Question Card -->
-  <div class="card card-qstn"> 
-      
+    <div class="card card-qstn"> 
       <div class="title" style="margin-bottom: 30px;">Q: {{ current_question.question }} </div>
-
-    <ul class="poll-options">
-            {% for opt in options %}
-            <li class="poll-option" style="display: flex;  gap: 15px; margin-bottom: 10px;">
-
-                <!-- Radio Button -->
-               
-                <input type="radio" id="option{{ loop.index }}" name="selected_option" value="{{ opt.option }}" required>
-
-                <!-- Option Label -->
-                <label for="option{{ loop.index }}" class="optionn" style=" font-weight: bold;">
-                    {{ opt.option }}
-                </label>
-
-          <!--if show_result-->
-
-            </li>
-            {% endfor %}
-        </ul>
-        
+      <ul class="poll-options">
+              {% for opt in options %}
+              <li class="poll-option" style="display: flex;  gap: 15px; margin-bottom: 10px;">                
+                  <input type="radio" id="option{{ loop.index }}" name="selected_option" value="{{ opt.option }}" required>
+                  <label for="option{{ loop.index }}" class="optionn" style=" font-weight: bold;">
+                      {{ opt.option }}
+                  </label>
+              </li>
+              {% endfor %}
+          </ul>
        {% if is_poll_admin != "True" %}
         <button type="button" id="submit-vote-button" style="padding: 8px 20px; cursor: pointer; width:100px" class="submit-button">
-                Submit
-            </button>
+          Submit
+        </button>
         {% endif %}
         <!-- next_question_url -->
       {% if is_poll_admin == "True" %}
       <button type="button" id="result-button" class="result-button" style="padding: 8px 20px; cursor: pointer; width:100px">
         Result
-    </button>
+      </button>
       {% endif %}
-     
-     
-  </div>
-  {% if is_poll_admin == "True" %}
-
-
-  <div class="card card-qr">
-    
-    <img src="{{ qrcodes }}" alt="{{ qrcodes }}" style="width: 100%; max-width: 300px; height: auto; margin: auto;">
+    </div>
+    {% if is_poll_admin == "True" %}
+   <div class="card card-qr">
+    <img src="{{ pollqr }}" alt="{{ pollqr }}" style="width: 100%; max-width: 300px; height: auto; margin: auto;">
+    </div>
+    {% endif %}
+    {% endif %}
   </div>
   {% endif %}
-  {% endif %}
-
-</div>
-
-{% endif %}
     <!-- Donut and Leaderboard Section -->
     <div class="dashboard-2col">
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-
       <!-- Results Breakdown -->
       {% if qstn_status == "Closed" and is_poll_admin == "True"  %}
       <div class="card card-result">
@@ -389,15 +367,11 @@
             <div class="anss"> 
                 {{ answer }}
             </div>
-
           </div>
-          
           <div class="card-result-chart">
         <div class="title">Results Breakdown</div>
         <canvas id="donutChart" width="" height=""></canvas>
       </div>
-    
-    
      </div>
     <script>
     const ctxDonut = document.getElementById('donutChart').getContext('2d');
@@ -472,18 +446,23 @@
             const result   = await response.json();
             console.log("Leaderboard Data:", result);
 
-        if (result.message && Array.isArray(result.message)) {
-        // Ensure we only take the first 5 entries (in case the API returns more)
-        const top5Data = result.message.slice(0, 20); // Get the first 5 items
-        // Extract labels (names) and data (points) from the top 5 API response
-        const labels = top5Data.map(user => user.name);
-        const data = top5Data.map(user => user.value);
-
-        // Render the chart with the extracted data
-        renderLeaderboardChart(labels, data);
-        } else {
-        console.error("Invalid leaderboard data format:", result);
-        }
+            if (result.message && Array.isArray(result.message)) {
+              // Step 1: Filter users who have points greater than 0
+              const usersWithPoints = result.message.filter(user => user.value > 0);
+          
+              // Step 2: Take the first 20 users from the filtered list
+              const top20Users = usersWithPoints.slice(0, 20);
+          
+              // Step 3: Extract labels and data
+              const labels = top20Users.map(user => user.name);
+              const data = top20Users.map(user => user.value);
+          
+              // Step 4: Render the chart
+              renderLeaderboardChart(labels, data);
+          } else {
+              console.error("Invalid leaderboard data format:", result);
+          }
+          
     } catch (error) {
         console.error("Failed to load leaderboard data:", error);
     }
@@ -576,12 +555,16 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
 
   </div>
 
-  {% if next_question_url and is_poll_admin == "True" and qstn_status == "Closed" %}
+  {% if next_question_url and is_poll_admin == "True" %}
   <h5 class="next-btn-text">Ready for the Next One?</h5>
   <a href="{{ next_question_url }}" class="next-btnn-mobile">NEXT</a>
+
+
+
   <div class="next-btn-sec">
     <a href="{{ next_question_url }}" class="next-btnn">NEXT</a>
   </div>
+  
   {% endif %}
 
   {% if poll_status == "Closed" %}

@@ -1,13 +1,31 @@
 // Copyright (c) 2025, avishna and contributors
 // For license information, please see license.txt
 
+
 frappe.ui.form.on("Community Poll", {
     // ID assign to route  
   
     refresh: function(frm) {
+
+        if (frm.doc.quest_qr && frm.fields_dict.qr_preview) {
+            // build the full URL for the image
+            const image_url = frappe.urllib.get_full_url(frm.doc.quest_qr);
+
+            // construct the HTML for the image preview
+            const html = `
+                <div style="width:100%; text-align:center; margin-top:10px;">
+                    <img src="${image_url}" 
+                         style="width:300px; height:auto; 
+                                border:1px solid #ddd; padding:5px; 
+                                border-radius:6px;" />
+                </div>`;
+
+            // set the HTML content of the 'qr_preview' field
+            frm.fields_dict.qr_preview.$wrapper.html(html);
+        }
        
         // Check if the user has the role "Poll User"
-        if (!frappe.user.has_role('Administrator') && frappe.user.has_role("Poll User")) {
+        if (!frappe.user.has_role('Poll Admin') && frappe.user.has_role("Poll User")) {
 
             console.log("yes")
             console.log(frappe.session.user)

@@ -1,0 +1,83 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"Pk6qJn2Tua\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"NdN0NZrZbQ\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Poll System</span>\",\"col\":12}},{\"id\":\"wriAH-3Ou0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Create Poll\",\"col\":3}},{\"id\":\"o0EP3NHJiZ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Poll Questions\",\"col\":3}},{\"id\":\"658Zbi8rJR\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Poll Users\",\"col\":3}},{\"id\":\"INPxVIuliV\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Poll Settings\",\"col\":3}},{\"id\":\"FJ1LkEGiIJ\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"m-DGpebBMD\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Summary <br></b></span>\",\"col\":12}},{\"id\":\"S8LJx2PcN3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Result Summary\",\"col\":3}},{\"id\":\"xjiZBdVyDR\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Leaderboard\",\"col\":3}}]",
+ "creation": "2025-04-29 09:28:27.742372",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "solid-success",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Poll",
+ "links": [],
+ "modified": "2025-04-29 09:38:06.639553",
+ "modified_by": "Administrator",
+ "module": "antPoll",
+ "name": "Poll",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "Poll Admin"
+  },
+  {
+   "role": "Poll User"
+  }
+ ],
+ "sequence_id": 1.0,
+ "shortcuts": [
+  {
+   "color": "Red",
+   "doc_view": "New",
+   "label": "Create Poll",
+   "link_to": "Community Poll",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Poll Settings",
+   "link_to": "Poll Settings",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Leaderboard",
+   "link_to": "leaderboard",
+   "type": "Page"
+  },
+  {
+   "color": "Orange",
+   "doc_view": "List",
+   "label": "Poll Questions",
+   "link_to": "Poll Question",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Blue",
+   "doc_view": "List",
+   "label": "Poll Users",
+   "link_to": "Community Poll Users",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Pink",
+   "doc_view": "List",
+   "label": "Result Summary",
+   "link_to": "Poll Vote",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "Poll"
+}

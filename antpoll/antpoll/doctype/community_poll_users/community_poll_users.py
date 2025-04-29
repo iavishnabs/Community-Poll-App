@@ -39,4 +39,13 @@ class CommunityPollUsers(Document):
 			login_manager.authenticate(self.email, self.password)
 			login_manager.post_login()
 
+			doc_perm=frappe.new_doc('User Permission')
+			doc_perm.update({
+				"user":self.email,
+				"allow":"User",
+				"for_value":self.email,
+				"apply_to_all_doctypes":True
+			})
+			doc_perm.save(ignore_permissions=True)
+
 

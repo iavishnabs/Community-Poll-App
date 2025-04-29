@@ -8,7 +8,6 @@ from frappe.utils import now_datetime
 import urllib.parse
 from urllib.parse import quote
 
-
 class CommunityPoll(WebsiteGenerator):
 
     website = frappe._dict(
@@ -26,6 +25,8 @@ class CommunityPoll(WebsiteGenerator):
         context.name = self.name
         context.poll_status = self.status
         context.title = self.name
+
+        context.pollqr = self.quest_qr
 
         # context.leaderboard = self.show_leaderboard
 
@@ -143,49 +144,70 @@ class CommunityPoll(WebsiteGenerator):
                     frappe.throw("This question has already been added")
                 question_texts.append(question_text)
 
-
+    
     def generate_qr_codes(self):
         if not self.get("questions"):
             return
+
+        first_question_text = self.questions[0].question.strip()
+
+        # URL encode the question text
+        question_slug = urllib.parse.quote(first_question_text)
+        url_path = f"/{self.name}?quest={question_slug}"
+
+        # Generate QR code
+        qr = qrcode.make(frappe.utils.get_url() + url_path) 
+        file_path = f"/tmp/{self.name}_qr.png"
+        qr.save(file_path)
+
+        # Save to Attach field
+        with open(file_path, "rb") as f:
+            saved_file = save_file(f"{self.name}-QR.png", f.read(), self.doctype, self.name, is_private=False)
+            self.qr_code = saved_file.file_url
+            frappe.db.set_value(self.doctype, self.name, "quest_qr", saved_file.file_url)
+
+    # def generate_qr_codes(self):
+    #     if not self.get("questions"):
+    #         return
         
-        base_url = frappe.utils.get_url()
-        tmp_dir  = frappe.get_site_path("private", "qr_temp")
-        os.makedirs(tmp_dir, exist_ok=True)
+    #     base_url = frappe.utils.get_url()
+    #     tmp_dir  = frappe.get_site_path("private", "qr_temp")
+    #     os.makedirs(tmp_dir, exist_ok=True)
 
-        for idx, q in enumerate(self.questions):
-            # Prepare the URL
-            question_text = q.question.strip()
-            slug          = urllib.parse.quote(question_text)
-            url_path      = f"/{self.name}?quest={slug}"
-            full_url      = base_url + url_path
+    #     for idx, q in enumerate(self.questions):
+    #         # Prepare the URL
+    #         question_text = q.question.strip()
+    #         slug          = urllib.parse.quote(question_text)
+    #         url_path      = f"/{self.name}?quest={slug}"
+    #         full_url      = base_url + url_path
 
-            # Check QR image
-            if q.get("qr"):
-                continue
+    #         # Check QR image
+    #         if q.get("qr"):
+    #             continue
 
-            # Gnerate QR
-            qr_img    = qrcode.make(full_url)
-            filename  = f"{self.name}_Q{idx+1}.png"
-            file_path = os.path.join(tmp_dir, filename)
-            qr_img.save(file_path)
+    #         # Gnerate QR
+    #         qr_img    = qrcode.make(full_url)
+    #         filename  = f"{self.name}_Q{idx+1}.png"
+    #         file_path = os.path.join(tmp_dir, filename)
+    #         qr_img.save(file_path)
 
-            # Read and save via positional args
-            with open(file_path, "rb") as f:
-                filedata = f.read()
-                saved = save_file(
-                    filename,        # fname
-                    filedata,        # content
-                    self.doctype,    # dt
-                    self.name,       # dn
-                    None,            # folder
-                    False            # is_private
-                )
+    #         # Read and save via positional args
+    #         with open(file_path, "rb") as f:
+    #             filedata = f.read()
+    #             saved = save_file(
+    #                 filename,        # fname
+    #                 filedata,        # content
+    #                 self.doctype,    # dt
+    #                 self.name,       # dn
+    #                 None,            # folder
+    #                 False            # is_private
+    #             )
 
-            # Store the QR code URL in the child row
-            q.db_set("qr", saved.file_url, update_modified=False)
+    #         # Store the QR code URL in the child row
+    #         q.db_set("qr", saved.file_url, update_modified=False)
 
-        # Update the parent’s modified timestamp so the parent doc registers a change
-        frappe.db.set_value(self.doctype, self.name, "modified", frappe.utils.now())
+    #     # Update the parent’s modified timestamp so the parent doc registers a change
+    #     frappe.db.set_value(self.doctype, self.name, "modified", frappe.utils.now())
         
 
 
@@ -333,3 +355,26 @@ def get_option_vote_data(poll_id, question_name):
         })
 
     return result
+
+
+
+@frappe.whitelist()
+def next_question(poll_id, next_question_url):
+    # Log for debug
+    frappe.logger().info(f"Poll ID: {poll_id}, Next Question URL: {next_question_url}")
+
+    # Publish real-time event to all users (you can filter by room/channel if needed)
+    frappe.publish_realtime(
+        event='show_next_question_url',
+        message={'url': next_question_url},
+        user=None  # Send to all users
+    )
+
+    return {
+        "status": "success",
+        "debug_url": next_question_url
+    }
+
+@frappe.whitelist()
+def my_backend_method():
+    frappe.publish_realtime('my_event', {'message': 'Hello from backend!'})

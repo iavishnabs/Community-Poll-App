@@ -14,7 +14,8 @@
   "poll_options_section",
   "questions",
   "qr_code_tab",
-  "quest_qr"
+  "quest_qr",
+  "qr_preview"
  ],
  "fields": [
   {
@@ -65,12 +66,17 @@
    "fieldtype": "Check",
    "label": "Published",
    "read_only": 1
+  },
+  {
+   "fieldname": "qr_preview",
+   "fieldtype": "HTML",
+   "label": "QR Preview"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-28 10:05:53.862220",
+ "modified": "2025-04-29 13:01:46.937373",
  "modified_by": "Administrator",
  "module": "antPoll",
  "name": "Community Poll",
@@ -86,6 +92,7 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "select": 1,
    "share": 1,
    "write": 1
   }

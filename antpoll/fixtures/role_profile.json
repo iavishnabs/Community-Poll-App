@@ -1,0 +1,32 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Role Profile",
+  "modified": "2025-04-28 10:56:58.412844",
+  "name": "Poll Master",
+  "role_profile": "Poll Master",
+  "roles": [
+   {
+    "parent": "Poll Master",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Poll Admin"
+   }
+  ]
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Role Profile",
+  "modified": "2025-04-24 11:03:37.102877",
+  "name": "Poll User",
+  "role_profile": "Poll User",
+  "roles": [
+   {
+    "parent": "Poll User",
+    "parentfield": "roles",
+    "parenttype": "Role Profile",
+    "role": "Poll User"
+   }
+  ]
+ }
+]
