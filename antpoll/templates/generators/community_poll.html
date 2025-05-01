@@ -307,14 +307,15 @@
   {% extends base_template %}
   {% block page_content %}
 
-  <div  class="poll-wrapper">
-  <div class="dashboard">
+
+
+
     {% if qstn_status == "Open" or qstn_status == "Reopen" or is_poll_admin != "True"  %}
 
   <!-- Question and Progress Bars -->
   <div class="dashboard-2col-qstn">
     {% if is_poll_admin == "True"  %}
-    <h4 style="color:black;" id="total-view-count">People Joined: {{ viewers }}</h4>
+    <h4 style="color:black;" id="total-view-count">PLAYERS: </h4>
     {% else %}
     <br><br><br>
     {% endif %}
@@ -323,6 +324,7 @@
           
   <!-- Existing Question Card -->
     <div class="card card-qstn"> 
+      <h4 id="message-box"></h4>
       <div class="title" style="margin-bottom: 30px;">Q: {{ current_question.question }} </div>
       <ul class="poll-options">
               {% for opt in options %}
@@ -551,18 +553,16 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
       </script>
       {% endif %}
     </div> 
-    
-
+  
   </div>
 
   {% if next_question_url and is_poll_admin == "True" %}
   <h5 class="next-btn-text">Ready for the Next One?</h5>
-  <a href="{{ next_question_url }}" class="next-btnn-mobile">NEXT</a>
-
+  <button id="goto_next_qstnn" class="next-btnn-mobile" >NEXT mob</button>
 
 
   <div class="next-btn-sec">
-    <a href="{{ next_question_url }}" class="next-btnn">NEXT</a>
+    <button id="goto_next_qstn" class="next-btnn" >NEXT</button>
   </div>
   
   {% endif %}
@@ -579,7 +579,66 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.min.js"></script>
 
     <script>
-     
+
+      var next_question_url = "{{ next_question_url }}"
+      var is_poll_admin = "{{ is_poll_admin }}"
+      frappe.ready(() => {
+        // Initialize Realtime
+        frappe.realtime.init();
+    
+        // Listen for next question URL and redirect users
+        frappe.realtime.on('goto_next_question_event', (next_url) => {
+            console.log('Redirecting to:', next_url);
+            window.location.href = next_url;  // Redirect user
+        });
+    
+        // Admin-only section
+        if (is_poll_admin == "True") {
+            document.getElementById('goto_next_qstn').addEventListener('click', () => {
+                const nextUrl = next_question_url;
+                if (nextUrl) {
+                    frappe.call({
+                        method: 'antpoll.antpoll.doctype.community_poll.community_poll.send_next_question_url',
+                        args: {
+                            next_url: nextUrl
+                        },
+                        callback: function (r) {
+                            if (r.message.status === "success") {
+                                console.log("yess")
+                            }
+                        },
+                        error: function (err) {
+                            frappe.msgprint("Error broadcasting next question URL.");
+                        }
+                    });
+                } 
+        });
+      // for mobile view
+        document.getElementById('goto_next_qstnn').addEventListener('click', () => {
+          const nextUrl = next_question_url;
+          if (nextUrl) {
+              frappe.call({
+                  method: 'antpoll.antpoll.doctype.community_poll.community_poll.send_next_question_url',
+                  args: {
+                      next_url: nextUrl
+                  },
+                  callback: function (r) {
+                      if (r.message.status === "success") {
+                          console.log("yess")
+                      }
+                  },
+                  error: function (err) {
+                      frappe.msgprint("Error broadcasting next question URL.");
+                  }
+              });
+          } 
+  });
+
+      }
+      
+    });
+  
+
     document.addEventListener("DOMContentLoaded", function () {
     const questionName = "{{ current_question.name }}";
     const currentUser = "{{ frappe.session.user }}";
@@ -617,19 +676,16 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
             },
             callback: function(response) {
                 if (response.message !== undefined) {
-                    document.getElementById('total-view-count').innerText = "People Joined: " + response.message;
+                    document.getElementById('total-view-count').innerText = "PLAYERS: " + response.message;
                 }
             }
         });
     }
 
-    // Refresh every 5 seconds
-    setInterval(refreshViewCount, 5000);
-
+    if (is_poll_admin == "True") {
     setInterval(refreshViewCount, 2000);
-
-    // Also refresh immediately when page loads
     refreshViewCount();
+    }
 
     // Function to show custom toast message
     function showCustomToast(message) {
@@ -698,8 +754,11 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
         });
     }
     // Call to check if the user has already voted
+    if (is_poll_admin != "True") {
     checkIfUserHasVoted();
+    }
 
+    
    // First hide the button
     document.getElementById("submit-vote-button").style.display = "none";
 
@@ -714,47 +773,49 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
         });
     });
 
+
+    if (is_poll_admin != "True") {
     // Submit vote logic
- document.getElementById("submit-vote-button").addEventListener("click", function () {
-    let selectedOption = document.querySelector('input[name="selected_option"]:checked');
-    let pollId = "{{ name }}";
-    let questId = "{{ current_question.name }}";
-    let user = "{{ frappe.session.user }}";
+  document.getElementById("submit-vote-button").addEventListener("click", function () {
+      let selectedOption = document.querySelector('input[name="selected_option"]:checked');
+      let pollId = "{{ name }}";
+      let questId = "{{ current_question.name }}";
+      let user = "{{ frappe.session.user }}";
 
-    if (!selectedOption) {
-        alert("Please select an option to vote.");
-        return;
-    }
+      if (!selectedOption) {
+          alert("Please select an option to vote.");
+          return;
+      }
 
-    let optionName = selectedOption.value;
+      let optionName = selectedOption.value;
 
-    frappe.call({
-        method: "antpoll.antpoll.doctype.community_poll.community_poll.cast_vote",
-        args: {
-            poll_id: pollId,
-            qst_id: questId,
-            option_name: optionName
-        },
-        callback: function (response) {
-            console.log("Response:", response);  // Log the response for debugging
-            if (response.message && response.message.VoteMsg) {
-                const data = response.message;
-                const voteMsg = data.VoteMsg;
-                // Show the "Thank you" message (custom toast) upon successful vote
-                showCustomToast(voteMsg);
-            } else {
-                // Log and show an error message if something went wrong
-                console.error("Error in response:", response);
-                alert("Something went wrong, please try again.");
-            }
-        }
-    });
-});
-
-
-
+      frappe.call({
+          method: "antpoll.antpoll.doctype.community_poll.community_poll.cast_vote",
+          args: {
+              poll_id: pollId,
+              qst_id: questId,
+              option_name: optionName
+          },
+          callback: function (response) {
+              console.log("Response:", response);  // Log the response for debugging
+              if (response.message && response.message.VoteMsg) {
+                  const data = response.message;
+                  const voteMsg = data.VoteMsg;
+                  // Show the "Thank you" message (custom toast) upon successful vote
+                  showCustomToast(voteMsg);
+              } else {
+                  // Log and show an error message if something went wrong
+                  console.error("Error in response:", response);
+                  alert("Something went wrong, please try again.");
+              }
+          }
+      });
+  });
+}
 
 });
+
+if (is_poll_admin == "True") {
 // Result button
 document.getElementById("result-button").addEventListener("click", function () {   
     let pollId = "{{ name }}";
@@ -777,6 +838,7 @@ document.getElementById("result-button").addEventListener("click", function () {
         }
     });
 });
+}
 
 
 </script>

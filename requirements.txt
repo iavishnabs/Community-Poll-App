@@ -1,1 +1,1 @@
-qrcode[pil]
+qrcode==8.1

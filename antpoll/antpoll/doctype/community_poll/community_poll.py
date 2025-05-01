@@ -359,22 +359,19 @@ def get_option_vote_data(poll_id, question_name):
 
 
 @frappe.whitelist()
-def next_question(poll_id, next_question_url):
-    # Log for debug
-    frappe.logger().info(f"Poll ID: {poll_id}, Next Question URL: {next_question_url}")
-
-    # Publish real-time event to all users (you can filter by room/channel if needed)
-    frappe.publish_realtime(
-        event='show_next_question_url',
-        message={'url': next_question_url},
-        user=None  # Send to all users
-    )
-
-    return {
-        "status": "success",
-        "debug_url": next_question_url
-    }
+def next_question(next_question_url):
+    frappe.publish_realtime('show_next_question_url',next_question_url)
+    return {"status": "success"}
 
 @frappe.whitelist()
-def my_backend_method():
-    frappe.publish_realtime('my_event', {'message': 'Hello from backend!'})
+def send_custom_notification(message):
+    
+    # Broadcast message to all connected clients
+    frappe.publish_realtime('my_custom_event', message)
+    return {"status": "success"}
+
+@frappe.whitelist()
+def send_next_question_url(next_url):
+    # Broadcast the next URL to all connected clients
+    frappe.publish_realtime('goto_next_question_event', next_url)
+    return {"status": "success", "url": next_url}
