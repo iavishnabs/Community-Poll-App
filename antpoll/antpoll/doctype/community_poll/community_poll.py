@@ -11,7 +11,7 @@ from urllib.parse import quote
 class CommunityPoll(WebsiteGenerator):
 
     website = frappe._dict(
-        template="templates/generators/community_poll.html",
+        template="templates/generators/test.html",
         condition_field = "is_published",
         page_title_field = "title",
     )
@@ -378,3 +378,12 @@ def next_question(poll_id, next_question_url):
 @frappe.whitelist()
 def my_backend_method():
     frappe.publish_realtime('my_event', {'message': 'Hello from backend!'})
+    
+frappe.whitelist()
+def send_custom_notification(message):
+    if frappe.session.user != "Administrator":
+        frappe.throw("Only Administrator can send messages.")
+    
+    # Broadcast message to all connected clients
+    frappe.publish_realtime('my_custom_event', message)
+    return {"status": "success"}

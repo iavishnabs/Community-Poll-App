@@ -305,9 +305,13 @@
   
   
   {% extends base_template %}
+    <head>
+      <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+  
   {% block page_content %}
 
-  <div  class="poll-wrapper">
+  <div  class="flex  bg-red-900">
   <div class="dashboard">
     {% if qstn_status == "Open" or qstn_status == "Reopen" or is_poll_admin != "True"  %}
 
@@ -575,8 +579,6 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
     </script>
   {% endif %}
 </div>
-<!-- right after your Chart.js import, or anywhere in <head> before your inline scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.min.js"></script>
 
     <script>
      

@@ -1,0 +1,61 @@
+{% extends "templates/web.html" %}
+
+{% block content %}
+<div class="container text-center p-4">
+    <h2 class="text-xl font-bold mb-4">Admin Message Broadcast</h2>
+    
+    <!-- Admin Message Input -->
+    <div id="admin-section" style="display: none;" class="mb-4">
+        <input type="text" id="admin-msg" placeholder="Type message here..." class="border p-2 rounded w-full max-w-md" />
+        <button id="send-btn" class="btn btn-primary mt-2">Send Message</button>
+    </div>
+
+    <!-- Display Latest Message -->
+    <div class="border p-4 rounded bg-gray-100">
+        <p class="font-semibold">Latest Message:</p>
+        <p id="message-box">Waiting...</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+frappe.ready(() => {
+    // Initialize Realtime
+    frappe.realtime.init();
+
+    // Listen for messages
+    frappe.realtime.on('my_custom_event', (message) => {
+        console.log('Realtime message received:', message);
+        document.getElementById("message-box").textContent = message;
+    });
+
+    // Show admin section only for Administrator
+    if (frappe.session.user === "Administrator") {
+        document.getElementById("admin-section").style.display = "block";
+
+        document.getElementById('send-btn').addEventListener('click', () => {
+            const msg = document.getElementById('admin-msg').value;
+            if (msg) {
+                frappe.call({
+                    method: 'antpoll.antpoll.doctype.community_poll.community_poll.track_poll_question_view.send_custom_notification',
+                    args: {
+                        message: msg
+                    },
+                    callback: function(r) {
+                        if (r.message.status === "success") {
+                            frappe.msgprint("Message sent to users!");
+                        }
+                    },
+                    error: function(err) {
+                        frappe.msgprint("Error sending message.");
+                    }
+                });
+            } else {
+                frappe.msgprint("Please enter a message first.");
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
