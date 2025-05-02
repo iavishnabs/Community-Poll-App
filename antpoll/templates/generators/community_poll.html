@@ -10,7 +10,7 @@
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
         body {
-          background-image: url("/assets/antpoll/images/svgbg.svg") !important;
+          background-color: rgb(236, 233, 226) !important;
           font-family: 'Segoe UI', sans-serif;
           background-size: cover;
           background-repeat: no-repeat;
@@ -118,7 +118,7 @@
           display: flex;
           gap: 15px;
           margin-bottom: 20px;
-          background: rgba(255, 255, 255, 0.15);
+          background-color: rgb(224, 219, 212) !important;
           padding: 12px 16px;
           border-radius: 18px;
       }
@@ -347,7 +347,7 @@
       .poll-option input[type="radio"] {
         margin-left:8px;
         accent-color: #1d1d1d;
-        background-color: rgb(253, 243, 209) !important;
+        background-color: rgb(241, 237, 224) !important;
         
       }
 
@@ -557,7 +557,6 @@
         
     <!-- Instruction and Timer -->
     {% if is_poll_admin == "True" %}
-
     <div class="instruction-side" id="qr-section">
         <h1>Quick Quiz <br>
             <span class="">Ready to Guess? </span>
@@ -641,6 +640,22 @@
     
       {% endif %}
     </div>
+
+    {% if is_poll_admin !="True" and qstn_status == "Closed"%}
+    <div id="points-feedback-section"
+    style="display: none; text-align: center; margin-top:20% !important;  margin-left: auto; margin-right: auto;">
+
+ <p id="points-feedback"
+    style="font-size: 1.5rem; font-weight: 700; color: #1a202c;">
+   🎯 Loading your points...
+ </p>
+
+ <p id="point-feedback-congrts" style="font-size: 1.25rem; color: #2f855a; font-weight: 500;">
+   
+ </p>
+
+</div>
+{% endif %}
     {% if is_poll_admin == "True" %}
    <div class="card card-qr">
     <img src="{{ pollqr }}" alt="{{ pollqr }}" style="width: 100%; max-width: 300px; height: auto; margin: auto;">
@@ -853,23 +868,9 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
     
 
     </div> 
-  {% if is_poll_admin !="True" and qstn_status == "Closed"%}
-    <div id="points-feedback-section"
-    style="display: none;  text-align: center; padding: 30px; background-color: #faf9f9; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); max-width: 600px; margin-left: auto; margin-right: auto;">
-
- <p id="points-feedback"
-    style="font-size: 1.5rem; font-weight: 700; color: #1a202c;">
-   🎯 Loading your points...
- </p>
-
- <p style="font-size: 1.25rem; color: #2f855a; font-weight: 500;">
-   🎉 Congrats!
- </p>
 
 </div>
-
-</div>
-    {% endif %}
+    
 
   {% if next_question_url and is_poll_admin == "True" and qstn_status == "Closed" %}
 
@@ -1122,6 +1123,23 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
     const questionOwner = "{{ current_question.owner }}";
     const pollId = "{{ name }}";
     const user = "{{ frappe.session.user }}";
+
+    var next_question_url = "{{ next_question_url }}"
+    var is_poll_admin = "{{ is_poll_admin }}"
+    var curQuest_url = "{{ current_question.name }}"
+    const hasShownQR = "{{ has_shown_qr }}"
+    const RedirectionSeconds = "{{poll_start_seconds}}"
+
+    const loadingSection = document.getElementById("loading-section");
+
+      const first = document.getElementById("poll-qr-sectionn")
+      const second = document.getElementById("qst-section-mainn")
+      const starts = document.getElementById("start-poll-button")
+      const nextbtn = document.getElementById('goto_next_qstn')
+      const countdownEl = document.getElementById("countdown");
+      const resbtn = document.getElementById("result-button");
+
+      const feedback_sec = document.getElementById("points-feedback-section");
     
 
 
@@ -1301,7 +1319,6 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
 
     async function loadUserPointsStatus() {
       const currentUser = "{{ frappe.session.user }}";
-      console.log("Current user (session email):", currentUser);
     
       const today = new Date();
       const todayStr = formatDate(today);
@@ -1310,7 +1327,6 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
                 + `?date_range=["${todayStr}","${todayStr}"]`;
     
       try {
-        console.log("Fetching leaderboard data from URL:", url);
         const response = await fetch(url);
     
         if (!response.ok) {
@@ -1319,32 +1335,32 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
     
         const result = await response.json();
         const leaderboard = result.message || [];
-        console.log("Leaderboard:", leaderboard);
     
         if (Array.isArray(leaderboard)) {
           const userEntry = leaderboard.find(entry => {
             const match = entry.formatted_name?.match(/user-profile\/(.*?)">/);
             const email = match ? match[1] : null;
-            console.log("Checking entry:", email, "vs", currentUser);
     
             return email && currentUser &&
                    email.toLowerCase().trim() === currentUser.toLowerCase().trim();
           });
           const firstEntry = leaderboard[0];
           let feedbackText = "🙁 No points recorded yet.";
-          if (userEntry) {
+          let feedbackTextCngrts = document.getElementById("point-feedback-congrts")
+          if (userEntry.value > 0) {
             const match = userEntry.formatted_name?.match(/user-profile\/(.*?)">/);
             const email = match ? match[1] : null;
             const firstMatch = firstEntry.formatted_name?.match(/user-profile\/(.*?)">/);
             const firstEmail = firstMatch ? firstMatch[1] : null;
     
             if (email === firstEmail) {
-              feedbackText = `🏆 You're leading with <strong>${userEntry.value}</strong> points!`;
-            } else {
-              feedbackText = `✅ You earned <strong>${userEntry.value}</strong> points.`;
+              
+              feedbackText = `🏆 You earned <strong>${userEntry.value}</strong> points!`;
+              feedbackTextCngrts.innerHTML="🎉 Congrats!"
             }
           }
     
+  
           const feedbackEl = document.getElementById("points-feedback");
           if (feedbackEl) {
             feedbackEl.innerHTML = feedbackText;
