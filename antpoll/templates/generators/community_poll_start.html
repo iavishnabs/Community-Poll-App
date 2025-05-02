@@ -1,0 +1,43 @@
+<div id="start-section" style="text-align:center">
+    <h2>Scan the QR to Join</h2>
+    <img src="{{ pollqr }}" alt="Poll QR" style="width:200px;height:auto" />
+
+    <br><br>
+    <button id="start-btn">Start</button>
+</div>
+
+<div id="countdown-section" style="display:none;text-align:center">
+    <img src="/files/loading.gif" alt="Loading" />
+    <h2 id="timer">{{ poll_start_duration }}</h2>
+</div>
+
+<script>
+document.getElementById("start-btn").addEventListener("click", function () {
+    document.getElementById("start-section").style.display = "none";
+    document.getElementById("countdown-section").style.display = "block";
+
+    let [h, m, s] = document.getElementById("timer").innerText.split(":").map(Number);
+    let totalSeconds = h * 3600 + m * 60 + s;
+
+    let interval = setInterval(function () {
+        totalSeconds--;
+        let h = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
+        let m = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
+        let s = String(totalSeconds % 60).padStart(2, "0");
+
+        document.getElementById("timer").innerText = `${h}:${m}:${s}`;
+
+        if (totalSeconds <= 0) {
+            clearInterval(interval);
+            // Optional: Set has_shown_qr = 1 via API
+            frappe.call({
+                method: "antpoll.antpoll.doctype.community_poll.community_poll.update_has_shown_qr",
+                args: { poll_id: "{{ name }}" }
+            });
+
+            // Redirect to first question
+            window.location.href = `/{{ name }}?quest={{ questions[0].question | urlencode }}`;
+        }
+    }, 1000);
+});
+</script>

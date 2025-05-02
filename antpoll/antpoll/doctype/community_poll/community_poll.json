@@ -15,7 +15,9 @@
   "questions",
   "qr_code_tab",
   "quest_qr",
-  "qr_preview"
+  "qr_preview",
+  "column_break_viye",
+  "has_shown_qr"
  ],
  "fields": [
   {
@@ -71,13 +73,23 @@
    "fieldname": "qr_preview",
    "fieldtype": "HTML",
    "label": "QR Preview"
+  },
+  {
+   "fieldname": "column_break_viye",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "has_shown_qr",
+   "fieldtype": "Check",
+   "label": "Has Shown QR"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-29 13:01:46.937373",
- "modified_by": "Administrator",
+ "modified": "2025-05-01 22:34:26.424607",
+ "modified_by": "avishna@gmail.com",
  "module": "antPoll",
  "name": "Community Poll",
  "naming_rule": "Expression",

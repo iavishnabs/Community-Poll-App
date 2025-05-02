@@ -1,0 +1,580 @@
+{% extends base_template %}
+{% block page_content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+        body {
+            
+            background: linear-gradient(135deg, #9b5de5 0%, #00bbf9 100%);
+        }
+    
+        .poll-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border-radius: 5px;
+            padding: 40px 20px;
+            flex-wrap: wrap;
+        }
+    
+        .instruction-side {
+            flex: 1 1 40%;
+            padding: 0px 20px;
+        }
+    
+        .instruction-side h1 {
+            font-size: 3rem;
+            color: #a6eff8;
+            font-weight: bold;
+        }
+        .instruction-side h1 span{
+            font-size: 2.6rem;
+            font-weight: bold;
+            color: white;
+        }
+        .poll-section h4{
+            color: white;
+        }
+        .instruction-side p {
+            font-size:15px;
+            color: #ffffff;
+            max-width: 90%;
+        }
+    
+        .timer {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-top: 20px;
+            color: #a6eff8;
+        }
+    
+        .image-side {
+            flex: 1 1 55%;
+            text-align: center;
+        }
+    
+        .poll-image {
+            width: 100%;
+            max-width: 650px;
+            opacity: 0.95;
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
+            transition: transform 0.4s ease;
+        }
+    
+        .poll-image:hover {
+            transform: scale(1.02);
+        }
+        .qr-image {
+            width: 300px;
+            padding: 15px; /* Adds space inside the image container */
+            border-radius: 20px; /* Makes the corners rounded */
+            background-color: white; /* Optional: helps the padding show better */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow */
+        }
+        
+        p.instructions-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px !important;
+            line-height: 1.6;
+            color: #ffffff;
+            font-weight: 500;
+            padding: 0px 20px;
+            border-radius: 10px;
+            max-width: 900px;
+        }
+        
+
+        .scan-qr-text{
+            font-weight: 800;
+        }
+        .players{
+            font-weight: 700;
+            color: #000000;
+            font-size: 25px;
+            
+        }
+        .qr-timer-message{
+            
+            padding: 30px 30px;
+            border-radius: 6px;
+            color: #000000 !important;
+            margin-top: 50px;
+        }
+        .animated-message {
+            display: inline-block;
+            position: relative;
+            font-family: 'Poppins', sans-serif;
+            font-size: 28px;
+            font-weight: 500;
+            line-height: 1.6;
+            color: #ffffff !important;
+            animation: drift 4s ease-in-out infinite alternate;
+        }
+        
+        @keyframes drift {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(-10px, 10px);
+            }
+        }
+    
+        @media (max-width: 768px) {
+            .poll-section {
+                flex-direction: column;
+                text-align: center;
+            }
+    
+            .instruction-side, .image-side {
+                flex: 1 1 100%;
+            }
+    
+            .instruction-side h1 {
+                font-size: 2rem;
+            }
+            .players{
+               
+                font-size: 22px;
+            }
+            .poll-image {
+                width: 70%;
+                max-width: 450px;
+                opacity: 0.95;
+                filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
+                transition: transform 0.4s ease;
+            }
+            .qr-timer-message{
+               font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+
+
+<body>
+
+
+    <div class="poll-section" id="poll-qr-section">
+        
+        <!-- Instruction and Timer -->
+        {% if is_poll_admin == "True" %}
+
+        <div class="instruction-side" id="qr-section">
+            <h1>Quick Quiz <br>
+                <span class="mt-3">Ready to Guess? </span>
+            </h1>
+            {% if instructions %}
+            <h3 class="rules-label mt-5"><strong>RULES</strong> :
+            </h3>
+            <p class="instructions-text">{{ instructions }}</p>
+            {% endif %}
+
+            <img class="qr-image" src="{{pollqr}}" alt="qr">
+            <h5 class="mt-3 text-light ml-3 scan-qr-text">SCAN THE QR FOR JOINING !</h5>
+           
+        </div>
+        <!-- Image Section -->
+        <div class="image-side" id="qr-section">
+            
+            <img src="/assets/antpoll/images/bgpoll.png" alt="Poll Image" class="poll-image">
+            <p class="players">PLAYERS : </p>
+            {% if poll_start_duration %}
+            <p id="countdown-timer" class="timer">{{poll_start_duration}}</p>
+            {% endif %}
+        </div>
+        {% else %}
+        <h4 id="timer-message" class="qr-timer-message animated-message"><strong>Please wait,</strong> <br>starting the poll soon...
+            <br>
+            
+        </h4>
+       
+        <img src="/assets/antpoll/images/bgpoll.png" alt="Poll Image" class="poll-image">
+        {% endif %}
+
+    </div>
+    <div id="question-section">
+
+        {% if qstn_status == "Open" or qstn_status == "Reopen" or is_poll_admin != "True"  %}
+
+        <!-- Question and Progress Bars -->
+        <div class="dashboard-2col-qstn">
+        {% if is_poll_admin == "True"  %}
+        <h4 style="color:black;" id="total-view-count">PLAYERS: </h4>
+        {% else %}
+        <br><br><br>
+        {% endif %}
+        <!-- QR Code Card -->
+        {% if frappe.form_dict.quest %}
+              
+      <!-- Existing Question Card -->
+        <div class="card card-qstn"> 
+          <h4 id="message-box"></h4>
+          <div class="title" style="margin-bottom: 30px;">Q: {{ current_question.question }} </div>
+          <ul class="poll-options">
+                  {% for opt in options %}
+                  <li class="poll-option" style="display: flex;  gap: 15px; margin-bottom: 10px;">                
+                      <input type="radio" id="option{{ loop.index }}" name="selected_option" value="{{ opt.option }}" required>
+                      <label for="option{{ loop.index }}" class="optionn" style=" font-weight: bold;">
+                          {{ opt.option }}
+                      </label>
+                  </li>
+                  {% endfor %}
+              </ul>
+           {% if is_poll_admin != "True" %}
+            <button type="button" id="submit-vote-button" style="padding: 8px 20px; cursor: pointer; width:100px" class="submit-button">
+              Submit
+            </button>
+            {% endif %}
+            <!-- next_question_url -->
+          {% if is_poll_admin == "True" %}
+          <button type="button" id="result-button" class="result-button" style="padding: 8px 20px; cursor: pointer; width:100px">
+            Result
+          </button>
+          {% endif %}
+        </div>
+        {% if is_poll_admin == "True" %}
+       <div class="card card-qr">
+        <img src="{{ pollqr }}" alt="{{ pollqr }}" style="width: 100%; max-width: 300px; height: auto; margin: auto;">
+        </div>
+        {% endif %}
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+
+    <!-- <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (!urlParams.get("quest")) {
+                // Initial redirect if "quest" is missing
+                window.location.href = window.location.pathname + "?quest={{ doc.questions[0].question }}";
+                return; // Stop further execution
+            }
+        
+            let timerElement = document.getElementById("countdown-timer");
+            if (!timerElement) return;
+        
+            let duration = timerElement.innerText.trim(); // e.g. 00:00:05
+        
+            function timeToSeconds(timeStr) {
+                const parts = timeStr.split(":").map(Number);
+                return parts[0] * 3600 + parts[1] * 60 + parts[2];
+            }
+        
+            function secondsToTime(secs) {
+                const h = String(Math.floor(secs / 3600)).padStart(2, '0');
+                const m = String(Math.floor((secs % 3600) / 60)).padStart(2, '0');
+                const s = String(secs % 60).padStart(2, '0');
+                return `${h}:${m}:${s}`;
+            }
+        
+            let totalSeconds = timeToSeconds(duration);
+        
+            const countdown = setInterval(function () {
+                totalSeconds--;
+        
+                if (totalSeconds <= 0) {
+                    clearInterval(countdown);
+                    const pollQR = document.getElementById("poll-qr-section");
+                    const questionsection = document.getElementById("question-section");
+                    if (pollQR) {
+                        pollQR.style.display = "none";
+                        questionsection.style.display  = "block";
+                    }
+        
+                    // Redirect to first question again to restart or move forward
+                    const newUrl = window.location.pathname + "?quest={{ doc.questions[0].question }}";
+                    window.location.href = newUrl;
+                } else {
+                    timerElement.innerText = secondsToTime(totalSeconds);
+                }
+            }, 1000);
+        });
+        </script> -->
+
+        <script>
+
+            var next_question_url = "{{ next_question_url }}"
+            var is_poll_admin = "{{ is_poll_admin }}"
+            frappe.ready(() => {
+              // Initialize Realtime
+              frappe.realtime.init();
+          
+              // Listen for next question URL and redirect users
+              frappe.realtime.on('goto_next_question_event', (next_url) => {
+                  console.log('Redirecting to:', next_url);
+                  window.location.href = next_url;  // Redirect user
+              });
+          
+              // Admin-only section
+              if (is_poll_admin == "True") {
+                  document.getElementById('goto_next_qstn').addEventListener('click', () => {
+                      const nextUrl = next_question_url;
+                      if (nextUrl) {
+                          frappe.call({
+                              method: 'antpoll.antpoll.doctype.community_poll.community_poll.send_next_question_url',
+                              args: {
+                                  next_url: nextUrl
+                              },
+                              callback: function (r) {
+                                  if (r.message.status === "success") {
+                                      console.log("yess")
+                                  }
+                              },
+                              error: function (err) {
+                                  frappe.msgprint("Error broadcasting next question URL.");
+                              }
+                          });
+                      } 
+              });
+            // for mobile view
+              document.getElementById('goto_next_qstnn').addEventListener('click', () => {
+                const nextUrl = next_question_url;
+                if (nextUrl) {
+                    frappe.call({
+                        method: 'antpoll.antpoll.doctype.community_poll.community_poll.send_next_question_url',
+                        args: {
+                            next_url: nextUrl
+                        },
+                        callback: function (r) {
+                            if (r.message.status === "success") {
+                                console.log("yess")
+                            }
+                        },
+                        error: function (err) {
+                            frappe.msgprint("Error broadcasting next question URL.");
+                        }
+                    });
+                } 
+        });
+      
+            }
+            
+          });
+        
+      
+          document.addEventListener("DOMContentLoaded", function () {
+          const questionName = "{{ current_question.name }}";
+          const currentUser = "{{ frappe.session.user }}";
+          const questionOwner = "{{ current_question.owner }}";
+          const pollId = "{{ name }}";
+          const user = "{{ frappe.session.user }}";
+      
+          // Redirect if no "quest" URL parameter
+          const urlParams = new URLSearchParams(window.location.search);
+          if (!urlParams.get("quest")) {
+              window.location.href = window.location.pathname + "?quest={{ doc.questions[0].question }}";
+          }
+      
+          // Check if the user is logged in
+          if (user === "Guest") {
+              alert("You must be logged in to vote.");
+              return;
+          } else {
+              // Track the user's view of the poll question (backend method)
+              frappe.call({
+                  method: "antpoll.antpoll.doctype.community_poll.community_poll.track_poll_question_view",
+                  args: {
+                      question_name: questionName,
+                      poll_id: pollId,
+                  }
+              });
+          }
+      
+          function refreshViewCount() {
+              frappe.call({
+                  method: "antpoll.antpoll.doctype.community_poll.community_poll.get_total_views",   // Change this to your method path
+                  args: {
+                      q_name: questionName,
+                      poll_id: pollId
+                  },
+                  callback: function(response) {
+                      if (response.message !== undefined) {
+                          document.getElementById('total-view-count').innerText = "PLAYERS: " + response.message;
+                      }
+                  }
+              });
+          }
+      
+          if (is_poll_admin == "True") {
+          setInterval(refreshViewCount, 2000);
+          refreshViewCount();
+          }
+      
+          // Function to show custom toast message
+          function showCustomToast(message) {
+              let toast = document.createElement("div");
+              toast.id = "custom-toast";
+              toast.style.position = "fixed";
+              toast.style.top = "40%";
+              toast.style.left = "50%";
+              toast.style.transform = "translateX(-50%)";
+              toast.style.backgroundColor = "#F8F8F8";
+              toast.style.color = "#000";
+              toast.style.padding = "40px 80px";
+              toast.style.borderRadius = "10px";
+              toast.style.boxShadow = "0px 4px 6px #F0F0F0";
+              toast.style.zIndex = "9999";
+              toast.style.fontSize = "16px";
+              toast.style.textAlign = "center";
+              toast.style.opacity = "1";
+              toast.style.transition = "opacity 0.5s ease-in-out";
+              toast.style.display = "flex";
+              toast.style.flexDirection = "column";
+              toast.style.alignItems = "center";
+              toast.style.justifyContent = "center";
+              toast.style.gap = "10px";
+      
+              let icon = document.createElement("img");
+              icon.src = "/assets/antpoll/images/righticon.svg"; 
+              icon.style.width = "34px";
+              icon.style.height = "34px";
+      
+              let text = document.createElement("span");
+              text.innerText = message;
+              toast.appendChild(icon);
+              toast.appendChild(text);
+              document.body.appendChild(toast);
+      
+               setTimeout(() => {
+              toast.style.opacity = "0";  
+              setTimeout(() => {
+                  toast.remove();  
+                  location.reload(); 
+              }, 500); 
+          }, 2000);  
+          }
+      
+          // Function to check if user has already voted
+         function checkIfUserHasVoted() {
+          console.log("calling check method!!!!!")
+          frappe.call({
+              method: "antpoll.antpoll.doctype.community_poll.community_poll.has_user_voted",
+              args: {
+                  poll_id: pollId,
+                  qst_id: questionName,
+                  user: user
+              },
+              callback: function (response) {
+                  if (response.message && response.message.has_voted) {
+                      // If user has voted, hide radio buttons and the submit button
+                      document.querySelectorAll('input[type="radio"]').forEach(function (radio) {
+                          radio.style.display = "none"; // Hide all radio buttons
+                      });
+                      document.getElementById("submit-vote-button").style.display = "none"; // Hide submit button
+                     
+                  } 
+              }
+              });
+          }
+          // Call to check if the user has already voted
+          if (is_poll_admin != "True") {
+          checkIfUserHasVoted();
+          }
+      
+          
+         // First hide the button
+          document.getElementById("submit-vote-button").style.display = "none";
+      
+          // Attach event to all radio buttons
+          document.querySelectorAll('input[name="selected_option"]').forEach(function (radio) {
+              radio.addEventListener("change", function () {
+                  if (document.querySelector('input[name="selected_option"]:checked')) {
+                      document.getElementById("submit-vote-button").style.display = "block";
+                  } else {
+                      document.getElementById("submit-vote-button").style.display = "none";
+                  }
+              });
+          });
+      
+      
+          if (is_poll_admin != "True") {
+          // Submit vote logic
+        document.getElementById("submit-vote-button").addEventListener("click", function () {
+            let selectedOption = document.querySelector('input[name="selected_option"]:checked');
+            let pollId = "{{ name }}";
+            let questId = "{{ current_question.name }}";
+            let user = "{{ frappe.session.user }}";
+      
+            if (!selectedOption) {
+                alert("Please select an option to vote.");
+                return;
+            }
+      
+            let optionName = selectedOption.value;
+      
+            frappe.call({
+                method: "antpoll.antpoll.doctype.community_poll.community_poll.cast_vote",
+                args: {
+                    poll_id: pollId,
+                    qst_id: questId,
+                    option_name: optionName
+                },
+                callback: function (response) {
+                    console.log("Response:", response);  // Log the response for debugging
+                    if (response.message && response.message.VoteMsg) {
+                        const data = response.message;
+                        const voteMsg = data.VoteMsg;
+                        // Show the "Thank you" message (custom toast) upon successful vote
+                        showCustomToast(voteMsg);
+                    } else {
+                        // Log and show an error message if something went wrong
+                        console.error("Error in response:", response);
+                        alert("Something went wrong, please try again.");
+                    }
+                }
+            });
+        });
+      }
+      
+      });
+      
+      if (is_poll_admin == "True") {
+      // Result button
+      document.getElementById("result-button").addEventListener("click", function () {   
+          let pollId = "{{ name }}";
+          let questId = "{{ current_question.name }}";
+      
+          // Call the API to fetch the question results
+          frappe.call({
+              method: "antpoll.antpoll.doctype.community_poll.community_poll.question_result_show",
+              args: {
+                  poll_id: pollId,
+                  qst_id: questId
+              },
+              callback: function (response) {
+                  console.log("Response:", response);  // Log the response for debugging
+                  
+                  if (response.message && response.message === "success") {
+                      console.log("yes!!!")
+                      location.reload();  // Reload the current page
+                  }
+              }
+          });
+      });
+      }
+      
+      
+      </script>
+         
+</body>
+</html>
+
+{% endblock %}

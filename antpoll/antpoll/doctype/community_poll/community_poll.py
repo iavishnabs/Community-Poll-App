@@ -12,6 +12,7 @@ class CommunityPoll(WebsiteGenerator):
 
     website = frappe._dict(
         template="templates/generators/community_poll.html",
+        # template="templates/generators/polls.html",
         condition_field = "is_published",
         page_title_field = "title",
     )
@@ -27,13 +28,21 @@ class CommunityPoll(WebsiteGenerator):
         context.title = self.name
 
         context.pollqr = self.quest_qr
+        context.has_qr_shown = self.has_shown_qr
 
         # context.leaderboard = self.show_leaderboard
 
         settings = frappe.get_doc("Poll Settings", "Poll Settings") 
         if settings.default_leaderboard:
             context.show_leaderboard = "true"
-       
+            context.instructions = settings.instructions
+            context.poll_start_duration = settings.poll_start_duration
+            poll_start_duration = frappe.db.get_single_value("Poll Settings", "poll_start_duration")  # returns timedelta
+
+            poll_start_seconds = int(poll_start_duration.total_seconds())
+
+            context.poll_start_seconds = poll_start_seconds
+            
         # questions = self.questions
         questions = self.questions or []
         if not questions:
@@ -288,6 +297,7 @@ def cast_vote(poll_id, qst_id, option_name):
 
 @frappe.whitelist()
 def question_result_show(poll_id,qst_id):
+   
     poll = frappe.get_doc("Community Poll", poll_id)
     print(poll)
     question = []
@@ -296,7 +306,9 @@ def question_result_show(poll_id,qst_id):
             print(qst_id)
             i.qst_status = "Closed"
             i.save()
-    return "success"
+
+    
+    return"success"
 
 @frappe.whitelist()
 def track_poll_question_view(question_name,poll_id):
@@ -358,10 +370,6 @@ def get_option_vote_data(poll_id, question_name):
 
 
 
-@frappe.whitelist()
-def next_question(next_question_url):
-    frappe.publish_realtime('show_next_question_url',next_question_url)
-    return {"status": "success"}
 
 @frappe.whitelist()
 def send_custom_notification(message):
@@ -375,3 +383,9 @@ def send_next_question_url(next_url):
     # Broadcast the next URL to all connected clients
     frappe.publish_realtime('goto_next_question_event', next_url)
     return {"status": "success", "url": next_url}
+
+@frappe.whitelist()
+def  send_cur_question_url(cur_url,poll_id):
+    frappe.publish_realtime('goto_cur_question_event', cur_url)
+    frappe.db.set_value("Community Poll", poll_id, "has_shown_qr", True)
+    return {"status": "success", "url": cur_url}
