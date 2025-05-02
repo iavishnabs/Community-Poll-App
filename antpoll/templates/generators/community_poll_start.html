@@ -13,8 +13,16 @@
 
 <script>
 document.getElementById("start-btn").addEventListener("click", function () {
-    document.getElementById("start-section").style.display = "none";
-    document.getElementById("countdown-section").style.display = "block";
+    if(   document.getElementById("start-section").style.display = "none"){
+        console.log('document.getElementById("start-section").style.display = "none"')
+    }
+    if (
+
+        document.getElementById("countdown-section").style.display = "block"
+    ){
+        console.log('document.getElementById("countdown-section").style.display = "block"');
+        
+    }
 
     let [h, m, s] = document.getElementById("timer").innerText.split(":").map(Number);
     let totalSeconds = h * 3600 + m * 60 + s;
@@ -28,14 +36,18 @@ document.getElementById("start-btn").addEventListener("click", function () {
         document.getElementById("timer").innerText = `${h}:${m}:${s}`;
 
         if (totalSeconds <= 0) {
+            console.log("intervel complete");
+            
             clearInterval(interval);
             // Optional: Set has_shown_qr = 1 via API
+            console.log("before api call");
             frappe.call({
                 method: "antpoll.antpoll.doctype.community_poll.community_poll.update_has_shown_qr",
                 args: { poll_id: "{{ name }}" }
             });
 
             // Redirect to first question
+            console.log("before redirecting");
             window.location.href = `/{{ name }}?quest={{ questions[0].question | urlencode }}`;
         }
     }, 1000);
