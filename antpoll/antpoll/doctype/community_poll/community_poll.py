@@ -65,6 +65,7 @@ class CommunityPoll(WebsiteGenerator):
             if qrs.question == quest_param:
                 context.qrcodes = qrs.qr
                 context.qstn_status = qrs.qst_status
+                context.viewss = qrs.total_view
         
 
         context.options = current_question.options
