@@ -16,8 +16,9 @@
           background-repeat: no-repeat;
           margin: 0;
           padding: 0;
-          height: 100vh;
+          height: 90vh;
         }
+        
        
         .poll-section {
             display: flex;
@@ -223,8 +224,8 @@
           padding: 20px 10px;
         }
         .card-result-answer .anss{
-          background: #e0c6f8;
-          color: #561d71;
+          background: #cebf95;
+          color: #0f0f0f;
           padding: 20px;
         }
         
@@ -243,26 +244,28 @@
   .card-result, .card-leaderb {
     max-width: 100%;
     width: 100%;
+    
   }
 }
 
-/* Mobile View (<= 768px) */
-@media (max-width: 768px) {
-  .dashboard-2col {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-    padding: 0 1rem;
-  }
+  /* Mobile View (<= 768px) */
+  @media (max-width: 768px) {
+    .dashboard-2col {
+      grid-template-columns: 1fr;
+      min-height: 400px !important;
+      gap: 1rem;
+      padding: 0 1rem;
+    }
 
-  .card-result-answer {
-    font-size: 1rem;
-    padding: 15px 8px;
-  }
+    .card-result-answer {
+      font-size: 1rem;
+      padding: 15px 8px;
+    }
 
-  .card-result-answer .anss {
-    padding: 15px;
+    .card-result-answer .anss {
+      padding: 15px;
+    }
   }
-}
 
       #total-view-count {
         top: 20px;
@@ -334,13 +337,9 @@
       #submit-vote-button {
           display: none;
         }
-      .next-btn-text, .next-btnn-mobile{
-      display: none;
-      }
-
 
     
-      #submit-vote-button, #result-button ,.next-btnn{
+      #submit-vote-button, #result-button ,.next-btnn, .next-btnn-start{
         background: transparent;
         color: #181818;
         padding: 10px 24px;
@@ -354,20 +353,20 @@
         transition: 0.3s;
       }
     
-      #submit-vote-button:hover, #result-button:hover , .next-btnn:hover{
-        background: #9b7251;
-        color: white
+      #submit-vote-button:hover, #result-button:hover , .next-btnn:hover, .next-btnn-start:hover{
+        background: #cebf95;
+        border-color: #af9c68;
         ;
       }
       .next-btn-sec {
           display: flex;
-          justify-content: center;
+          justify-content: right;
           margin-top: 0.5rem; /* adds space above the button */
         }
         
-        .next-btnn {
-          margin-top: 0; 
-          padding: 10px 100px;
+        .next-btnn , .next-btnn-start{
+          margin-top: 4px; 
+          padding: 10px 60px;
         }
         
       /* QR Code Section */
@@ -385,26 +384,8 @@
       }
       
       @media (max-width: 991px) {
-      .next-btn-text, .next-btnn-mobile{
-        display: inline-block;
-        }
-        a.next-btnn-mobile{
-            justify-content: center;
-            text-align: center;
-              display:flex;
-            background: #ffffff;
-            color: #561d71;
-            font-size: 16px;
-            font-weight: bold;
-            width: auto;
-            margin-left: 300px;
-            margin-right: 300px;
-            border-radius: 8px;
-            padding: 8px 15px;
-            border:1px solid #e0c6f8;;
-            margin-top: 2px;
-            cursor: pointer;
-        }
+      
+        
      
         .dashboard-2col-qstn {
           padding: 1.5rem;
@@ -428,44 +409,21 @@
             font-weight: 600;
             margin-top: 200px;
         }
-        .next-btnn{
-            display: none;
-        }
+     
     
       }
     
       @media (min-width: 350px) and (max-width: 740px) {
-        .next-btnn{
-            justify-content: center;
-            text-align: center;
-            display:flex;
-            background: #ffffff;
-            color: #561d71;
-            font-size: 16px;
-            font-weight: bold;
-            width: auto;
-            margin-left: 100px;
-            margin-right: 100px;
-            border-radius: 8px;
-            padding: 8px 10px;
-            border:1px solid #e0c6f8;;
-            margin-top: 2px;
-            cursor: pointer;
-        }
        
-        .next-btn-text {
-            font-size: 15px;
-            justify-content: center;
-            text-align: center;
-            font-weight: 600;
-            margin-top: 200px;
+        .next-btnn{
+        margin-right:20px;
+        padding: 8px 30px;
+        font-size: 14px;
         }
-        
-          
-      
-        .next-btn-sec{
-            display: block;
-            }
+          .next-btn-sec{
+            justify-content: center;
+            align-items: center;
+          }
         .dashboard-2col-qstn {
           padding: 1.5rem;
         }
@@ -535,7 +493,7 @@
         display: none !important;
       }
     }
-    
+
     </style>
   
   </head>
@@ -570,12 +528,10 @@
         <img src="/assets/antpoll/images/bgpoll.png" alt="Poll Image" class="poll-image">
         <p class="players" id="total-view-count" style="color:black;font-size:22px;">PLAYERS :  </p>
 
-        <button id="start-poll-button" class="next-btnn" >START</button>
+        <button id="start-poll-button" class="next-btnn-start" >START</button>
 
 
-        {% if poll_start_duration %}
-        <p id="countdown-timer" class="timer">{{poll_start_seconds}}</p>
-        {% endif %}
+       
     </div>
     {% else %}
     <h4 id="timer-message" class="qr-timer-message animated-message"><strong>Please wait,</strong> <br>starting the poll soon...
@@ -657,7 +613,7 @@
             </div>
           </div>
           <div class="card-result-chart">
-        <div class="title">Results Breakdown</div>
+      
         <canvas id="donutChart" width="" height=""></canvas>
       </div>
      </div>
@@ -765,7 +721,7 @@
       labels: labels,
       datasets: [{
         data: data,
-        backgroundColor: 'rgba(128, 90, 213, 0.7)',
+        backgroundColor: '#d15c5c',
         borderRadius: 4,
         barThickness: 25,
         categoryPercentage: 0, // Added: control gap between bars
@@ -895,6 +851,7 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
       const first = document.getElementById("poll-qr-sectionn")
       const second = document.getElementById("qst-section-mainn")
       const starts = document.getElementById("start-poll-button")
+      const nextbtn = document.getElementById('goto_next_qstn')
 
       const countdownEl = document.getElementById("countdown");
 
@@ -904,6 +861,7 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
     
         // Listen for next question URL and redirect users
         frappe.realtime.on('goto_next_question_event', (next_url) => {
+          
             console.log('Redirecting to:', next_url);
             if (first) first.style.display = "none";
             if (second) second.style.display = "none";
@@ -967,6 +925,7 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
                 callback: function (r) {
                     if (r.message.status === "success") {
                         console.log("yess")
+                       
                     }
                 },
                 error: function (err) {
@@ -976,7 +935,8 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
             }
            });
           
-            document.getElementById('goto_next_qstn').addEventListener('click', () => {
+          if(nextbtn){
+            nextbtn.addEventListener('click', () => {
                 const nextUrl = next_question_url;
                 if (nextUrl) {
                     frappe.call({
@@ -987,6 +947,7 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
                         callback: function (r) {
                             if (r.message.status === "success") {
                                 console.log("yess")
+                               
                             }
                         },
                         error: function (err) {
@@ -995,29 +956,9 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
                     });
                 } 
         });
+      }
       
-          document.getElementById('start-poll-btns').addEventListener('click', () => {
-            
-            const curQuest = curQuest_url;
-           
-            if (curQuest) {
-                frappe.call({
-                    method: 'antpoll.antpoll.doctype.community_poll.community_poll.send_cur_question_url',
-                    args: {
-                        cur_url: curQuest,
-                        poll_id:pollId
-                    },
-                    callback: function (r) {
-                        if (r.message.status === "success") {
-                            console.log("yess")
-                        }
-                    },
-                    error: function (err) {
-                        frappe.msgprint("Error broadcasting next question URL.");
-                    }
-                });
-            } 
-        });
+
 
     }
     
@@ -1041,12 +982,17 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
         if (second) second.style.display = "none";
     }
 
-    // Redirect if no "quest" URL parameter
     const urlParams = new URLSearchParams(window.location.search);
     if (!urlParams.get("quest")) {
-        window.location.href = window.location.pathname + "?quest={{ doc.questions[0].question }}";
+      const firstQuestion = "{{ doc.questions[0].question | urlencode }}";
+      const newUrl = `${window.location.origin}${window.location.pathname}?quest=${firstQuestion}`;
+      console.log("Redirecting to:", newUrl);
+      window.location.href = newUrl;
+    } else {
+      console.log("Already has quest param:", window.location.href);
     }
-
+  
+    
     // Check if the user is logged in
     if (user === "Guest") {
         alert("You must be logged in to vote.");
@@ -1156,7 +1102,7 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
 
     
    // First hide the button
-    document.getElementById("submit-vote-button").style.display = "none";
+   // document.getElementById("submit-vote-button").style.display = "none";
 
     // Attach event to all radio buttons
     document.querySelectorAll('input[name="selected_option"]').forEach(function (radio) {
@@ -1164,7 +1110,7 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
             if (document.querySelector('input[name="selected_option"]:checked')) {
                 document.getElementById("submit-vote-button").style.display = "block";
             } else {
-                document.getElementById("submit-vote-button").style.display = "none";
+                document.getElementById("submit-vote-button").style.display = "hidden";
             }
         });
     });
@@ -1283,7 +1229,9 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
 
     });
 
-if (is_poll_admin == "True") {
+  const resbtn = document.getElementById("result-button");
+
+if (is_poll_admin == "True" && resbtn) {
 // Result button
 document.getElementById("result-button").addEventListener("click", function () {   
     let pollId = "{{ name }}";
