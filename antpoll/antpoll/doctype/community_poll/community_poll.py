@@ -222,10 +222,12 @@ class CommunityPoll(WebsiteGenerator):
 
 @frappe.whitelist(allow_guest=True)
 def get_total_views(q_name,poll_id):
+    print("\n\n\nview count method called\n\n")
     poll_doc = frappe.get_doc("Community Poll", poll_id)
     for qrs in poll_doc.questions:
         if qrs.question == q_name:
             total_views = qrs.total_view
+            print(":::::",total_views,"::::::::::")
             return total_views if total_views else 0
 
 @frappe.whitelist()
@@ -307,8 +309,8 @@ def question_result_show(poll_id,qst_id):
             i.qst_status = "Closed"
             i.save()
 
-    
-    return"success"
+    frappe.publish_realtime('result_publish_event', poll_id)
+    return {"message": "success"}
 
 @frappe.whitelist()
 def track_poll_question_view(question_name,poll_id):
@@ -327,11 +329,13 @@ def track_poll_question_view(question_name,poll_id):
 
                 for question in poll_doc.questions:
                     if question.question == question_name:
-                        question.total_view = (question.total_view or 0) + 1
+                        new_view = (question.total_view or 0) + 1
                         break
-
-                poll_doc.save(ignore_permissions=True)
-                frappe.db.commit()
+                    
+                frappe.db.set_value("Question Items",question.name,"total_view",new_view)
+                frappe.publish_realtime("view_count_updated",message={"question": question_name, "poll_id": poll_id})
+                print("called")
+                return {"question": question_name, "poll_id": poll_id}
 
 
 @frappe.whitelist()

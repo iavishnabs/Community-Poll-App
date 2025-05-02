@@ -109,6 +109,45 @@
             font-size: 25px;
             
         }
+        .poll-options {
+          list-style: none;
+          padding: 0;
+          margin: 0 auto;
+      }
+  
+      .poll-option {
+          display: flex;
+          gap: 15px;
+          margin-bottom: 20px;
+          background: rgba(255, 255, 255, 0.15);
+          padding: 12px 16px;
+          border-radius: 18px;
+      }
+  
+      .poll-option input[type="radio"] {
+          margin-left: 8px;
+          accent-color: #1d1d1d;
+      }
+  
+      .poll-option label {
+          flex-grow: 1;
+          font-weight: bold;
+          color: #303030;
+          cursor: pointer;
+      }
+  
+      .poll-option div {
+          flex-grow: 1;
+          height: 8px;
+          background: #ffffff40;
+          border-radius: 4px;
+          overflow: hidden;
+      }
+  
+      .poll-option div > div {
+          height: 100%;
+          background: #ffffff80;
+      }
         .qr-timer-message{
             
             padding: 30px 30px;
@@ -307,10 +346,12 @@
       }
     
       .poll-option input[type="radio"] {
-        width: 25px;
-        height: 25px;
+        margin-left:8px;
         accent-color: #1d1d1d;
+        background-color: rgb(253, 243, 209) !important;
+        
       }
+
     
       .poll-option label {
         flex-grow: 1;
@@ -385,7 +426,12 @@
       
       @media (max-width: 991px) {
       
-        
+        .poll-option input[type="radio"] {
+          margin-left: 8px;
+          width: 30px !important;
+          
+          accent-color: #1d1d1d;
+      }
      
         .dashboard-2col-qstn {
           padding: 1.5rem;
@@ -414,7 +460,12 @@
       }
     
       @media (min-width: 350px) and (max-width: 740px) {
-       
+        .poll-option input[type="radio"] {
+          margin-left: 8px;
+          width: 90px !important;
+         
+          accent-color: #1d1d1d;
+      }
         .next-btnn{
         margin-right:20px;
         padding: 8px 30px;
@@ -436,7 +487,7 @@
         }
         .poll-option {
           font-size: 0.8rem;
-          width: 240px;
+          width: 210px;
         }
       
       }
@@ -545,7 +596,7 @@
 
 <div id="loading-section" class="text-center" style="display: none;">
   <p class="text-center">Please Wait a Moment..</p>
-  <span id="countdown" class="text-center">{{ poll_start_seconds }}</span>
+  <span id="countdown" class="text-center"> {{ poll_start_seconds if poll_start_seconds else 0 }}</span>
 </div>
 
 <div id="qst-section-mainn" >
@@ -555,7 +606,7 @@
     <!-- Question and Progress Bars -->
     <div class="dashboard-2col-qstn">
     {% if is_poll_admin == "True"  %}
-    <h4 style="color:black;" id="total-view-count">PLAYERS: </h4>
+    <h4 style="color:black;" id="total-view-count-qst">PLAYERS: 0</h4>
     {% else %}
     <br><br><br>
     {% endif %}
@@ -568,11 +619,12 @@
       <div class="title" style="margin-bottom: 30px;">Q: {{ current_question.question }} </div>
       <ul class="poll-options">
               {% for opt in options %}
-              <li class="poll-option" style="display: flex;  gap: 15px; margin-bottom: 10px;">                
-                  <input type="radio" id="option{{ loop.index }}" name="selected_option" value="{{ opt.option }}" required>
-                  <label for="option{{ loop.index }}" class="optionn" style=" font-weight: bold;">
+              <li class="poll-option" style="display: flex;  gap: 15px; margin-bottom: 10px ;">                
+                  <input class="form-check-input" type="radio" id="option{{ loop.index }}" name="selected_option"  value="{{ opt.option }}" required>
+                  <label for="option{{ loop.index }}" class="optionn form-check-label" style=" font-weight: bold;">
                       {{ opt.option }}
                   </label>
+                                
               </li>
               {% endfor %}
           </ul>
@@ -586,6 +638,8 @@
       <button type="button" id="result-button" class="result-button" style="padding: 8px 20px; cursor: pointer; width:100px">
         Result
       </button>
+
+    
       {% endif %}
     </div>
     {% if is_poll_admin == "True" %}
@@ -599,7 +653,7 @@
     <!-- Donut and Leaderboard Section -->
 
     
-    <div class="dashboard-2col" style="margin-top:100px;">
+    <div class="dashboard-2col" id="dashboard-2col" style="margin-top:100px;">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
       <!-- Results Breakdown -->
@@ -852,16 +906,17 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
       const second = document.getElementById("qst-section-mainn")
       const starts = document.getElementById("start-poll-button")
       const nextbtn = document.getElementById('goto_next_qstn')
-
       const countdownEl = document.getElementById("countdown");
+      const resbtn = document.getElementById("result-button");
+
+      const feedback_sec = document.getElementById("points-feedback-section");
+
 
       frappe.ready(() => {
         
         frappe.realtime.init();
-    
         // Listen for next question URL and redirect users
         frappe.realtime.on('goto_next_question_event', (next_url) => {
-          
             console.log('Redirecting to:', next_url);
             if (first) first.style.display = "none";
             if (second) second.style.display = "none";
@@ -870,7 +925,7 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
             if (loadingSection) loadingSection.style.display = "block";
         
             // Start countdown
-            let secondsLeft = RedirectionSeconds;
+            let secondsLeft = RedirectionSeconds || 5;  // Set fallback
             countdownEl.textContent = secondsLeft;
         
             const interval = setInterval(() => {
@@ -887,31 +942,93 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
            
         });
      
-        frappe.realtime.on('goto_cur_question_event', (cur_url) => {
-          first.style.display = "none";
-          second.style.display = "none";
-          if (loadingSection) loadingSection.style.display = "block";
-          let secondsLeft = RedirectionSeconds;
-            countdownEl.textContent = secondsLeft;
-
-            const interval = setInterval(() => {
-              secondsLeft--;
-              countdownEl.textContent = secondsLeft;
+        
+          frappe.realtime.on('result_publish_event', (data) => {
+              if (data) {
+                  // Hide question and feedback immediately
+                  if (second) second.style.display = 'none';
+                  if (feedback_sec) feedback_sec.style.display = 'none';
       
-              if (secondsLeft <= 0) {
-                  clearInterval(interval);
-                  if (loadingSection) loadingSection.style.display = "none";
-                  countdownEl.style.display = "none"
-                  second.style.display = "block";
-                
+                  // Show loading section
+                  if (loadingSection) loadingSection.style.display = "block";
+                  if (countdownEl) countdownEl.style.display = "block";
+      
+                let secondsLeft = RedirectionSeconds || 5;  // Set fallback
+                if (countdownEl) countdownEl.textContent = secondsLeft;
+    
+                const interval = setInterval(() => {
+                    secondsLeft--;
+                    if (countdownEl) countdownEl.textContent = secondsLeft;
+    
+                  if (secondsLeft <= 0) {
+                      clearInterval(interval);
+  
+                      // Hide loading section
+                      loadingSection.style.display = "none";
+                      countdownEl.style.display = "none";
+                      
+                      if (is_poll_admin != "True") {
+                      if (feedback_sec) feedback_sec.style.display = 'block';
+                        location.reload();  
+                      }else{
+                        const resultgraph = document.getElementById("dashboard-2col")
+                        resultgraph.style.display = "block";
+                        location.reload();  
+                      }
+                  }
+              }, 1000);
               }
-          }, 1000);
-        });
-    
+          });
+        
 
-    
+            frappe.realtime.on('view_count_updated', (data) => {
+              const { question, poll_id } = data
+              frappe.call({
+                method: "antpoll.antpoll.doctype.community_poll.community_poll.get_total_views",   // Change this to your method path
+                args: {
+                    q_name: question,
+                    poll_id: poll_id
+                },
+                callback: function(response) {
+                    if (response.message !== undefined) {
+                        document.getElementById('total-view-count').innerText = "PLAYERS: " + response.message;  
+                        document.getElementById('total-view-count-qst').innerText = "PLAYERS: " + response.message;
+                    }
+                }
+            });
+
+          }); 
+
+
+
         // Admin-only section
         if (is_poll_admin == "True") {
+
+          if(resbtn){
+            resbtn.addEventListener("click", () => {   
+              let pollId = "{{ name }}";
+              let questId = "{{ current_question.name }}";
+          
+              // Call the API to fetch the question results
+              frappe.call({
+                  method: "antpoll.antpoll.doctype.community_poll.community_poll.question_result_show",
+                  args: {
+                      poll_id: pollId,
+                      qst_id: questId
+                  },
+                  callback: function (response) {
+                      console.log("Response:", response);  // Log the response for debugging
+                      
+                      if (response.message && response.message === "success") {
+                          console.log("yes!!!")
+                          location.reload();  // Reload the current page
+                      }
+                  }
+              });
+              
+          
+          });
+          }
 
           document.getElementById('start-poll-button').addEventListener('click', () => {
             const curQuest = curQuest_url;
@@ -958,6 +1075,22 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
         });
       }
       
+      function refreshViewCount() {
+        alert("refresh starts!!!!")
+        frappe.call({
+            method: "antpoll.antpoll.doctype.community_poll.community_poll.get_total_views",   // Change this to your method path
+            args: {
+                q_name: questionName,
+                poll_id: pollId
+            },
+            callback: function(response) {
+                if (response.message !== undefined) {
+                    document.getElementById('total-view-count').innerText = "PLAYERS: " + response.message;  
+                    document.getElementById('total-view-count-qst').innerText = "PLAYERS: " + response.message;
+                }
+            }
+        });
+    }
 
 
     }
@@ -1008,25 +1141,9 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
         });
     }
 
-    function refreshViewCount() {
-        frappe.call({
-            method: "antpoll.antpoll.doctype.community_poll.community_poll.get_total_views",   // Change this to your method path
-            args: {
-                q_name: questionName,
-                poll_id: pollId
-            },
-            callback: function(response) {
-                if (response.message !== undefined) {
-                    document.getElementById('total-view-count').innerText = "PLAYERS: " + response.message;
-                }
-            }
-        });
-    }
+    
 
-    if (is_poll_admin == "True") {
-    setInterval(refreshViewCount, 2000);
-    refreshViewCount();
-    }
+  
 
 
     // Function to show custom toast message
@@ -1229,34 +1346,9 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
 
     });
 
-  const resbtn = document.getElementById("result-button");
 
-if (is_poll_admin == "True" && resbtn) {
-// Result button
-document.getElementById("result-button").addEventListener("click", function () {   
-    let pollId = "{{ name }}";
-    let questId = "{{ current_question.name }}";
 
-    // Call the API to fetch the question results
-    frappe.call({
-        method: "antpoll.antpoll.doctype.community_poll.community_poll.question_result_show",
-        args: {
-            poll_id: pollId,
-            qst_id: questId
-        },
-        callback: function (response) {
-            console.log("Response:", response);  // Log the response for debugging
-            
-            if (response.message && response.message === "success") {
-                console.log("yes!!!")
-                location.reload();  // Reload the current page
-            }
-        }
-    });
-    
 
-});
-}
 
 
 </script>

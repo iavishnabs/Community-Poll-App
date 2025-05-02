@@ -39,7 +39,8 @@
     .card h1 {
       font-size: 1.8rem;
       color: #333;
-      margin-bottom: 24px;
+      margin-top:20px;
+      margin-bottom: 2px;
       font-weight: 600;
     }
 
@@ -76,12 +77,14 @@
 @media (max-width: 600px) {
   .card {
     padding: 15px 20px;
-   margin-left: 30px;
-   margin-right: 30px
+   margin-left: 50px;
+   margin-right: 50px
   }
 
   .card h1 {
     font-size: 1.5rem;
+    margin-bottom: 0;
+    margin-top: 10px;
   }
 
 
@@ -95,7 +98,7 @@
 
     <!-- Embed your existing Web Form here -->
     <div class="iframe-wrapper">
-      <iframe
+      <iframe style="border: 0; width: 100%; height:500px; " id="iframeResizer0" scrolling="no"
         src="{{ web_form_url }}"
         title="Join Community Form">
        
@@ -105,7 +108,6 @@
     <!-- Login link for existing users -->
     {% if frappe.form_dict.quest %}
     {% set current_url = "/" + doc.name + "?quest=" + frappe.form_dict.quest %}
-    
     <div class="login-link">
       Already have an account?
       <a href="/login?redirect-to={{ current_url | urlencode }}">Login</a>
