@@ -140,7 +140,7 @@ class CommunityPoll(WebsiteGenerator):
             context.is_poll_admin = "True"
             print("yessss")
             
-
+        context.no_cache = 1
         return context
 
     def after_insert(self):
