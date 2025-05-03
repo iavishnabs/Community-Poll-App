@@ -591,7 +591,6 @@
     {% endif %}
 
 </div>
-
 <div id="loading-section" class="text-center" style="display: none;">
   <p class="text-center">Please Wait a Moment..</p>
   <span id="countdown" class="text-center"> {{ poll_start_seconds if poll_start_seconds else 0 }}</span>
@@ -917,7 +916,7 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
         frappe.realtime.init();
         // Listen for next question URL and redirect users
         frappe.realtime.on('goto_next_question_event', (next_url) => {
-            console.log('Redirecting to:', next_url);
+            console.log('nex qstn event called!! Redirecting to:', next_url);
             if (first) first.style.display = "none";
             if (second) second.style.display = "none";
         
@@ -944,6 +943,7 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
         frappe.realtime.on('goto_cur_question_event', (cur_url) => {
           first.style.display = "none";
           second.style.display = "none";
+          console.log("current qstn event called!!",cur_url);
           if (loadingSection) loadingSection.style.display = "block";
           let secondsLeft = RedirectionSeconds;
             countdownEl.textContent = secondsLeft;
@@ -956,7 +956,13 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
                   clearInterval(interval);
                   if (loadingSection) loadingSection.style.display = "none";
                   countdownEl.style.display = "none"
-                  second.style.display = "block";
+                  if (second) {
+                    second.style.display = "block";
+                    console.log("qstn element is available");
+                    console.log("qstn element content:", second.innerHTML);
+                }
+                
+                 
                 
               }
           }, 1000);
@@ -964,6 +970,7 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
         
           frappe.realtime.on('result_publish_event', (data) => {
               if (data) {
+                console.log("result publish event called!!")
                   // Hide question and feedback immediately
                   if (second) second.style.display = 'none';
                   if (feedback_sec) feedback_sec.style.display = 'none';
@@ -1123,6 +1130,7 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
     const questionOwner = "{{ current_question.owner }}";
     const pollId = "{{ name }}";
     const user = "{{ frappe.session.user }}";
+    const viewss = "{{ viewss }}"
 
     var next_question_url = "{{ next_question_url }}"
     var is_poll_admin = "{{ is_poll_admin }}"
@@ -1347,7 +1355,8 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
           const firstEntry = leaderboard[0];
           let feedbackText = "🙁 No points recorded yet.";
           let feedbackTextCngrts = document.getElementById("point-feedback-congrts")
-          if (userEntry.value > 0) {
+          if (userEntry) {
+            if (userEntry.value > 0){
             const match = userEntry.formatted_name?.match(/user-profile\/(.*?)">/);
             const email = match ? match[1] : null;
             const firstMatch = firstEntry.formatted_name?.match(/user-profile\/(.*?)">/);
@@ -1359,6 +1368,7 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
               feedbackTextCngrts.innerHTML="🎉 Congrats!"
             }
           }
+        }
     
   
           const feedbackEl = document.getElementById("points-feedback");
