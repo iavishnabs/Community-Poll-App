@@ -1,0 +1,631 @@
+<head>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Document</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+      
+              body {
+                background-color: rgb(236, 233, 226) !important;
+                font-family: 'Segoe UI', sans-serif;
+                background-size: cover;
+                background-repeat: no-repeat;
+                margin: 0;
+                padding: 0;
+                height: 90vh;
+              }
+              
+             
+              .poll-section {
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  background: transparent;
+                  border-radius: 15px;
+                  padding: 40px 20px;
+                  flex-wrap: wrap;
+              }
+          
+              .instruction-side {
+                  flex: 1 1 40%;
+                  padding: 0px 30px;
+                  margin-top: 90px !important;
+              }
+          
+              .instruction-side h1 {
+                  font-size: 3rem;
+                  color: #880e0e;
+                  font-weight: bold;
+              }
+              .instruction-side h1 span{
+                  font-size: 2.2rem;
+                  font-weight: bold;
+                  
+                  color: rgb(15, 15, 15);
+              }
+              .poll-section h4{
+                  color: rgb(22, 22, 22);
+              }
+              .instruction-side p {
+                  font-size:15px;
+                  color: #111111;
+                  max-width: 90%;
+              }
+          
+              .timer {
+                  font-size: 2.5rem;
+                  font-weight: 700;
+                  margin-top: 20px;
+                  color: #880e0e;
+              }
+              
+              .image-side {
+                  flex: 1 1 55%;
+                  text-align: center;
+              }
+          
+              .poll-image {
+                  width: 100%;
+                  max-width: 650px;
+                  opacity: 0.95;
+                  filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
+                  transition: transform 0.4s ease;
+              }
+          
+              .poll-image:hover {
+                  transform: scale(1.02);
+              }
+              .qr-image {
+                  width: 300px;
+                  padding: 15px; /* Adds space inside the image container */
+                  border-radius: 20px; /* Makes the corners rounded */
+                  background-color: white; /* Optional: helps the padding show better */
+                  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow */
+              }
+              
+           
+      
+              .scan-qr-text{
+                  font-weight: 800;
+                  color: black;
+              }
+              .players{
+                  font-weight: 700;
+                  color: #000000;
+                  font-size: 25px;
+                  
+              }
+              .poll-options {
+                list-style: none;
+                padding: 0;
+                margin: 0 auto;
+            }
+        
+            .poll-option {
+                display: flex;
+                gap: 15px;
+                margin-bottom: 20px;
+                background-color: rgb(224, 219, 212) !important;
+                padding: 12px 16px;
+                border-radius: 18px;
+            }
+        
+            .poll-option input[type="radio"] {
+                margin-left: 8px;
+                accent-color: #1d1d1d;
+            }
+        
+            .poll-option label {
+                flex-grow: 1;
+                font-weight: bold;
+                color: #303030;
+                cursor: pointer;
+            }
+        
+            .poll-option div {
+                flex-grow: 1;
+                height: 8px;
+                background: #ffffff40;
+                border-radius: 4px;
+                overflow: hidden;
+            }
+        
+            .poll-option div > div {
+                height: 100%;
+                background: #ffffff80;
+            }
+              .qr-timer-message{
+                  border-radius: 6px;
+                  color: #000000 !important;
+                  margin-top: 170px;
+              }
+              .animated-message {
+                  display: inline-block;
+                  position: relative;
+                  font-family: 'Poppins', sans-serif;
+                  font-size: 28px;
+                  font-weight: 500;
+                  line-height: 1.6;
+                  color: #880e0e!important;
+                  animation: drift 4s ease-in-out infinite alternate;
+              }
+              
+              @keyframes drift {
+                  0% {
+                      transform: translate(0, 0);
+                  }
+                  100% {
+                      transform: translate(-10px, 10px);
+                  }
+              }
+          
+              @media (max-width: 768px) {
+                  .poll-section {
+                      flex-direction: column;
+                      text-align: center;
+                      height: 600px !important;
+            
+                  }
+                  .poll-image{
+                    margin-top:60px !important;
+                  }
+          
+                  .instruction-side {
+                    flex: 1 1 100%;  /* Make it take full width */
+                    padding: 0px 15px;  /* Reduce padding on smaller screens */
+                    margin-top: 0px !important; /* Adjust margin for better alignment */
+                }
+                
+                .instruction-side h1 {
+                    font-size: 20px; /* Reduce text size for better fit */
+                }
+            
+                .instruction-side h5 {
+                    font-size: 14px; /* Reduce text size for better fit */
+                }
+            
+                .instruction-side img {
+                   
+                    width: 100%; /* Ensure images take full width */
+                    height: auto;
+                }
+            
+                /* If there are two sections inside .instruction-side, use flex row */
+                .instruction-side {
+                    display: flex;
+                    flex-direction: column; /* Stack elements vertically on small screens */
+                }
+                  .qr-timer-message{
+                     font-size: 16px;
+                     margin-top: 100px;
+                  }
+              }
+              .poll-wrapper {
+                display: flex;
+                flex-direction: column;
+                
+              }
+            
+              .dashboard {
+                width: 100%;
+                margin: auto;
+                padding: 2rem;
+              }
+            
+              .dashboard-2col-qstn {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                background: transparent;
+                position: relative;
+                color: white;
+              }
+              .dashboard-2col {
+                  display: grid;
+                  grid-template-columns: 400px 800px; /* First column smaller, second bigger */
+                  gap: 2rem;
+                  justify-content: center; /* Center the whole grid nicely */
+                  width: 100%;
+                }
+                
+              .card-result, .card-leaderb {
+                box-sizing: border-box;
+                height: auto;
+              }
+                
+              /* Specific styles for Result card */
+              .card-result {
+                display: flex;
+                flex-direction: column; /* Arrange inside vertically */
+                max-width: 400px;
+                width: 100%;
+                background: #f9f9f9; /* optional, light background */
+                padding: 1rem; /* some padding inside */
+                border-radius: 8px; /* rounded corners */
+              }
+                /* Specific styles for Leaderboard card */
+                .card-leaderb {
+                max-width: 800px;
+                width: 100%;
+                background: #ffffff; /* optional */
+                padding: 1rem;
+                border-radius: 8px;
+              }
+                    
+              /* Inside .card-result, two sections: answer and chart */
+              .card-result-answer {
+                margin-bottom: 1rem; /* gap between answer and chart */
+                font-size: 1.2rem;
+                font-weight: bold;
+                padding: 20px 10px;
+              }
+              .card-result-answer .anss{
+                background: #cebf95;
+                color: #0f0f0f;
+                padding: 20px;
+              }
+              
+              .card-result-chart {
+                flex: 1; /* Chart takes remaining space */
+              }
+      
+              /* Tablet View (<= 1024px) */
+      @media (max-width: 1024px) {
+        .dashboard-2col {
+          grid-template-columns: 1fr; /* Single column layout */
+          gap: 1rem;
+          padding: 0 1rem;
+        }
+      
+        .card-result, .card-leaderb {
+          max-width: 100%;
+          width: 100%;
+          
+        }
+      }
+      
+        /* Mobile View (<= 768px) */
+        @media (max-width: 768px) {
+          .dashboard-2col {
+            grid-template-columns: 1fr;
+            min-height: 400px !important;
+            gap: 1rem;
+            padding: 0 1rem;
+          }
+      
+          .card-result-answer {
+            font-size: 1rem;
+            padding: 15px 8px;
+          }
+      
+          .card-result-answer .anss {
+            padding: 15px;
+          }
+        }
+      
+            #total-view-count {
+              top: 20px;
+              right: 20px;
+              font-weight: bold;
+              font-size: 1rem;
+              color: #0e0d0d;
+            }
+          
+            .card-qstn {
+              background: transparent !important;
+              box-shadow: none;
+              padding: 0px 16px 16px 16px;
+              box-shadow: 0.5 px 0.5px 10px black;
+            }
+            
+          
+            .title {
+              font-size: 1.3rem;
+              font-weight: 700;
+              margin-bottom: 10px;
+              color: #1f1f1f;
+              padding: 0px 30px;
+            }
+          
+            .poll-options {
+              list-style: none;
+              padding: 0;
+              margin: 0 auto;
+            }
+          
+            .poll-option {
+              display: flex;
+              gap: 15px;
+              margin-bottom: 20px;
+              background: rgba(255, 255, 255, 0.15);
+              padding: 12px 16px;
+              border-radius: 18px;
+            }
+          
+            .poll-option input[type="radio"] {
+              margin-left:8px;
+              accent-color: #1d1d1d;
+              background-color: rgb(241, 237, 224) !important;
+              
+            }
+      
+          
+            .poll-option label {
+              flex-grow: 1;
+              font-weight: bold;
+              color: #303030;
+              cursor: pointer;
+            }
+          
+            .poll-option div {
+              flex-grow: 1;
+              height: 8px;
+              background: #ffffff40;
+              border-radius: 4px;
+              overflow: hidden;
+            }
+          
+            .poll-option div > div {
+              height: 100%;
+              background: #ffffff80;
+            }
+            .optionn{
+                width:1080px;
+            }
+            #submit-vote-button {
+                display: none;
+              }
+      
+          
+            #submit-vote-button, #result-button ,.next-btnn, .next-btnn-start{
+              background: transparent;
+              color: #181818;
+              padding: 10px 24px;
+              margin-left:35px;
+              font-size: 16px;
+              font-weight: bold;
+              border-radius: 8px;
+              border:1px solid #8f8f8f;;
+              margin-top: 20px;
+              cursor: pointer;
+              transition: 0.3s;
+            }
+          
+            #submit-vote-button:hover, #result-button:hover , .next-btnn:hover, .next-btnn-start:hover{
+              background: #cebf95;
+              border-color: #af9c68;
+              ;
+            }
+            .next-btn-sec {
+                display: flex;
+                justify-content: right;
+                margin-top: 0.5rem; /* adds space above the button */
+              }
+              
+              .next-btnn , .next-btnn-start{
+                margin-top: 4px; 
+                padding: 10px 60px;
+              }
+              
+            /* QR Code Section */
+            .card-qr {
+              background: transparent;
+              margin: 1rem auto 0;
+              text-align: center;
+            }
+          
+            .card-qr img {
+              max-width: 250px;
+              height: auto;
+              border-radius: 12px;
+              box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+            }
+            
+            @media (max-width: 991px) {
+            
+              .poll-option input[type="radio"] {
+                margin-left: 8px;
+                width: 30px !important;
+                
+                accent-color: #1d1d1d;
+            }
+           
+              .dashboard-2col-qstn {
+                padding: 1.5rem;
+              }
+              .poll-options {
+                padding: 0 10px;
+              }
+              .title {
+                font-size: 1rem;
+                font-weight: 600;
+              }
+              .poll-option {
+                font-size: 0.8rem;
+                width: 600px;
+              }
+            
+              .next-btn-text {
+                  font-size: 15px;
+                  justify-content: center;
+                  text-align: center;
+                  font-weight: 600;
+                  margin-top: 200px;
+              }
+           
+          
+            }
+          
+            @media (min-width: 350px) and (max-width: 740px) {
+              .poll-option input[type="radio"] {
+                margin-left: 8px;
+                width: 90px !important;
+               
+                accent-color: #1d1d1d;
+            }
+              .next-btnn{
+              margin-right:20px;
+              padding: 8px 30px;
+              font-size: 14px;
+              }
+                .next-btn-sec{
+                  justify-content: center;
+                  align-items: center;
+                }
+              .dashboard-2col-qstn {
+                padding: 1.5rem;
+              }
+              .poll-options {
+                padding: 0 10px;
+              }
+              .title {
+                font-size: 1rem;
+                font-weight: 600;
+              }
+              .poll-option {
+                font-size: 0.8rem;
+                width: 210px;
+              }
+            
+            }
+            #poll-qr-sectionn {
+              display: none ; /* hide both initially */
+          }
+          .rules-label{
+            margin-top:50px;
+          }
+      
+          #loading-section {
+            
+            width: 100%;
+            height: 100%;
+            margin-top:30%;
+            
+            justify-content: center;
+            align-items: center;
+          }
+          #loading-section p {
+            color: #001225; /* Blue color */
+            font-weight: bold;
+          }
+        
+          #loading-section #countdown {
+            font-size: 5rem;
+            color: #880e0e; /* Blue color */
+            font-weight: bold;
+            
+          }
+        
+          @media (max-width: 768px) {
+            #loading-section #countdown {
+              font-size: 4rem;
+            }
+            #loading-section {
+              margin-top:30%;
+      
+            }
+            .card-qr{
+              display: none !important;
+            }
+          }
+        
+          @media (max-width: 480px) {
+            #loading-section #countdown {
+              font-size: 3rem;
+            }
+            #loading-section {
+              margin-top:30%;
+      
+            }
+            .card-qr{
+              display: none !important;
+            }
+          }
+      
+          </style>
+
+    
+    </head>
+    {% extends base_template %}
+    {% block page_content %}
+  
+  <body>
+    
+  
+    <div class="poll-section">    
+      <!-- Instruction and Timer -->
+    <div id="admin-section" style="display: none;">
+      <div class="instruction-side" id="qr-section">
+          <h1>Quick Quiz <br>
+              <span class="">Ready to Guess? </span>
+          </h1>
+          <img class="qr-image" src="{{pollqr}}" alt="qr">
+          <h5 class="mt-3 text-dark ml-3 scan-qr-text">SCAN THE QR FOR JOINING !</h5>
+         
+      </div>
+      <!-- Image Section -->
+      <div class="image-side" id="qr-section">
+          
+          <img src="/assets/antpoll/images/bgpoll.png" alt="Poll Image" class="poll-image">
+          <p class="players" id="total-view-count" style="color:black;font-size:22px;">PLAYERS : 0 </p>
+  
+          <button id="start-poll-button" class="next-btnn-start" >START</button>
+      </div>
+</div>
+  <div id="user-section" style="display: none;">
+    <h4 id="timer-message" class="qr-timer-message animated-message"><strong>Please wait,</strong> <br>starting the poll soon...
+        <br>
+    </h4>
+   
+    <img src="/assets/antpoll/images/bgpoll.png" alt="Poll Image" class="poll-image">
+   
+  </div>
+  </div>
+   
+  <div id="loading-section" class="text-center" style="display: none;">
+    <p class="text-center">Please Wait a Moment..</p>
+    <span id="countdown" class="text-center"> 0</span>
+  </div>
+
+
+
+
+  
+<script id="page-context" type="application/json">
+    {
+        "user": "{{ user }}",
+        "roles": {{ roles | tojson }},
+        "starttimer" :"{{ starttimer }}"
+    }
+    </script>
+    
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const contextData = JSON.parse(document.getElementById("page-context").textContent);
+    
+        console.log("User Context", contextData);
+    
+       
+        if (contextData.roles.includes("Poll Admin")) {
+            document.getElementById("admin-section").style.display = "flex";
+          } else {
+            document.getElementById("user-section").style.display = "flex";
+          }
+
+
+        // countdown timer value adding
+        if(contextData.starttimer){
+            document.getElementById("countdown").innerHTML = contextData.starttimer;
+        }
+        
+        
+        
+      });
+      </script>
+</body>
+</html>
+{% endblock %}

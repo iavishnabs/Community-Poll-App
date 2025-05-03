@@ -171,6 +171,12 @@ fixtures = [
   "filters": [
     ["role_profile", "in", ["Poll Master", "Poll User"]]
   ]
+},
+{
+  "doctype": "Energy Point Rule",
+  "filters": [
+    ["name", "in", ["Poll First Rule", "Poll Second Rule"]]
+  ]
 }
 
 ]

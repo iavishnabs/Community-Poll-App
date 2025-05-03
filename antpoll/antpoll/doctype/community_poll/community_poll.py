@@ -12,6 +12,7 @@ class CommunityPoll(WebsiteGenerator):
 
     website = frappe._dict(
         template="templates/generators/community_poll.html",
+        # template="templates/generators/polls.html",
         condition_field = "is_published",
         page_title_field = "title",
     )
@@ -27,13 +28,21 @@ class CommunityPoll(WebsiteGenerator):
         context.title = self.name
 
         context.pollqr = self.quest_qr
+        context.has_qr_shown = self.has_shown_qr
 
         # context.leaderboard = self.show_leaderboard
 
         settings = frappe.get_doc("Poll Settings", "Poll Settings") 
         if settings.default_leaderboard:
             context.show_leaderboard = "true"
-       
+            
+        context.instructions = settings.instructions
+        context.poll_start_duration = settings.poll_start_duration
+        poll_start_duration = frappe.db.get_single_value("Poll Settings", "poll_start_duration")  # returns timedelta
+
+        poll_start_seconds = int(poll_start_duration.total_seconds())
+        context.poll_start_seconds = poll_start_seconds
+            
         # questions = self.questions
         questions = self.questions or []
         if not questions:
@@ -56,6 +65,7 @@ class CommunityPoll(WebsiteGenerator):
             if qrs.question == quest_param:
                 context.qrcodes = qrs.qr
                 context.qstn_status = qrs.qst_status
+                context.viewss = qrs.total_view
         
 
         context.options = current_question.options
@@ -120,11 +130,17 @@ class CommunityPoll(WebsiteGenerator):
             context.next_question_url = f"?quest={next_question_text}"
         else:
             context.next_question_url = None
+
         user = frappe.session.user  # Current logged-in user
         
         roles = frappe.get_roles(user)
+        context.roles = roles  
+        context.user = user
         if "Poll Admin" in roles:
             context.is_poll_admin = "True"
+            print("yessss")
+            
+        context.no_cache = 1
         return context
 
     def after_insert(self):
@@ -213,10 +229,12 @@ class CommunityPoll(WebsiteGenerator):
 
 @frappe.whitelist(allow_guest=True)
 def get_total_views(q_name,poll_id):
+    print("\n\n\nview count method called\n\n")
     poll_doc = frappe.get_doc("Community Poll", poll_id)
     for qrs in poll_doc.questions:
         if qrs.question == q_name:
             total_views = qrs.total_view
+            print(":::::",total_views,"::::::::::")
             return total_views if total_views else 0
 
 @frappe.whitelist()
@@ -282,12 +300,13 @@ def cast_vote(poll_id, qst_id, option_name):
         next_question_name = questions[current_index + 1].question
 
     return {
-        "VoteMsg": "Thank you for voting!",
+        "VoteMsg": "Thanks for participating!",
         "next_question": next_question_name  # None if no more questions
     }
 
 @frappe.whitelist()
 def question_result_show(poll_id,qst_id):
+   
     poll = frappe.get_doc("Community Poll", poll_id)
     print(poll)
     question = []
@@ -296,7 +315,9 @@ def question_result_show(poll_id,qst_id):
             print(qst_id)
             i.qst_status = "Closed"
             i.save()
-    return "success"
+
+    frappe.publish_realtime('result_publish_event', poll_id)
+    return {"message": "success"}
 
 @frappe.whitelist()
 def track_poll_question_view(question_name,poll_id):
@@ -315,11 +336,13 @@ def track_poll_question_view(question_name,poll_id):
 
                 for question in poll_doc.questions:
                     if question.question == question_name:
-                        question.total_view = (question.total_view or 0) + 1
+                        new_view = (question.total_view or 0) + 1
                         break
-
-                poll_doc.save(ignore_permissions=True)
-                frappe.db.commit()
+                    
+                frappe.db.set_value("Question Items",question.name,"total_view",new_view)
+                frappe.publish_realtime("view_count_updated",message={"question": question_name, "poll_id": poll_id})
+                print("called")
+                return {"question": question_name, "poll_id": poll_id}
 
 
 @frappe.whitelist()
@@ -358,23 +381,22 @@ def get_option_vote_data(poll_id, question_name):
 
 
 
-@frappe.whitelist()
-def next_question(poll_id, next_question_url):
-    # Log for debug
-    frappe.logger().info(f"Poll ID: {poll_id}, Next Question URL: {next_question_url}")
-
-    # Publish real-time event to all users (you can filter by room/channel if needed)
-    frappe.publish_realtime(
-        event='show_next_question_url',
-        message={'url': next_question_url},
-        user=None  # Send to all users
-    )
-
-    return {
-        "status": "success",
-        "debug_url": next_question_url
-    }
 
 @frappe.whitelist()
-def my_backend_method():
-    frappe.publish_realtime('my_event', {'message': 'Hello from backend!'})
+def send_custom_notification(message):
+    
+    # Broadcast message to all connected clients
+    frappe.publish_realtime('my_custom_event', message)
+    return {"status": "success"}
+
+@frappe.whitelist()
+def send_next_question_url(next_url):
+    # Broadcast the next URL to all connected clients
+    frappe.publish_realtime('goto_next_question_event', next_url)
+    return {"status": "success", "url": next_url}
+
+@frappe.whitelist()
+def  send_cur_question_url(cur_url,poll_id):
+    frappe.publish_realtime('goto_cur_question_event', cur_url)
+    frappe.db.set_value("Community Poll", poll_id, "has_shown_qr", True)
+    return {"status": "success", "url": cur_url}

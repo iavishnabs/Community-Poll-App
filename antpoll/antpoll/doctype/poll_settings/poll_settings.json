@@ -7,8 +7,11 @@
  "field_order": [
   "poll_management_section",
   "clear_all_polls",
+  "column_break_xsfs",
+  "poll_start_duration",
+  "poll_instructions_section",
+  "instructions",
   "poll_answer_config",
-  "multi_correct_choices",
   "default_leaderboard"
  ],
  "fields": [
@@ -25,14 +28,6 @@
    "label": "Poll Management"
   },
   {
-   "default": "0",
-   "description": "Allow users to select more than one answer option.",
-   "fieldname": "multi_correct_choices",
-   "fieldtype": "Check",
-   "hidden": 1,
-   "label": "Allow Multiple Selections"
-  },
-  {
    "fieldname": "poll_answer_config",
    "fieldtype": "Section Break",
    "label": "Poll Answer Configuration"
@@ -43,13 +38,32 @@
    "fieldname": "default_leaderboard",
    "fieldtype": "Check",
    "label": "Enable Default Leaderboard"
+  },
+  {
+   "fieldname": "poll_instructions_section",
+   "fieldtype": "Section Break",
+   "label": "Poll Instructions"
+  },
+  {
+   "fieldname": "instructions",
+   "fieldtype": "Text Editor",
+   "label": "Instructions"
+  },
+  {
+   "fieldname": "column_break_xsfs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "poll_start_duration",
+   "fieldtype": "Time",
+   "label": "Poll Start Duration"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-04-29 09:21:27.206187",
- "modified_by": "Administrator",
+ "modified": "2025-05-01 20:27:07.347901",
+ "modified_by": "avishna@gmail.com",
  "module": "antPoll",
  "name": "Poll Settings",
  "owner": "Administrator",

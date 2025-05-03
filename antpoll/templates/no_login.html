@@ -14,10 +14,18 @@
       width:100%; height:100%;
       font-family: 'Poppins', sans-serif;
     }
+    
+
     body {
-      background: linear-gradient(135deg, #9b5de5 0%, #00bbf9 100%);
+      background-image: url("/assets/antpoll/images/svgbg.svg") !important;
+      font-family: 'Segoe UI', sans-serif;
+      background-size: cover;
+      background-repeat: no-repeat;
+      margin: 0;
+      padding: 0;
       display: flex; align-items: center; justify-content: center;
     }
+    
 
     /* Card wrapper */
     .card {
@@ -31,7 +39,8 @@
     .card h1 {
       font-size: 1.8rem;
       color: #333;
-      margin-bottom: 24px;
+      margin-top:20px;
+      margin-bottom: 2px;
       font-weight: 600;
     }
 
@@ -42,6 +51,8 @@
       overflow: hidden;
     }
     .iframe-wrapper iframe {
+      scrollbar-width: none;
+      overflow-y: hidden;
       width: 100%;
       height: 500px;  /* adjust if your form is taller */
       border: none;
@@ -60,6 +71,24 @@
     .login-link a:hover {
       text-decoration: underline;
     }
+   
+    
+    /* Responsive adjustments */
+@media (max-width: 600px) {
+  .card {
+    padding: 15px 20px;
+   margin-left: 50px;
+   margin-right: 50px
+  }
+
+  .card h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0;
+    margin-top: 10px;
+  }
+
+
+}
   </style>
 </head>
 <body>
@@ -69,16 +98,16 @@
 
     <!-- Embed your existing Web Form here -->
     <div class="iframe-wrapper">
-      <iframe
+      <iframe style="border: 0; width: 100%; height:500px; " id="iframeResizer0" scrolling="no"
         src="{{ web_form_url }}"
         title="Join Community Form">
+       
       </iframe>
     </div>
 
     <!-- Login link for existing users -->
     {% if frappe.form_dict.quest %}
     {% set current_url = "/" + doc.name + "?quest=" + frappe.form_dict.quest %}
-    
     <div class="login-link">
       Already have an account?
       <a href="/login?redirect-to={{ current_url | urlencode }}">Login</a>
@@ -106,12 +135,15 @@
           const quest = params.get('quest');
           const redirectTo = currentPath + (quest ? '?quest=' + encodeURIComponent(quest) : '');
           window.location.href = redirectTo;
+          console.log(data.message);
+          console.log("logged!!",redirectTo);
         } else {
           setTimeout(checkLoginAndRedirect, 500);
+          console.log("still guest");
         }
       })
       .catch(() => {
-        setTimeout(checkLoginAndRedirect, 1000);
+        setTimeout(checkLoginAndRedirect, 500);
       });
     }
   </script>

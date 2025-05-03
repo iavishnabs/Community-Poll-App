@@ -1,0 +1,38 @@
+[
+ {
+  "apply_only_once": 0,
+  "condition": "doc.is_correct and doc.is_first",
+  "docstatus": 0,
+  "doctype": "Energy Point Rule",
+  "enabled": 1,
+  "field_to_check": null,
+  "for_assigned_users": 0,
+  "for_doc_event": "Custom",
+  "max_points": 0,
+  "modified": "2025-05-02 01:00:05.966782",
+  "multiplier_field": null,
+  "name": "Poll First Rule",
+  "points": 10,
+  "reference_doctype": "Poll Vote",
+  "rule_name": "Poll First Rule",
+  "user_field": "user"
+ },
+ {
+  "apply_only_once": 0,
+  "condition": "doc.is_correct",
+  "docstatus": 0,
+  "doctype": "Energy Point Rule",
+  "enabled": 1,
+  "field_to_check": null,
+  "for_assigned_users": 0,
+  "for_doc_event": "Custom",
+  "max_points": 0,
+  "modified": "2025-05-02 00:59:46.119543",
+  "multiplier_field": null,
+  "name": "Poll Second Rule",
+  "points": 5,
+  "reference_doctype": "Poll Vote",
+  "rule_name": "Poll Second Rule",
+  "user_field": "user"
+ }
+]
