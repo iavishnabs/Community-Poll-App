@@ -300,7 +300,7 @@ def cast_vote(poll_id, qst_id, option_name):
         next_question_name = questions[current_index + 1].question
 
     return {
-        "VoteMsg": "Thank you for voting!",
+        "VoteMsg": "Thanks for participating!",
         "next_question": next_question_name  # None if no more questions
     }
 

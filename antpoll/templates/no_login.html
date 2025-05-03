@@ -135,12 +135,15 @@
           const quest = params.get('quest');
           const redirectTo = currentPath + (quest ? '?quest=' + encodeURIComponent(quest) : '');
           window.location.href = redirectTo;
+          console.log(data.message);
+          console.log("logged!!",redirectTo);
         } else {
           setTimeout(checkLoginAndRedirect, 500);
+          console.log("still guest");
         }
       })
       .catch(() => {
-        setTimeout(checkLoginAndRedirect, 1000);
+        setTimeout(checkLoginAndRedirect, 500);
       });
     }
   </script>
