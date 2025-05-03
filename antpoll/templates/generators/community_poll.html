@@ -582,7 +582,8 @@
 
        
     </div>
-    {% else %}
+    {% endif %}
+    {% if is_poll_admin !="True"  %}
     <h4 id="timer-message" class="qr-timer-message animated-message"><strong>Please wait,</strong> <br>starting the poll soon...
         <br>
     </h4>
@@ -879,13 +880,7 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
   
   {% endif %}
 
-  {% if poll_status == "Closed" %}
-  <div style="margin-top: 20px; text-align: center; padding: 25px; border-radius: 10px; max-width: 600px; margin-left: auto; margin-right: auto;">
-    <p style="font-size: 1.1rem; font-weight: 600; color: #000000; margin: 0;">
-      Thank You For Participating!
-    </p>
-  </div>
-{% endif %}
+ 
 
 <!-- right after your Chart.js import, or anywhere in <head> before your inline scripts -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.min.js"></script>
@@ -898,7 +893,6 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
       const hasShownQR = "{{ has_shown_qr }}"
       const pollId = "{{ name }}";
       const RedirectionSeconds = "{{poll_start_seconds}}"
-
       const loadingSection = document.getElementById("loading-section");
 
       const first = document.getElementById("poll-qr-sectionn")
@@ -907,16 +901,14 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
       const nextbtn = document.getElementById('goto_next_qstn')
       const countdownEl = document.getElementById("countdown");
       const resbtn = document.getElementById("result-button");
-
       const feedback_sec = document.getElementById("points-feedback-section");
-
 
       frappe.ready(() => {
         
         frappe.realtime.init();
         // Listen for next question URL and redirect users
         frappe.realtime.on('goto_next_question_event', (next_url) => {
-            console.log('nex qstn event called!! Redirecting to:', next_url);
+            console.log('nex qstn event called!! ', next_url);
             if (first) first.style.display = "none";
             if (second) second.style.display = "none";
         
@@ -936,6 +928,7 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
                     if (loadingSection) loadingSection.style.display = "none";
                     countdownEl.style.display = "none"
                     window.location.href = next_url;  // Redirect after countdown
+                    console.log("redirected to next qstn",next_url)
                 }
             }, 1000);
            
@@ -994,9 +987,11 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
                       countdownEl.style.display = "none";
                       
                       if (is_poll_admin != "True") {
+                        console.log("points publish to users")
                       if (feedback_sec) feedback_sec.style.display = 'block';
                         location.reload();  
                       }else{
+                        console.log("result charts publish to admin page")
                         const resultgraph = document.getElementById("dashboard-2col")
                         resultgraph.style.display = "block";
                         location.reload();  
@@ -1005,9 +1000,9 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
               }, 1000);
               }
           });
-        
 
-            frappe.realtime.on('view_count_updated', (data) => {
+          frappe.realtime.on('view_count_updated', (data) => {
+              console.log("view count event called!!")
               const { question, poll_id } = data
               frappe.call({
                 method: "antpoll.antpoll.doctype.community_poll.community_poll.get_total_views",   // Change this to your method path
@@ -1017,21 +1012,21 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
                 },
                 callback: function(response) {
                     if (response.message !== undefined) {
+                      console.log("response",response.message)
                         document.getElementById('total-view-count').innerText = "PLAYERS: " + response.message;  
                         document.getElementById('total-view-count-qst').innerText = "PLAYERS: " + response.message;
+                    }else{
+                      console.log("undefined view count")
                     }
                 }
             });
-
           }); 
-
-
 
         // Admin-only section
         if (is_poll_admin == "True") {
-
           if(resbtn){
             resbtn.addEventListener("click", () => {   
+              console.log("result show button clicked!!")
               let pollId = "{{ name }}";
               let questId = "{{ current_question.name }}";
           
@@ -1046,18 +1041,17 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
                       console.log("Response:", response);  // Log the response for debugging
                       
                       if (response.message && response.message === "success") {
-                          console.log("yes!!!")
+                          console.log("results true!")
                           location.reload();  // Reload the current page
                       }
                   }
               });
-              
-          
           });
-          }
+        }
 
           document.getElementById('start-poll-button').addEventListener('click', () => {
             const curQuest = curQuest_url;
+            console.log("start button clicked!! cur qst url: ",curQuest)
             if(curQuest){
               frappe.call({
                 method: 'antpoll.antpoll.doctype.community_poll.community_poll.send_cur_question_url',
@@ -1067,12 +1061,12 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
                 },
                 callback: function (r) {
                     if (r.message.status === "success") {
-                        console.log("yess")
+                        console.log("start button retun success")
                        
                     }
                 },
                 error: function (err) {
-                    frappe.msgprint("Error broadcasting next question URL.");
+                    frappe.msgprint("Error broadcasting cur question URL.");
                 }
             });
             }
@@ -1081,6 +1075,7 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
           if(nextbtn){
             nextbtn.addEventListener('click', () => {
                 const nextUrl = next_question_url;
+                console.log("next button clicked!! next qstn url: ",nextUrl)
                 if (nextUrl) {
                     frappe.call({
                         method: 'antpoll.antpoll.doctype.community_poll.community_poll.send_next_question_url',
@@ -1089,7 +1084,7 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
                         },
                         callback: function (r) {
                             if (r.message.status === "success") {
-                                console.log("yess")
+                                console.log("next btn return true!!")
                                
                             }
                         },
@@ -1100,24 +1095,6 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
                 } 
         });
       }
-      
-      function refreshViewCount() {
-        alert("refresh starts!!!!")
-        frappe.call({
-            method: "antpoll.antpoll.doctype.community_poll.community_poll.get_total_views",   // Change this to your method path
-            args: {
-                q_name: questionName,
-                poll_id: pollId
-            },
-            callback: function(response) {
-                if (response.message !== undefined) {
-                    document.getElementById('total-view-count').innerText = "PLAYERS: " + response.message;  
-                    document.getElementById('total-view-count-qst').innerText = "PLAYERS: " + response.message;
-                }
-            }
-        });
-    }
-
 
     }
     
@@ -1125,6 +1102,7 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
   
 
     document.addEventListener("DOMContentLoaded", function () {
+      
     const questionName = "{{ current_question.name }}";
     const currentUser = "{{ frappe.session.user }}";
     const questionOwner = "{{ current_question.owner }}";
@@ -1146,15 +1124,20 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
       const nextbtn = document.getElementById('goto_next_qstn')
       const countdownEl = document.getElementById("countdown");
       const resbtn = document.getElementById("result-button");
+      var qstnstatus = "{{ qstn_status }}"
 
       const feedback_sec = document.getElementById("points-feedback-section");
-    
-
+      console.log("DOM started with elements and variables:", {questionName,
+        currentUser,questionOwner,pollId,user,viewss,next_question_url,
+        is_poll_admin,curQuest_url,hasShownQR,RedirectionSeconds,loadingSection,
+        first,second,starts,nextbtn,countdownEl,resbtn,feedback_sec, qstnstatus});
 
     if (hasShownQR === "1") {
+      console.log("qr code shown! true!!")
         if (first) first.style.display = "none";
         if (second) second.style.display = "block";
     } else {
+      console.log("qr code not shown!!")
         if (first) first.style.display = "flex";
         if (second) second.style.display = "none";
     }
@@ -1236,7 +1219,7 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
 
     // Function to check if user has already voted
    function checkIfUserHasVoted() {
-    console.log("calling check method!!!!!")
+    console.log("calling  user voted check method!!!!!")
     frappe.call({
         method: "antpoll.antpoll.doctype.community_poll.community_poll.has_user_voted",
         args: {
@@ -1246,6 +1229,7 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
         },
         callback: function (response) {
             if (response.message && response.message.has_voted) {
+                console.log("current user is voted to this question as in response")
                 // If user has voted, hide radio buttons and the submit button
                 document.querySelectorAll('input[type="radio"]').forEach(function (radio) {
                     radio.style.display = "none"; // Hide all radio buttons
@@ -1261,10 +1245,6 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
     checkIfUserHasVoted();
     }
 
-    
-   // First hide the button
-   // document.getElementById("submit-vote-button").style.display = "none";
-
     // Attach event to all radio buttons
     document.querySelectorAll('input[name="selected_option"]').forEach(function (radio) {
         radio.addEventListener("change", function () {
@@ -1279,17 +1259,17 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
 
     if (is_poll_admin != "True") {
     // Submit vote logic
-  document.getElementById("submit-vote-button").addEventListener("click", function () {
+    document.getElementById("submit-vote-button").addEventListener("click", function () {
       let selectedOption = document.querySelector('input[name="selected_option"]:checked');
       let pollId = "{{ name }}";
       let questId = "{{ current_question.name }}";
       let user = "{{ frappe.session.user }}";
 
+      console.log("submit vote clicked!! for",pollId,questId,"by ",user)
       if (!selectedOption) {
           alert("Please select an option to vote.");
           return;
       }
-
       let optionName = selectedOption.value;
 
       frappe.call({
@@ -1305,11 +1285,12 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
                   const data = response.message;
                   const voteMsg = data.VoteMsg;
                   // Show the "Thank you" message (custom toast) upon successful vote
+                  console.log(voteMsg)
                   showCustomToast(voteMsg);
               } else {
                   // Log and show an error message if something went wrong
                   console.error("Error in response:", response);
-                  alert("Something went wrong, please try again.");
+                  console("Something went wrong, please try again.");
               }
           }
       });
@@ -1333,17 +1314,18 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
     
       const url = `/api/method/frappe.desk.leaderboard.get_energy_point_leaderboard`
                 + `?date_range=["${todayStr}","${todayStr}"]`;
-    
+      console.log("leader board func called! with",currentUser)
       try {
         const response = await fetch(url);
     
         if (!response.ok) {
+          console.log("leaderboard api response failed", response.status)
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
     
         const result = await response.json();
         const leaderboard = result.message || [];
-    
+        console.log(leaderboard)
         if (Array.isArray(leaderboard)) {
           const userEntry = leaderboard.find(entry => {
             const match = entry.formatted_name?.match(/user-profile\/(.*?)">/);
@@ -1356,14 +1338,16 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
           let feedbackText = "🙁 No points recorded yet.";
           let feedbackTextCngrts = document.getElementById("point-feedback-congrts")
           if (userEntry) {
+            console.log("have user energy point")
             if (userEntry.value > 0){
+              console.log("user has points greater than zero")
             const match = userEntry.formatted_name?.match(/user-profile\/(.*?)">/);
             const email = match ? match[1] : null;
             const firstMatch = firstEntry.formatted_name?.match(/user-profile\/(.*?)">/);
             const firstEmail = firstMatch ? firstMatch[1] : null;
     
             if (email === firstEmail) {
-              
+              console.log("user email mateched with leaderboard user")
               feedbackText = `🏆 You earned <strong>${userEntry.value}</strong> points!`;
               feedbackTextCngrts.innerHTML="🎉 Congrats!"
             }
@@ -1373,21 +1357,22 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
   
           const feedbackEl = document.getElementById("points-feedback");
           if (feedbackEl) {
+            console.log("feedback field available!!")
             feedbackEl.innerHTML = feedbackText;
             document.getElementById("points-feedback-section").style.display = "block";
             document.getElementById("card-qstn").style.display = "none";
           }
         } else {
-          console.warn("Leaderboard is not an array:", leaderboard);
+          console.log("Leaderboard is not an array:", leaderboard);
         }
       } catch (err) {
-        console.error("Failed to load leaderboard points:", err.message);
+        console.log("Failed to load leaderboard points:", err.message);
       }
     }
     
-
+if(qstnstatus === "Closed"){
     loadUserPointsStatus()
-
+}
     });
 
 
