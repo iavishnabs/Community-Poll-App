@@ -35,13 +35,13 @@ class CommunityPoll(WebsiteGenerator):
         settings = frappe.get_doc("Poll Settings", "Poll Settings") 
         if settings.default_leaderboard:
             context.show_leaderboard = "true"
-            context.instructions = settings.instructions
-            context.poll_start_duration = settings.poll_start_duration
-            poll_start_duration = frappe.db.get_single_value("Poll Settings", "poll_start_duration")  # returns timedelta
+            
+        context.instructions = settings.instructions
+        context.poll_start_duration = settings.poll_start_duration
+        poll_start_duration = frappe.db.get_single_value("Poll Settings", "poll_start_duration")  # returns timedelta
 
-            poll_start_seconds = int(poll_start_duration.total_seconds())
-
-            context.poll_start_seconds = poll_start_seconds
+        poll_start_seconds = int(poll_start_duration.total_seconds())
+        context.poll_start_seconds = poll_start_seconds
             
         # questions = self.questions
         questions = self.questions or []
@@ -130,11 +130,17 @@ class CommunityPoll(WebsiteGenerator):
             context.next_question_url = f"?quest={next_question_text}"
         else:
             context.next_question_url = None
+
         user = frappe.session.user  # Current logged-in user
         
         roles = frappe.get_roles(user)
+        context.roles = roles  
+        context.user = user
         if "Poll Admin" in roles:
             context.is_poll_admin = "True"
+            print("yessss")
+            
+
         return context
 
     def after_insert(self):
