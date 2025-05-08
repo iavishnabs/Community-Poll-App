@@ -1,3 +1,7 @@
+# Copyright (c) 2025, anthertech and contributors
+# For license information, please see license.txt
+
+
 from datetime import timedelta
 import frappe
 from frappe.website.website_generator import WebsiteGenerator 

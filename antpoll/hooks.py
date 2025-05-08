@@ -1,8 +1,8 @@
 app_name = "antpoll"
 app_title = "antPoll"
-app_publisher = "avishna"
+app_publisher = "anthertech"
 app_description = "Poll App"
-app_email = "avishna@gmail.com"
+app_email = "anther.tech"
 app_license = "mit"
 
 # Apps
