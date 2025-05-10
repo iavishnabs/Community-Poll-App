@@ -123,10 +123,7 @@
           border-radius: 18px;
       }
   
-      .poll-option input[type="radio"] {
-          margin-left: 8px;
-          accent-color: #1d1d1d;
-      }
+     
   
       .poll-option label {
           flex-grow: 1;
@@ -344,13 +341,6 @@
         border-radius: 18px;
       }
     
-      .poll-option input[type="radio"] {
-        margin-left:8px;
-        accent-color: #1d1d1d;
-        background-color: rgb(241, 237, 224) !important;
-        
-      }
-
     
       .poll-option label {
         flex-grow: 1;
@@ -424,14 +414,7 @@
       }
       
       @media (max-width: 991px) {
-      
-        .poll-option input[type="radio"] {
-          margin-left: 8px;
-          width: 30px !important;
-          
-          accent-color: #1d1d1d;
-      }
-     
+
         .dashboard-2col-qstn {
           padding: 1.5rem;
         }
@@ -459,12 +442,7 @@
       }
     
       @media (min-width: 350px) and (max-width: 740px) {
-        .poll-option input[type="radio"] {
-          margin-left: 8px;
-          width: 90px !important;
-         
-          accent-color: #1d1d1d;
-      }
+      
         .next-btnn{
         margin-right:20px;
         padding: 8px 30px;
@@ -610,22 +588,36 @@
     {% endif %}
     <!-- QR Code Card -->
     {% if frappe.form_dict.quest %}
-          
+    {% if qstn_status == "Open" %}
   <!-- Existing Question Card -->
     <div class="card card-qstn" id="card-qstn"> 
       <h4 id="message-box"></h4>
       <div class="title" style="margin-bottom: 30px;">Q: {{ current_question.question }} </div>
-      <ul class="poll-options">
-              {% for opt in options %}
-              <li class="poll-option" style="display: flex;  gap: 15px; margin-bottom: 10px ;">                
-                  <input class="form-check-input" type="radio" id="option{{ loop.index }}" name="selected_option"  value="{{ opt.option }}" required>
-                  <label for="option{{ loop.index }}" class="optionn form-check-label" style=" font-weight: bold;">
-                      {{ opt.option }}
-                  </label>
-                                
-              </li>
-              {% endfor %}
-          </ul>
+
+      <div id="qstntimersection" style="display: none; color:black;">
+        <p>Qstn Ends in <span id="qstn-seconds">15</span> Seconds</p>
+      </div>
+   
+      <ul class="poll-options d-flex flex-column gap-3 mt-3" style="list-style: none; padding-left: 0;">
+        {% for opt in options %}
+        <li class="poll-option" style="margin-bottom: 10px;">
+            <label for="option{{ loop.index }}" 
+                   class="rounded-pill px-4  d-flex align-items-center gap-3 optionn form-check-label"
+                   style="cursor: pointer; transition: all 0.2s ease; background:transparent; font-weight: bold;">
+                
+                  {% if is_poll_admin != "True"  %}
+                <input class="form-check-input m-0" type="radio" 
+                       id="option{{ loop.index }}" 
+                       name="selected_option" 
+                       value="{{ opt.option }}" 
+                       required>
+                {% endif %}
+                <span>{{ opt.option }}</span>
+            </label>
+        </li>
+        {% endfor %}
+    </ul>
+    
        {% if is_poll_admin != "True" %}
         <button type="button" id="submit-vote-button" style="padding: 8px 20px; cursor: pointer; width:100px" class="submit-button">
           Submit
@@ -640,22 +632,11 @@
     
       {% endif %}
     </div>
+    {% endif %}
 
-    {% if is_poll_admin !="True" and qstn_status == "Closed"%}
-    <div id="points-feedback-section"
-    style="display: none; text-align: center; margin-top:20% !important;  margin-left: auto; margin-right: auto;">
 
- <p id="points-feedback"
-    style="font-size: 1.5rem; font-weight: 700; color: #1a202c;">
-   🎯 Loading your points...
- </p>
 
- <p id="point-feedback-congrts" style="font-size: 1.25rem; color: #2f855a; font-weight: 500;">
-   
- </p>
 
-</div>
-{% endif %}
     {% if is_poll_admin == "True" %}
    <div class="card card-qr">
     <img src="{{ pollqr }}" alt="{{ pollqr }}" style="width: 100%; max-width: 300px; height: auto; margin: auto;">
@@ -666,219 +647,329 @@
   {% endif %}
     <!-- Donut and Leaderboard Section -->
 
+
     
-    <div class="dashboard-2col" id="dashboard-2col" style="margin-top:100px;">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-      <!-- Results Breakdown -->
-      {% if qstn_status == "Closed" and is_poll_admin == "True"  %}
-      <div class="card card-result">
-        <div class="card-result-answer">
-            <!-- Selected Answer goes here -->
-            Answer:
-            <div class="anss"> 
-                {{ answer }}
-            </div>
+
+    {% if qstn_status == "Closed" and is_poll_admin == "True" and is_shown_leaderboard != 1 %}
+    <div class="card shadow-sm rounded-4" style="background: transparent;border-radius: 15px; margin-top:50px;">
+      <div class="card-header text-white rounded-top-4 py-3" id="qstn-name">
+        <h5 class="mb-0">{{ current_question.question }}</h5>
+    </div>
+      <!-- ADMIN RESULT SCREEN -->
+      <div id="admin-results">
+        <div>
+          <p class="mt-3" style="color:black; text-align:left; padding-left:29px; font-size:17px;">
+            ✅ <strong>{{ answer }}</strong>
+          </p>
+        </div>
+        <div  style="background: transparent; padding: 20px; border:none;">
+          <div class="card-result-chart" style="width: 100%; height: auto;">
+            <canvas id="pollChart" style="width: 100%; height: 100%;"></canvas>
           </div>
-          <div class="card-result-chart">
-      
-        <canvas id="donutChart" width="" height=""></canvas>
+        </div>
       </div>
-     </div>
-    <script>
-    const ctxDonut = document.getElementById('donutChart').getContext('2d');
-      const donutChart = new Chart(ctxDonut, {
-        type: 'doughnut',
+     
+
+    <div class="next-btn-sec text-center justify-content-center" style="padding: 20px 0px 50px 0px;">
+      <button id="goto_leaderboard" class="next-btnn" >Leaderboard</button>
+    </div>
+      <!-- Chart.js Scripts -->
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const ctx = document.getElementById('pollChart').getContext('2d');
+      
+          const pollChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: [
+                {% for opt in optionsss %}
+                  "{{ opt.option }}"{% if not loop.last %},{% endif %}
+                {% endfor %}
+              ],
+              datasets: [{
+                data: [
+                  {% for opt in optionsss %}
+                    {{ opt.percent }}{% if not loop.last %},{% endif %}
+                  {% endfor %}
+                ],
+                backgroundColor: [
+                  "#00C49F", "#FF6B6B", "#8884D8", "#FFB6C1", "#FFD700",
+                  "#82ca9d", "#a29bfe", "#fab1a0", "#fdcb6e", "#55efc4"
+                ],
+                borderRadius: 8,
+                barThickness: 70
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  callbacks: {
+                    label: context => context.raw + '%',
+                  }
+                },
+                datalabels: {
+                  labels: {
+                    topLabel: {
+                      anchor: 'end',
+                      align: 'top',
+                      font: {
+                        size: 14,
+                        weight: 'bold'
+                      },
+                      color: '#000',
+                      formatter: function (value, context) {
+                        const voteCounts = [
+                          {% for opt in optionsss %}
+                            {{ opt.votes }}{% if not loop.last %}, {% endif %}
+                          {% endfor %}
+                        ];
+                        const voteCount = voteCounts[context.dataIndex];
+                        return voteCount + (voteCount === 1 ? ' vote' : ' votes');
+                      }
+                    },
+                    centerLabel: {
+                      anchor: 'center',
+                      align: 'center',
+                      font: {
+                        size: 14,
+                        weight: 'bold'
+                      },
+                      color: '#fff',
+                      formatter: function (value, context) {
+                        const voteCounts = [
+                          {% for opt in optionsss %}
+                            {{ opt.votes }}{% if not loop.last %}, {% endif %}
+                          {% endfor %}
+                        ];
+                        const voteCount = voteCounts[context.dataIndex];
+                        return voteCount > 0 ? voteCount + (voteCount === 1 ? ' vote' : ' votes') : '';
+                      }
+                    }
+                  }
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  ticks: {
+                    display: false
+                  },
+                  grid: {
+                    display: false,
+                    drawBorder: false
+                  }
+                },
+                x: {
+                  ticks: {
+                    font: {
+                      size: 14,
+                      weight: 'bold'
+                    }
+                  },
+                  grid: {
+                    display: false
+                  }
+                }
+              }
+            },
+            plugins: [ChartDataLabels]
+          });
+        });
+      </script>
+    </div>
+    
+{% endif %}
+
+    {% if qstn_status == "Closed" and is_poll_admin != "True" and is_shown_leaderboard != 1  %}
+    <div class="card shadow-sm rounded-4" style="background: transparent;border-radius: 15px; margin-top:50px;" id="user-result">
+      <div class="card-header text-white rounded-top-4 py-3" id="qstn-name">
+        <h5 class="mb-0">{{ current_question.question }}</h5>
+    </div>
+      <!--user results-->
+      <div id="user-results" class="container text-center mt-5 mb-5" style="  border-radius: 10px; padding: 20px; max-width: 500px; margin: 0 auto;">
+        <h3 class="mb-3" style="color: #343a40;">Result</h3>
+        {% if user_result_status == "correct" %}
+        <p class="lead" style="font-size: 1.2rem; color: black;">✅🎉 Correct answer!</p>
+    {% elif user_result_status == "incorrect" %}
+        <p class="lead" style="font-size: 1.2rem; color: black;">❌😔 Incorrect answer</p>
+    {% else %}
+        <p class="lead" style="font-size: 1.2rem; color: black;">❗ You missed this question!</p>
+    {% endif %}
+    </div>
+    </div>
+    {% endif %}
+
+      <!-- Leaderboard for admin-->
+    {% if qstn_status == "Closed" and is_poll_admin == "True" and show_leaderboard == "true" and is_shown_leaderboard == 1 %}
+          <div class="card card-leaderb" id="adminleaderboard">
+            <div class="title">Leaderboard</div>
+            <canvas id="leaderboardChart" width="" height="500" style="border-left:none;"></canvas>
+          </div>
+
+          {% if next_question_url %}
+          <div class="next-btn-sec text-center justify-content-center" style="padding: 20px 0px 50px 0px;">
+            <button id="goto_next_qstn" class="next-btnn" >NEXT</button>
+          </div>
+          {% endif %}
+          <script>
+            function pad(n) {
+                return n < 10 ? '0' + n : n;
+              }
+          
+              // Return "YYYY-MM-DD" for a Date
+              function formatDate(d) {
+                return d.getFullYear()
+                    + '-' + pad(d.getMonth() + 1)
+                    + '-' + pad(d.getDate());
+              }
+          
+              async function loadLeaderboardData() {
+                const today = new Date();
+                const todayStr = formatDate(today);
+          
+                // Use the same date for both ends of the range
+                const url = `/api/method/frappe.desk.leaderboard.get_energy_point_leaderboard`
+                          + `?date_range=["${todayStr}","${todayStr}"]`
+                          + `&limit=20`;
+            try {
+                const response = await fetch(url);
+                const result   = await response.json();
+                console.log("Leaderboard Data:", result);
+
+                if (result.message && Array.isArray(result.message)) {
+                  // Step 1: Filter users who have points greater than 0
+                  const usersWithPoints = result.message.filter(user => user.value > 0);
+              
+                  // Step 2: Take the first 20 users from the filtered list
+                  const top20Users = usersWithPoints.slice(0, 20);
+              
+                  // Step 3: Extract labels and data
+                  const labels = top20Users.map(user => user.name);
+                  const data = top20Users.map(user => user.value);
+              
+                  // Step 4: Render the chart
+                  renderLeaderboardChart(labels, data);
+              } else {
+                  console.error("Invalid leaderboard data format:", result);
+              }
+              
+        } catch (error) {
+            console.error("Failed to load leaderboard data:", error);
+        }
+        }
+      function renderLeaderboardChart(labels, data) {
+      const ctxLeaderboard = document.getElementById('leaderboardChart').getContext('2d');
+
+      new Chart(ctxLeaderboard, {
+        type: 'bar',
         data: {
-          labels: [
-            {% for opt in optionss %}
-              "{{ opt.option }}"{% if not loop.last %},{% endif %}
-            {% endfor %}
-          ],
+          labels: labels,
           datasets: [{
-            data: [
-              {% for opt in optionss %}
-                {{ opt.percent }}{% if not loop.last %},{% endif %}
-              {% endfor %}
-            ],
-            backgroundColor: [
-              {% for opt in optionss %}
-                {% if loop.index == 1 %}"#FF6B6B"
-                {% elif loop.index == 2 %}"#4ECDC4"
-                {% elif loop.index == 3 %}"#FFD93D"
-                {% elif loop.index == 4 %}"#5D5FEF"
-                {% else %}"#ccc"{% endif %}
-                {% if not loop.last %},{% endif %}
-              {% endfor %}
-            ],
-            borderWidth: 1
+            data: data,
+            backgroundColor: '#d15c5c',
+            borderRadius: 4,
+            barThickness: 25,
+            categoryPercentage: 0, // Added: control gap between bars
+            barPercentage: 0.8     // Added: control width of individual bar
           }]
         },
         options: {
-          cutout: '60%',
+          indexAxis: 'y',
+          scales: {
+            x: {
+              beginAtZero: true,
+              grid: {
+                display: true,
+                color: '#e5e7eb', // light gray lines
+                borderColor: '#e5e7eb',
+                drawBorder: false // ✅ Added: remove vertical line from X axis
+              },
+              ticks: {
+                display: false
+              }
+            },
+            y: {
+              beginAtZero: true,
+              grid: {
+                display: true,
+                color: '#e5e7eb', // light gray lines
+                borderColor: '#e5e7eb',
+                borderWidth: 0,
+                drawBorder: false // already present ✅
+              },
+              ticks: {
+                display: true,
+                callback: function(value, index) {
+                  return `${data[index]}`; // Corrected template string
+                },
+                align: 'start',
+                padding: 25,
+                color: '#6B7280', // Tailwind slate-500
+                font: {
+                  size: 14
+                }
+              }
+            }
+          },
           plugins: {
             legend: {
-              position: 'bottom',
-            }
-          }
-        }
-      });
-      </script>
-
-      {% endif %}
-
-      <!-- Leaderboard -->
-      {% if qstn_status == "Closed" and is_poll_admin == "True" and show_leaderboard == "true" %}
-      <div class="card card-leaderb">
-        <div class="title">Leaderboard</div>
-        <canvas id="leaderboardChart" width="" height="500" style="border-left:none;"></canvas>
-      </div>
-
-      <script>
-        function pad(n) {
-            return n < 10 ? '0' + n : n;
-          }
-      
-          // Return "YYYY-MM-DD" for a Date
-          function formatDate(d) {
-            return d.getFullYear()
-                 + '-' + pad(d.getMonth() + 1)
-                 + '-' + pad(d.getDate());
-          }
-      
-          async function loadLeaderboardData() {
-            const today = new Date();
-            const todayStr = formatDate(today);
-      
-            // Use the same date for both ends of the range
-            const url = `/api/method/frappe.desk.leaderboard.get_energy_point_leaderboard`
-                      + `?date_range=["${todayStr}","${todayStr}"]`
-                      + `&limit=20`;
-        try {
-            const response = await fetch(url);
-            const result   = await response.json();
-            console.log("Leaderboard Data:", result);
-
-            if (result.message && Array.isArray(result.message)) {
-              // Step 1: Filter users who have points greater than 0
-              const usersWithPoints = result.message.filter(user => user.value > 0);
-          
-              // Step 2: Take the first 20 users from the filtered list
-              const top20Users = usersWithPoints.slice(0, 20);
-          
-              // Step 3: Extract labels and data
-              const labels = top20Users.map(user => user.name);
-              const data = top20Users.map(user => user.value);
-          
-              // Step 4: Render the chart
-              renderLeaderboardChart(labels, data);
-          } else {
-              console.error("Invalid leaderboard data format:", result);
-          }
-          
-    } catch (error) {
-        console.error("Failed to load leaderboard data:", error);
-    }
-    }
-  function renderLeaderboardChart(labels, data) {
-  const ctxLeaderboard = document.getElementById('leaderboardChart').getContext('2d');
-
-  new Chart(ctxLeaderboard, {
-    type: 'bar',
-    data: {
-      labels: labels,
-      datasets: [{
-        data: data,
-        backgroundColor: '#d15c5c',
-        borderRadius: 4,
-        barThickness: 25,
-        categoryPercentage: 0, // Added: control gap between bars
-        barPercentage: 0.8     // Added: control width of individual bar
-      }]
-    },
-    options: {
-      indexAxis: 'y',
-      scales: {
-        x: {
-          beginAtZero: true,
-          grid: {
-            display: true,
-            color: '#e5e7eb', // light gray lines
-            borderColor: '#e5e7eb',
-            drawBorder: false // ✅ Added: remove vertical line from X axis
-          },
-          ticks: {
-            display: false
-          }
-        },
-        y: {
-          beginAtZero: true,
-          grid: {
-            display: true,
-            color: '#e5e7eb', // light gray lines
-            borderColor: '#e5e7eb',
-            borderWidth: 0,
-            drawBorder: false // already present ✅
-          },
-          ticks: {
-            display: true,
-            callback: function(value, index) {
-              return `${data[index]}`; // Corrected template string
+              display: false
             },
-            align: 'start',
-            padding: 25,
-            color: '#6B7280', // Tailwind slate-500
-            font: {
-              size: 14
+            tooltip: {
+              enabled: false
+            },
+            datalabels: {
+              anchor: 'center',
+              align: 'center',
+              color: '#ffffff',
+              font: {
+                weight: 'bold',
+                size: 14
+              },
+              formatter: function(value, context) {
+                return context.chart.data.labels[context.dataIndex]; // Show name in center
+              }
             }
           }
-        }
-      },
-      plugins: {
-        legend: {
-          display: false
         },
-        tooltip: {
-          enabled: false
-        },
-        datalabels: {
-          anchor: 'center',
-          align: 'center',
-          color: '#ffffff',
-          font: {
-            weight: 'bold',
-            size: 14
-          },
-          formatter: function(value, context) {
-            return context.chart.data.labels[context.dataIndex]; // Show name in center
-          }
-        }
-      }
-    },
-    plugins: [ChartDataLabels]
-  });
-}
-  
-// Load leaderboard data when the page content is loaded
-window.addEventListener('DOMContentLoaded', loadLeaderboardData);
-      </script>
+        plugins: [ChartDataLabels]
+      });
+    }
       
-      {% endif %}
+    // Load leaderboard data when the page content is loaded
+    window.addEventListener('DOMContentLoaded', loadLeaderboardData);
+          </script>
+    {% endif %}
 
-    
+
+
+    {% if qstn_status == "Closed" and is_poll_admin != "True" and show_leaderboard == "true" and is_shown_leaderboard == 1 %}
+    <!--user leaderboard show-->
+    <div id="points-feedback-section" style="text-align: center; margin-top:20% !important;  margin-left: auto; margin-right: auto;">
+     
+          <p id="point-feedback-congrts" style="font-size: 1.25rem; color: #2f855a; font-weight: 500;"> </p>
+
+          <div id="userleaderboard" class="mt-2" style=" padding: 1rem; text-align: center; background: #f8f9fa; border-radius: 8px;">
+            
+            <h5 class="pt-2"><strong>Your are at <span style="color:rgb(219, 8, 8); font-size: 24px;">{{ position if position else 0 }}</span> position</strong></h5>
+            <p><strong><span style="color:rgb(219, 8, 8); font-size: 24px;">{{ user_total_points }}</span></strong> Points in total</p>
+            
+        </div>
+    </div>
+    {% endif %}
 
     </div> 
-
 </div>
     
 
-  {% if next_question_url and is_poll_admin == "True" and qstn_status == "Closed" %}
-
-  <div class="next-btn-sec">
-    <button id="goto_next_qstn" class="next-btnn" >NEXT</button>
-  </div>
-  
-  {% endif %}
 
  
 
@@ -889,8 +980,8 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
 
       var next_question_url = "{{ next_question_url }}"
       var is_poll_admin = "{{ is_poll_admin }}"
-      var curQuest_url = "{{ current_question.name }}"
       const hasShownQR = "{{ has_shown_qr }}"
+      var curQuest_url = "{{ current_question.name }}"
       const pollId = "{{ name }}";
       const RedirectionSeconds = "{{poll_start_seconds}}"
       const loadingSection = document.getElementById("loading-section");
@@ -902,37 +993,109 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
       const countdownEl = document.getElementById("countdown");
       const resbtn = document.getElementById("result-button");
       const feedback_sec = document.getElementById("points-feedback-section");
+      const qstntimersection = document.getElementById("qstntimersection");
+      const qstnseconds = document.getElementById("qstn-seconds");
+      const goto_leaderboard = document.getElementById("goto_leaderboard");
+      const testbc = document.getElementById("testbc");
+      const next_question_name = "{{next_question_name}}";
 
       frappe.ready(() => {
         
-        frappe.realtime.init();
+        frappe.realtime.init();        
+
+      
+            // Listen for next question URL and redirect users
+            frappe.realtime.on('start_qstn_timer', (qst_id) => {
+              console.log("\n\n\n START TIMER:: 666666666\n\n\n")
+              if (!qstntimersection || !qstnseconds) {
+                  console.error("Timer section or countdown element not found!");
+                  return;
+              }
+              // Delay the start by 4 seconds
+              setTimeout(() => {
+                  // Show timer section
+                  qstntimersection.style.display = "block";
+                  qstnseconds.style.display = "inline";
+          
+                  let secondsLeft = parseInt(qstnseconds.textContent) || 15;
+                  qstnseconds.textContent = secondsLeft;
+          
+                  const interval = setInterval(() => {
+                      secondsLeft--;
+                      qstnseconds.textContent = secondsLeft;
+          
+                      if (secondsLeft <= 0) {
+                          clearInterval(interval);
+                          qstntimersection.style.display = "none";
+                          qstnseconds.style.display = "none";
+                          console.log("QSTN TIME OUT");
+          
+                          frappe.call({
+                              method: "antpoll.antpoll.doctype.community_poll.community_poll.qstn_timeout_update",
+                              args: {
+                                  qst_id: curQuest_url,
+                                  poll_id: pollId
+                              },
+                              callback: function(response) {
+                                  if (response.message !== undefined) {
+                                      console.log("response", response.message);
+                                  }
+                              }
+                          });
+                      }
+                  }, 1000);
+              }, 2000); // 2 second delay
+          });
+
         // Listen for next question URL and redirect users
         frappe.realtime.on('goto_next_question_event', (next_url) => {
-            console.log('nex qstn event called!! ', next_url);
-            if (first) first.style.display = "none";
-            if (second) second.style.display = "none";
-        
-            // Show loading section
-            if (loadingSection) loadingSection.style.display = "block";
-        
-            // Start countdown
-            let secondsLeft = RedirectionSeconds || 5;  // Set fallback
-            countdownEl.textContent = secondsLeft;
-        
-            const interval = setInterval(() => {
-                secondsLeft--;
-                countdownEl.textContent = secondsLeft;
-        
-                if (secondsLeft <= 0) {
-                    clearInterval(interval);
-                    if (loadingSection) loadingSection.style.display = "none";
-                    countdownEl.style.display = "none"
-                    window.location.href = next_url;  // Redirect after countdown
-                    console.log("redirected to next qstn",next_url)
-                }
-            }, 1000);
-           
-        });
+         alert(next_question_name)
+      
+          if (second) second.style.display = "none";
+          
+          // Show loading section
+          if (loadingSection) loadingSection.style.display = "block";
+          
+          // Start countdown
+          let secondsLeft = RedirectionSeconds || 5;  // Set fallback
+          countdownEl.textContent = secondsLeft;
+          
+          const interval = setInterval(() => {
+              secondsLeft--;
+              countdownEl.textContent = secondsLeft;
+              
+              if (secondsLeft <= 0) {
+                  clearInterval(interval);
+                  if (loadingSection) loadingSection.style.display = "none";
+                  countdownEl.style.display = "none";
+                  second.style.display = "block";
+      
+                  // Frappe API call to update the question status
+                  frappe.call({
+                      method: 'antpoll.antpoll.doctype.community_poll.community_poll.update_question_workflow',
+                      args: {
+                          qst_id: next_question_name,  // Example parameter
+                          poll_id: pollId  // Example status update
+                      },
+                      callback: function(response) {
+                          console.log("Frappe API response:", response.message);
+                          
+                          // After the API call succeeds, redirect to the next question
+                          window.location.href = next_url;
+                          console.log("redirected to next qstn", next_url);
+                      },
+                      error: function(error) {
+                          console.error("Error in Frappe API call:", error);
+                          // Proceed with redirection even if API call fails
+                          window.location.href = next_url;
+                          console.log("redirected to next qstn (API call failed)", next_url);
+                      }
+                  });
+              }
+          }, 1000);
+      });
+      
+
         frappe.realtime.on('goto_cur_question_event', (cur_url) => {
           first.style.display = "none";
           second.style.display = "none";
@@ -948,59 +1111,54 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
               if (secondsLeft <= 0) {
                   clearInterval(interval);
                   if (loadingSection) loadingSection.style.display = "none";
-                  countdownEl.style.display = "none"
-                  if (second) {
-                    second.style.display = "block";
-                    console.log("qstn element is available");
-                    console.log("qstn element content:", second.innerHTML);
-                }
-                
-                 
-                
+                    countdownEl.style.display = "none"
+                    if (second) second.style.display = "block";
+
+                    frappe.call({
+                      method: 'antpoll.antpoll.doctype.community_poll.community_poll.update_question_workflow',
+                      args: {
+                          qst_id: curQuest_url,
+                          poll_id:pollId
+                      }
+                  });
+                   console.log("qstn element is available");
               }
           }, 1000);
         });
-        
-          frappe.realtime.on('result_publish_event', (data) => {
-              if (data) {
-                console.log("result publish event called!!")
-                  // Hide question and feedback immediately
-                  if (second) second.style.display = 'none';
-                  if (feedback_sec) feedback_sec.style.display = 'none';
-      
-                  // Show loading section
-                  if (loadingSection) loadingSection.style.display = "block";
-                  if (countdownEl) countdownEl.style.display = "block";
-      
-                let secondsLeft = RedirectionSeconds || 5;  // Set fallback
-                if (countdownEl) countdownEl.textContent = secondsLeft;
-    
-                const interval = setInterval(() => {
-                    secondsLeft--;
-                    if (countdownEl) countdownEl.textContent = secondsLeft;
-    
-                  if (secondsLeft <= 0) {
-                      clearInterval(interval);
-  
-                      // Hide loading section
-                      loadingSection.style.display = "none";
-                      countdownEl.style.display = "none";
-                      
-                      if (is_poll_admin != "True") {
-                        console.log("points publish to users")
-                      if (feedback_sec) feedback_sec.style.display = 'block';
-                        location.reload();  
-                      }else{
-                        console.log("result charts publish to admin page")
-                        const resultgraph = document.getElementById("dashboard-2col")
-                        resultgraph.style.display = "block";
-                        location.reload();  
-                      }
-                  }
-              }, 1000);
-              }
-          });
 
+        
+        frappe.realtime.on('update_qstn_leaderboard', (data) => {
+          console.log("777777777----2222222")
+          if (data) {
+            console.log("leaderboard show event called!!")
+              // Hide question and feedback immediately
+              if (feedback_sec) feedback_sec.style.display = 'none';
+             
+  
+              // Show loading section
+              if (loadingSection) loadingSection.style.display = "block";
+              if (countdownEl) countdownEl.style.display = "block";
+  
+            let secondsLeft = RedirectionSeconds || 5;  // Set fallback
+            if (countdownEl) countdownEl.textContent = secondsLeft;
+
+            const interval = setInterval(() => {
+             
+                secondsLeft--;
+                if (countdownEl) countdownEl.textContent = secondsLeft;
+
+              if (secondsLeft <= 0) {
+                  clearInterval(interval);
+                  // Hide loading section
+                  loadingSection.style.display = "none";
+                  countdownEl.style.display = "none";
+                  window.location.reload();
+              }
+          }, 1000);
+          }
+      });
+        
+          
           frappe.realtime.on('view_count_updated', (data) => {
               console.log("view count event called!!")
               const { question, poll_id } = data
@@ -1023,27 +1181,23 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
           }); 
 
         // Admin-only section
-        if (is_poll_admin == "True") {
-          if(resbtn){
-            resbtn.addEventListener("click", () => {   
-              console.log("result show button clicked!!")
+        if (is_poll_admin == "True") { 
+          if(goto_leaderboard){
+            goto_leaderboard.addEventListener("click", () => { 
+             
+              console.log("leaderboard show button clicked!!")
               let pollId = "{{ name }}";
               let questId = "{{ current_question.name }}";
           
               // Call the API to fetch the question results
               frappe.call({
-                  method: "antpoll.antpoll.doctype.community_poll.community_poll.question_result_show",
+                  method: "antpoll.antpoll.doctype.community_poll.community_poll.leaderboard_status_update",
                   args: {
                       poll_id: pollId,
                       qst_id: questId
                   },
                   callback: function (response) {
-                      console.log("Response:", response);  // Log the response for debugging
-                      
-                      if (response.message && response.message === "success") {
-                          console.log("results true!")
-                          location.reload();  // Reload the current page
-                      }
+                      console.log("Response:", response.message);
                   }
               });
           });
@@ -1085,6 +1239,7 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
                         callback: function (r) {
                             if (r.message.status === "success") {
                                 console.log("next btn return true!!")
+                                
                                
                             }
                         },
@@ -1092,13 +1247,16 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
                             frappe.msgprint("Error broadcasting next question URL.");
                         }
                     });
+
+                    
                 } 
         });
       }
 
     }
-    
   });
+  
+
   
 
     document.addEventListener("DOMContentLoaded", function () {
@@ -1172,7 +1330,6 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
 
   
 
-
     // Function to show custom toast message
     function showCustomToast(message) {
         let toast = document.createElement("div");
@@ -1245,17 +1402,20 @@ window.addEventListener('DOMContentLoaded', loadLeaderboardData);
     checkIfUserHasVoted();
     }
 
-    // Attach event to all radio buttons
-    document.querySelectorAll('input[name="selected_option"]').forEach(function (radio) {
-        radio.addEventListener("change", function () {
-            if (document.querySelector('input[name="selected_option"]:checked')) {
-                document.getElementById("submit-vote-button").style.display = "block";
-            } else {
-                document.getElementById("submit-vote-button").style.display = "hidden";
-            }
-        });
-    });
+    const radioButtons = document.querySelectorAll('input[name="selected_option"]');
+    const submitButton = document.getElementById("submit-vote-button");
 
+    if (submitButton) {
+      submitButton.style.display = "none"; // Hide initially
+
+      radioButtons.forEach((radio) => {
+        radio.addEventListener("change", () => {
+          if (document.querySelector('input[name="selected_option"]:checked')) {
+            submitButton.style.display = "inline-block";
+          }
+        });
+      });
+    }
 
     if (is_poll_admin != "True") {
     // Submit vote logic
