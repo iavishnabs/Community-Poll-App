@@ -13,6 +13,8 @@
   "column_break_ktda",
   "total_view",
   "total_vote_count",
+  "workflow_phase",
+  "is_shown_leaderboard",
   "section_break_gdgy",
   "options_result"
  ],
@@ -66,14 +68,26 @@
    "fieldname": "options_result",
    "fieldtype": "HTML",
    "label": "Options"
+  },
+  {
+   "fieldname": "workflow_phase",
+   "fieldtype": "Select",
+   "label": "Workflow Phase",
+   "options": "Pending\nHas Started\nTime Out"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_shown_leaderboard",
+   "fieldtype": "Check",
+   "label": "Is shown leaderboard"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-04-28 17:03:03.348751",
- "modified_by": "Administrator",
+ "modified": "2025-05-09 15:10:22.234387",
+ "modified_by": "avishna@gmail.com",
  "module": "antPoll",
  "name": "Question Items",
  "owner": "Administrator",
