@@ -497,7 +497,7 @@ def update_question_workflow(qst_id, poll_id):
                 q.workflow_phase = "Has Started"
                 poll.save(ignore_permissions=True)
                 frappe.db.commit()
-                frappe.publish_realtime('start_qstn_timer', qst_id)
+                # frappe.publish_realtime('start_qstn_timer', qst_id)
                 return {"status": "updated", "question": q.question}
             else:
                 return {"status": "already_set", "question": q.question}

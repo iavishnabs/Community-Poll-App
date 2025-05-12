@@ -521,7 +521,23 @@
         display: none !important;
       }
     }
+    .poll-options {
+      list-style: none;
+      padding-left: 0;
+      opacity: 0; /* Initially invisible */
+      animation: fadeIn 2s forwards; /* Apply fade-in effect */
+      animation-delay: 2s; /* Delay the animation by 2 seconds */
+  }
 
+  /* Keyframes for fading in */
+  @keyframes fadeIn {
+      0% {
+          opacity: 0;
+      }
+      100% {
+          opacity: 1;
+      }
+  }
     </style>
   
   </head>
@@ -1078,18 +1094,9 @@
                           poll_id: pollId  // Example status update
                       },
                       callback: function(response) {
-                          console.log("Frappe API response:", response.message);
-                          
-                          // After the API call succeeds, redirect to the next question
                           window.location.href = next_url;
-                          console.log("redirected to next qstn", next_url);
-                      },
-                      error: function(error) {
-                          console.error("Error in Frappe API call:", error);
-                          // Proceed with redirection even if API call fails
-                          window.location.href = next_url;
-                          console.log("redirected to next qstn (API call failed)", next_url);
                       }
+                      
                   });
               }
           }, 1000);
