@@ -495,30 +495,27 @@ def update_question_workflow(qst_id, poll_id):
             print("qstn find!!!\n\n")
             if q.workflow_phase == "Pending":
                 q.workflow_phase = "Has Started"
-                poll.save(ignore_permissions=True)
-                frappe.db.commit()
-                frappe.publish_realtime('start_qstn_timer', qst_id)
-                return {"status": "updated", "question": q.question}
-            else:
-                return {"status": "already_set", "question": q.question}
-        else:
-            print("not matching")
-            
+                
+    poll.save(ignore_permissions=True)
+    frappe.db.commit()
+    frappe.publish_realtime('start_qstn_timer', qst_id)
+    return {"status": "updated", "question": q.question}
+
 
            
 ########### qstn status updated after qstn timeout ###########
 @frappe.whitelist()
 def qstn_timeout_update(poll_id,qst_id):
-    print("\n\nuuuu")
+    print("\n\n uuuu")
     poll = frappe.get_doc("Community Poll", poll_id)
     for i in poll.questions:
         if i.question == qst_id:
             if i.workflow_phase == "Has Started":
                 i.workflow_phase = "Time Out"
                 i.qst_status = "Closed"
-                poll.save(ignore_permissions=True)
-                frappe.db.commit()
-                return {"status": "successfully updated time out"}
+    poll.save(ignore_permissions=True)
+    frappe.db.commit()
+    return {"status": "successfully updated time out"}
     
 ########## qstn leaderboard status update ##############
 
@@ -528,7 +525,7 @@ def leaderboard_status_update(poll_id,qst_id):
     for i in poll.questions:
         if i.question == qst_id:
             i.is_shown_leaderboard = 1
-            poll.save(ignore_permissions=True)
-            frappe.db.commit()
-            frappe.publish_realtime('update_qstn_leaderboard', qst_id)
-            return {"status": "successfully updated leaderboard status"}
+    poll.save(ignore_permissions=True)
+    frappe.db.commit()
+    frappe.publish_realtime('update_qstn_leaderboard', qst_id)
+    return {"status": "successfully updated leaderboard status"}
