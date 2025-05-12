@@ -521,7 +521,23 @@
         display: none !important;
       }
     }
+    .poll-options {
+      list-style: none;
+      padding-left: 0;
+      opacity: 0; /* Initially invisible */
+      animation: fadeIn 3s forwards; /* Apply fade-in effect */
+      animation-delay: 3s; /* Delay the animation by 2 seconds */
+  }
 
+  /* Keyframes for fading in */
+  @keyframes fadeIn {
+      0% {
+          opacity: 0;
+      }
+      100% {
+          opacity: 1;
+      }
+  }
     </style>
   
   </head>
@@ -570,10 +586,13 @@
     {% endif %}
 
 </div>
+
+
 <div id="loading-section" class="text-center" style="display: none;">
   <p class="text-center">Please Wait a Moment..</p>
   <span id="countdown" class="text-center"> {{ poll_start_seconds if poll_start_seconds else 0 }}</span>
 </div>
+
 
 <div id="qst-section-mainn" >
 
@@ -643,7 +662,7 @@
     </div>
     {% endif %}
     {% endif %}
-  </div>
+    </div>
   {% endif %}
     <!-- Donut and Leaderboard Section -->
 
@@ -966,10 +985,8 @@
     </div>
     {% endif %}
 
-    </div> 
-</div>
+</div> 
     
-
 
  
 
@@ -996,14 +1013,11 @@
       const qstntimersection = document.getElementById("qstntimersection");
       const qstnseconds = document.getElementById("qstn-seconds");
       const goto_leaderboard = document.getElementById("goto_leaderboard");
-      const testbc = document.getElementById("testbc");
+    
       const next_question_name = "{{next_question_name}}";
 
       frappe.ready(() => {
         
-        frappe.realtime.init();        
-
-      
             // Listen for next question URL and redirect users
             frappe.realtime.on('start_qstn_timer', (qst_id) => {
               console.log("\n\n\n START TIMER:: 666666666\n\n\n")
@@ -1049,11 +1063,7 @@
 
         // Listen for next question URL and redirect users
         frappe.realtime.on('goto_next_question_event', (next_url) => {
-         alert(next_question_name)
-      
           if (second) second.style.display = "none";
-          
-          // Show loading section
           if (loadingSection) loadingSection.style.display = "block";
           
           // Start countdown
@@ -1069,33 +1079,12 @@
                   if (loadingSection) loadingSection.style.display = "none";
                   countdownEl.style.display = "none";
                   second.style.display = "block";
-      
-                  // Frappe API call to update the question status
-                  frappe.call({
-                      method: 'antpoll.antpoll.doctype.community_poll.community_poll.update_question_workflow',
-                      args: {
-                          qst_id: next_question_name,  // Example parameter
-                          poll_id: pollId  // Example status update
-                      },
-                      callback: function(response) {
-                          console.log("Frappe API response:", response.message);
-                          
-                          // After the API call succeeds, redirect to the next question
-                          window.location.href = next_url;
-                          console.log("redirected to next qstn", next_url);
-                      },
-                      error: function(error) {
-                          console.error("Error in Frappe API call:", error);
-                          // Proceed with redirection even if API call fails
-                          window.location.href = next_url;
-                          console.log("redirected to next qstn (API call failed)", next_url);
-                      }
-                  });
+                  window.location.href = next_url;
               }
           }, 1000);
       });
       
-
+        // CHECKED 11111111
         frappe.realtime.on('goto_cur_question_event', (cur_url) => {
           first.style.display = "none";
           second.style.display = "none";
@@ -1125,7 +1114,6 @@
               }
           }, 1000);
         });
-
         
         frappe.realtime.on('update_qstn_leaderboard', (data) => {
           console.log("777777777----2222222")
@@ -1267,7 +1255,8 @@
     const pollId = "{{ name }}";
     const user = "{{ frappe.session.user }}";
     const viewss = "{{ viewss }}"
-
+    const nextt = document.getElementById("nextt");
+    const nextsec = document.getElementById("nextsec");
     var next_question_url = "{{ next_question_url }}"
     var is_poll_admin = "{{ is_poll_admin }}"
     var curQuest_url = "{{ current_question.name }}"

@@ -1,0 +1,1598 @@
+<head>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Document</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  
+          body {
+            background-color: rgb(236, 233, 226) !important;
+            font-family: 'Segoe UI', sans-serif;
+            background-size: cover;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+            height: 90vh;
+          }
+          
+         
+          .poll-section {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              background: transparent;
+              border-radius: 15px;
+              padding: 40px 20px;
+              flex-wrap: wrap;
+          }
+      
+          .instruction-side {
+              flex: 1 1 40%;
+              padding: 0px 20px;
+          }
+      
+          .instruction-side h1 {
+              font-size: 3rem;
+              color: #880e0e;
+              font-weight: bold;
+          }
+          .instruction-side h1 span{
+              font-size: 2.2rem;
+              font-weight: bold;
+              
+              color: rgb(15, 15, 15);
+          }
+          .poll-section h4{
+              color: rgb(22, 22, 22);
+          }
+          .instruction-side p {
+              font-size:15px;
+              color: #111111;
+              max-width: 90%;
+          }
+      
+          .timer {
+              font-size: 2.5rem;
+              font-weight: 700;
+              margin-top: 20px;
+              color: #880e0e;
+          }
+          
+          .image-side {
+              flex: 1 1 55%;
+              text-align: center;
+          }
+      
+          .poll-image {
+              width: 100%;
+              max-width: 650px;
+              opacity: 0.95;
+              filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
+              transition: transform 0.4s ease;
+          }
+      
+          .poll-image:hover {
+              transform: scale(1.02);
+          }
+          .qr-image {
+              width: 300px;
+              padding: 15px; /* Adds space inside the image container */
+              border-radius: 20px; /* Makes the corners rounded */
+              background-color: white; /* Optional: helps the padding show better */
+              box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow */
+          }
+          
+          p.instructions-text {
+              font-family: 'Poppins', sans-serif;
+              font-size: 20px !important;
+              line-height: 1 !important;
+              color: #131212;
+              font-weight: 500;
+              padding: 0px 20px;
+              border-radius: 10px;
+              max-width: 900px;
+          }
+          
+  
+          .scan-qr-text{
+              font-weight: 800;
+              color: black;
+          }
+          .players{
+              font-weight: 700;
+              color: #000000;
+              font-size: 25px;
+              
+          }
+          .poll-options {
+            list-style: none;
+            padding: 0;
+            margin: 0 auto;
+        }
+    
+        .poll-option {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            background-color: rgb(224, 219, 212) !important;
+            padding: 12px 16px;
+            border-radius: 18px;
+        }
+    
+       
+    
+        .poll-option label {
+            flex-grow: 1;
+            font-weight: bold;
+            color: #303030;
+            cursor: pointer;
+        }
+    
+        .poll-option div {
+            flex-grow: 1;
+            height: 8px;
+            background: #ffffff40;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+    
+        .poll-option div > div {
+            height: 100%;
+            background: #ffffff80;
+        }
+          .qr-timer-message{
+              
+              padding: 30px 30px;
+              border-radius: 6px;
+              color: #000000 !important;
+              margin-top: 50px;
+          }
+          .animated-message {
+              display: inline-block;
+              position: relative;
+              font-family: 'Poppins', sans-serif;
+              font-size: 28px;
+              font-weight: 500;
+              line-height: 1.6;
+              color: #880e0e!important;
+              animation: drift 4s ease-in-out infinite alternate;
+          }
+          
+          @keyframes drift {
+              0% {
+                  transform: translate(0, 0);
+              }
+              100% {
+                  transform: translate(-10px, 10px);
+              }
+          }
+      
+          @media (max-width: 768px) {
+              .poll-section {
+                  flex-direction: column;
+                  text-align: center;
+              }
+      
+              .instruction-side, .image-side {
+                  flex: 1 1 100%;
+              }
+      
+              .instruction-side h1 {
+                  font-size: 2rem;
+              }
+              .players{
+                 
+                  font-size: 22px;
+              }
+              .poll-image {
+                  width: 70%;
+                  max-width: 450px;
+                  opacity: 0.95;
+                  filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
+                  transition: transform 0.4s ease;
+              }
+              .qr-timer-message{
+                 font-size: 16px;
+              }
+          }
+          .poll-wrapper {
+            display: flex;
+            flex-direction: column;
+            
+          }
+        
+          .dashboard {
+            width: 100%;
+            margin: auto;
+            padding: 2rem;
+          }
+        
+          .dashboard-2col-qstn {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            background: transparent;
+            position: relative;
+            color: white;
+          }
+          .dashboard-2col {
+              display: grid;
+              grid-template-columns: 400px 800px; /* First column smaller, second bigger */
+              gap: 2rem;
+              justify-content: center; /* Center the whole grid nicely */
+              width: 100%;
+            }
+            
+          .card-result, .card-leaderb {
+            box-sizing: border-box;
+            height: auto;
+          }
+            
+          /* Specific styles for Result card */
+          .card-result {
+            display: flex;
+            flex-direction: column; /* Arrange inside vertically */
+            max-width: 400px;
+            width: 100%;
+            background: #f9f9f9; /* optional, light background */
+            padding: 1rem; /* some padding inside */
+            border-radius: 8px; /* rounded corners */
+          }
+            /* Specific styles for Leaderboard card */
+            .card-leaderb {
+            max-width: 800px;
+            width: 100%;
+            background: #ffffff; /* optional */
+            padding: 1rem;
+            border-radius: 8px;
+          }
+                
+          /* Inside .card-result, two sections: answer and chart */
+          .card-result-answer {
+            margin-bottom: 1rem; /* gap between answer and chart */
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 20px 10px;
+          }
+          .card-result-answer .anss{
+            background: #cebf95;
+            color: #0f0f0f;
+            padding: 20px;
+          }
+          
+          .card-result-chart {
+            flex: 1; /* Chart takes remaining space */
+          }
+  
+          /* Tablet View (<= 1024px) */
+  @media (max-width: 1024px) {
+    .dashboard-2col {
+      grid-template-columns: 1fr; /* Single column layout */
+      gap: 1rem;
+      padding: 0 1rem;
+    }
+  
+    .card-result, .card-leaderb {
+      max-width: 100%;
+      width: 100%;
+      
+    }
+  }
+  
+    /* Mobile View (<= 768px) */
+    @media (max-width: 768px) {
+      .dashboard-2col {
+        grid-template-columns: 1fr;
+        min-height: 400px !important;
+        gap: 1rem;
+        padding: 0 1rem;
+      }
+  
+      .card-result-answer {
+        font-size: 1rem;
+        padding: 15px 8px;
+      }
+  
+      .card-result-answer .anss {
+        padding: 15px;
+      }
+    }
+  
+        #total-view-count {
+          top: 20px;
+          right: 20px;
+          font-weight: bold;
+          font-size: 1rem;
+          color: #0e0d0d;
+        }
+      
+        .card-qstn {
+          background: transparent !important;
+          box-shadow: none;
+          padding: 0px 16px 16px 16px;
+          box-shadow: 0.5 px 0.5px 10px black;
+        }
+        
+      
+        .title {
+          font-size: 1.3rem;
+          font-weight: 700;
+          margin-bottom: 10px;
+          color: #1f1f1f;
+          padding: 0px 30px;
+        }
+      
+        .poll-options {
+          list-style: none;
+          padding: 0;
+          margin: 0 auto;
+        }
+      
+        .poll-option {
+          display: flex;
+          gap: 15px;
+          margin-bottom: 20px;
+          background: rgba(255, 255, 255, 0.15);
+          padding: 12px 16px;
+          border-radius: 18px;
+        }
+      
+      
+        .poll-option label {
+          flex-grow: 1;
+          font-weight: bold;
+          color: #303030;
+          cursor: pointer;
+        }
+      
+        .poll-option div {
+          flex-grow: 1;
+          height: 8px;
+          background: #ffffff40;
+          border-radius: 4px;
+          overflow: hidden;
+        }
+      
+        .poll-option div > div {
+          height: 100%;
+          background: #ffffff80;
+        }
+        .optionn{
+            width:1080px;
+        }
+        #submit-vote-button {
+            display: none;
+          }
+  
+      
+        #submit-vote-button, #result-button ,.next-btnn, .next-btnn-start{
+          background: transparent;
+          color: #181818;
+          padding: 10px 24px;
+          margin-left:35px;
+          font-size: 16px;
+          font-weight: bold;
+          border-radius: 8px;
+          border:1px solid #8f8f8f;;
+          margin-top: 20px;
+          cursor: pointer;
+          transition: 0.3s;
+        }
+      
+        #submit-vote-button:hover, #result-button:hover , .next-btnn:hover, .next-btnn-start:hover{
+          background: #cebf95;
+          border-color: #af9c68;
+          ;
+        }
+        .next-btn-sec {
+            display: flex;
+            justify-content: right;
+            margin-top: 0.5rem; /* adds space above the button */
+          }
+          
+          .next-btnn , .next-btnn-start{
+            margin-top: 4px; 
+            padding: 10px 60px;
+          }
+          
+        /* QR Code Section */
+        .card-qr {
+          background: transparent;
+          margin: 1rem auto 0;
+          text-align: center;
+        }
+      
+        .card-qr img {
+          max-width: 250px;
+          height: auto;
+          border-radius: 12px;
+          box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        @media (max-width: 991px) {
+  
+          .dashboard-2col-qstn {
+            padding: 1.5rem;
+          }
+          .poll-options {
+            padding: 0 10px;
+          }
+          .title {
+            font-size: 1rem;
+            font-weight: 600;
+          }
+          .poll-option {
+            font-size: 0.8rem;
+            width: 600px;
+          }
+        
+          .next-btn-text {
+              font-size: 15px;
+              justify-content: center;
+              text-align: center;
+              font-weight: 600;
+              margin-top: 200px;
+          }
+       
+      
+        }
+      
+        @media (min-width: 350px) and (max-width: 740px) {
+        
+          .next-btnn{
+          margin-right:20px;
+          padding: 8px 30px;
+          font-size: 14px;
+          }
+            .next-btn-sec{
+              justify-content: center;
+              align-items: center;
+            }
+          .dashboard-2col-qstn {
+            padding: 1.5rem;
+          }
+          .poll-options {
+            padding: 0 10px;
+          }
+          .title {
+            font-size: 1rem;
+            font-weight: 600;
+          }
+          .poll-option {
+            font-size: 0.8rem;
+            width: 210px;
+          }
+        
+        }
+        #poll-qr-sectionn {
+          display: none ; /* hide both initially */
+      }
+      .rules-label{
+        margin-top:50px;
+      }
+  
+      #loading-section {
+        
+        width: 100%;
+        height: 100%;
+        margin-top:30%;
+        
+        justify-content: center;
+        align-items: center;
+      }
+      #loading-section p {
+        color: #001225; /* Blue color */
+        font-weight: bold;
+      }
+    
+      #loading-section #countdown {
+        font-size: 5rem;
+        color: #880e0e; /* Blue color */
+        font-weight: bold;
+        
+      }
+    
+      @media (max-width: 768px) {
+        #loading-section #countdown {
+          font-size: 4rem;
+        }
+        #loading-section {
+          margin-top:30%;
+  
+        }
+        .card-qr{
+          display: none !important;
+        }
+      }
+    
+      @media (max-width: 480px) {
+        #loading-section #countdown {
+          font-size: 3rem;
+        }
+        #loading-section {
+          margin-top:30%;
+  
+        }
+        .card-qr{
+          display: none !important;
+        }
+      }
+  
+      </style>
+    
+    </head>
+    {% extends base_template %}
+    {% block page_content %}
+  
+  <body>
+    
+  
+    <div class="poll-section" id="poll-qr-sectionn" >
+          
+      <!-- Instruction and Timer -->
+      {% if is_poll_admin == "True" %}
+      <div class="instruction-side" id="qr-section">
+          <h1>Quick Quiz <br>
+              <span class="">Ready to Guess? </span>
+          </h1>
+          {% if instructions %}
+          <h5 class="rules-label hidden"><strong>RULES</strong> :
+          </h5>
+          <p class="instructions-text hidden"></p>
+          {% endif %}
+  
+          <img class="qr-image" src="{{pollqr}}" alt="qr">
+          <h5 class="mt-3 text-dark ml-3 scan-qr-text">SCAN THE QR FOR JOINING !</h5>
+         
+      </div>
+      <!-- Image Section -->
+      <div class="image-side" id="qr-section">
+          
+          <img src="/assets/antpoll/images/bgpoll.png" alt="Poll Image" class="poll-image">
+          <p class="players" id="total-view-count" style="color:black;font-size:22px;">PLAYERS : {{viewss}} </p>
+  
+          <button id="start-poll-button" class="next-btnn-start" >START</button>
+  
+  
+         
+      </div>
+      {% endif %}
+      {% if is_poll_admin !="True"  %}
+      <h4 id="timer-message" class="qr-timer-message animated-message"><strong>Please wait,</strong> <br>starting the poll soon...
+          <br>
+      </h4>
+     
+      <img src="/assets/antpoll/images/bgpoll.png" alt="Poll Image" class="poll-image">
+      {% endif %}
+  
+  </div>
+  
+  
+  <div id="loading-section" class="text-center" style="display: none;">
+    <p class="text-center">Please Wait a Moment..</p>
+    <span id="countdown" class="text-center"> {{ poll_start_seconds if poll_start_seconds else 0 }}</span>
+  </div>
+  
+  
+  <div id="qst-section-mainn" >
+  
+      {% if qstn_status == "Open" or qstn_status == "Reopen" or is_poll_admin != "True"  %}
+  
+      <!-- Question and Progress Bars -->
+      <div class="dashboard-2col-qstn">
+      {% if is_poll_admin == "True"  %}
+      <h4 style="color:black;" id="total-view-count-qst">PLAYERS: 0</h4>
+      {% else %}
+      <br><br><br>
+      {% endif %}
+      <!-- QR Code Card -->
+      {% if frappe.form_dict.quest %}
+      {% if qstn_status == "Open" %}
+    <!-- Existing Question Card -->
+      <div class="card card-qstn" id="card-qstn"> 
+        <h4 id="message-box"></h4>
+        <div class="title" style="margin-bottom: 30px;">Q: {{ current_question.question }} </div>
+  
+        <div id="qstntimersection" style="display: none; color:black;">
+          <p>Qstn Ends in <span id="qstn-seconds">15</span> Seconds</p>
+        </div>
+     
+        <ul class="poll-options d-flex flex-column gap-3 mt-3" style="list-style: none; padding-left: 0;">
+          {% for opt in options %}
+          <li class="poll-option" style="margin-bottom: 10px;">
+              <label for="option{{ loop.index }}" 
+                     class="rounded-pill px-4  d-flex align-items-center gap-3 optionn form-check-label"
+                     style="cursor: pointer; transition: all 0.2s ease; background:transparent; font-weight: bold;">
+                  
+                    {% if is_poll_admin != "True"  %}
+                  <input class="form-check-input m-0" type="radio" 
+                         id="option{{ loop.index }}" 
+                         name="selected_option" 
+                         value="{{ opt.option }}" 
+                         required>
+                  {% endif %}
+                  <span>{{ opt.option }}</span>
+              </label>
+          </li>
+          {% endfor %}
+      </ul>
+      
+         {% if is_poll_admin != "True" %}
+          <button type="button" id="submit-vote-button" style="padding: 8px 20px; cursor: pointer; width:100px" class="submit-button">
+            Submit
+          </button>
+          {% endif %}
+          <!-- next_question_url -->
+        {% if is_poll_admin == "True" %}
+        <button type="button" id="result-button" class="result-button" style="padding: 8px 20px; cursor: pointer; width:100px">
+          Result
+        </button>
+  
+      
+        {% endif %}
+      </div>
+      {% endif %}
+  
+  
+  
+  
+      {% if is_poll_admin == "True" %}
+     <div class="card card-qr">
+      <img src="{{ pollqr }}" alt="{{ pollqr }}" style="width: 100%; max-width: 300px; height: auto; margin: auto;">
+      </div>
+      {% endif %}
+      {% endif %}
+      </div>
+    {% endif %}
+      <!-- Donut and Leaderboard Section -->
+  
+  
+      
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+  
+      {% if qstn_status == "Closed" and is_poll_admin == "True" and is_shown_leaderboard != 1 %}
+      <div class="card shadow-sm rounded-4" style="background: transparent;border-radius: 15px; margin-top:50px;">
+        <div class="card-header text-white rounded-top-4 py-3" id="qstn-name">
+          <h5 class="mb-0">{{ current_question.question }}</h5>
+      </div>
+        <!-- ADMIN RESULT SCREEN -->
+        <div id="admin-results">
+          <div>
+            <p class="mt-3" style="color:black; text-align:left; padding-left:29px; font-size:17px;">
+              ✅ <strong>{{ answer }}</strong>
+            </p>
+          </div>
+          <div  style="background: transparent; padding: 20px; border:none;">
+            <div class="card-result-chart" style="width: 100%; height: auto;">
+              <canvas id="pollChart" style="width: 100%; height: 100%;"></canvas>
+            </div>
+          </div>
+        </div>
+       
+  
+      <div class="next-btn-sec text-center justify-content-center" style="padding: 20px 0px 50px 0px;">
+        <button id="goto_leaderboard" class="next-btnn" >Leaderboard</button>
+      </div>
+        <!-- Chart.js Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+      
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            const ctx = document.getElementById('pollChart').getContext('2d');
+        
+            const pollChart = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: [
+                  {% for opt in optionsss %}
+                    "{{ opt.option }}"{% if not loop.last %},{% endif %}
+                  {% endfor %}
+                ],
+                datasets: [{
+                  data: [
+                    {% for opt in optionsss %}
+                      {{ opt.percent }}{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                  ],
+                  backgroundColor: [
+                    "#00C49F", "#FF6B6B", "#8884D8", "#FFB6C1", "#FFD700",
+                    "#82ca9d", "#a29bfe", "#fab1a0", "#fdcb6e", "#55efc4"
+                  ],
+                  borderRadius: 8,
+                  barThickness: 70
+                }]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      label: context => context.raw + '%',
+                    }
+                  },
+                  datalabels: {
+                    labels: {
+                      topLabel: {
+                        anchor: 'end',
+                        align: 'top',
+                        font: {
+                          size: 14,
+                          weight: 'bold'
+                        },
+                        color: '#000',
+                        formatter: function (value, context) {
+                          const voteCounts = [
+                            {% for opt in optionsss %}
+                              {{ opt.votes }}{% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                          ];
+                          const voteCount = voteCounts[context.dataIndex];
+                          return voteCount + (voteCount === 1 ? ' vote' : ' votes');
+                        }
+                      },
+                      centerLabel: {
+                        anchor: 'center',
+                        align: 'center',
+                        font: {
+                          size: 14,
+                          weight: 'bold'
+                        },
+                        color: '#fff',
+                        formatter: function (value, context) {
+                          const voteCounts = [
+                            {% for opt in optionsss %}
+                              {{ opt.votes }}{% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                          ];
+                          const voteCount = voteCounts[context.dataIndex];
+                          return voteCount > 0 ? voteCount + (voteCount === 1 ? ' vote' : ' votes') : '';
+                        }
+                      }
+                    }
+                  }
+                },
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    ticks: {
+                      display: false
+                    },
+                    grid: {
+                      display: false,
+                      drawBorder: false
+                    }
+                  },
+                  x: {
+                    ticks: {
+                      font: {
+                        size: 14,
+                        weight: 'bold'
+                      }
+                    },
+                    grid: {
+                      display: false
+                    }
+                  }
+                }
+              },
+              plugins: [ChartDataLabels]
+            });
+          });
+        </script>
+      </div>
+      
+  {% endif %}
+  
+      {% if qstn_status == "Closed" and is_poll_admin != "True" and is_shown_leaderboard != 1  %}
+      <div class="card shadow-sm rounded-4" style="background: transparent;border-radius: 15px; margin-top:50px;" id="user-result">
+        <div class="card-header text-white rounded-top-4 py-3" id="qstn-name">
+          <h5 class="mb-0">{{ current_question.question }}</h5>
+      </div>
+        <!--user results-->
+        <div id="user-results" class="container text-center mt-5 mb-5" style="  border-radius: 10px; padding: 20px; max-width: 500px; margin: 0 auto;">
+          <h3 class="mb-3" style="color: #343a40;">Result</h3>
+          {% if user_result_status == "correct" %}
+          <p class="lead" style="font-size: 1.2rem; color: black;">✅🎉 Correct answer!</p>
+      {% elif user_result_status == "incorrect" %}
+          <p class="lead" style="font-size: 1.2rem; color: black;">❌😔 Incorrect answer</p>
+      {% else %}
+          <p class="lead" style="font-size: 1.2rem; color: black;">❗ You missed this question!</p>
+      {% endif %}
+      </div>
+      </div>
+      {% endif %}
+  
+        <!-- Leaderboard for admin-->
+      {% if qstn_status == "Closed" and is_poll_admin == "True" and show_leaderboard == "true" and is_shown_leaderboard == 1 %}
+            <div class="card card-leaderb" id="adminleaderboard">
+              <div class="title">Leaderboard</div>
+              <canvas id="leaderboardChart" width="" height="500" style="border-left:none;"></canvas>
+            </div>
+  
+            {% if next_question_url %}
+            <div class="next-btn-sec text-center justify-content-center" style="padding: 20px 0px 50px 0px;">
+              <button id="goto_next_qstn" class="next-btnn" >NEXT</button>
+            </div>
+            {% endif %}
+            <script>
+              function pad(n) {
+                  return n < 10 ? '0' + n : n;
+                }
+            
+                // Return "YYYY-MM-DD" for a Date
+                function formatDate(d) {
+                  return d.getFullYear()
+                      + '-' + pad(d.getMonth() + 1)
+                      + '-' + pad(d.getDate());
+                }
+            
+                async function loadLeaderboardData() {
+                  const today = new Date();
+                  const todayStr = formatDate(today);
+            
+                  // Use the same date for both ends of the range
+                  const url = `/api/method/frappe.desk.leaderboard.get_energy_point_leaderboard`
+                            + `?date_range=["${todayStr}","${todayStr}"]`
+                            + `&limit=20`;
+              try {
+                  const response = await fetch(url);
+                  const result   = await response.json();
+                  console.log("Leaderboard Data:", result);
+  
+                  if (result.message && Array.isArray(result.message)) {
+                    // Step 1: Filter users who have points greater than 0
+                    const usersWithPoints = result.message.filter(user => user.value > 0);
+                
+                    // Step 2: Take the first 20 users from the filtered list
+                    const top20Users = usersWithPoints.slice(0, 20);
+                
+                    // Step 3: Extract labels and data
+                    const labels = top20Users.map(user => user.name);
+                    const data = top20Users.map(user => user.value);
+                
+                    // Step 4: Render the chart
+                    renderLeaderboardChart(labels, data);
+                } else {
+                    console.error("Invalid leaderboard data format:", result);
+                }
+                
+          } catch (error) {
+              console.error("Failed to load leaderboard data:", error);
+          }
+          }
+        function renderLeaderboardChart(labels, data) {
+        const ctxLeaderboard = document.getElementById('leaderboardChart').getContext('2d');
+  
+        new Chart(ctxLeaderboard, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              data: data,
+              backgroundColor: '#d15c5c',
+              borderRadius: 4,
+              barThickness: 25,
+              categoryPercentage: 0, // Added: control gap between bars
+              barPercentage: 0.8     // Added: control width of individual bar
+            }]
+          },
+          options: {
+            indexAxis: 'y',
+            scales: {
+              x: {
+                beginAtZero: true,
+                grid: {
+                  display: true,
+                  color: '#e5e7eb', // light gray lines
+                  borderColor: '#e5e7eb',
+                  drawBorder: false // ✅ Added: remove vertical line from X axis
+                },
+                ticks: {
+                  display: false
+                }
+              },
+              y: {
+                beginAtZero: true,
+                grid: {
+                  display: true,
+                  color: '#e5e7eb', // light gray lines
+                  borderColor: '#e5e7eb',
+                  borderWidth: 0,
+                  drawBorder: false // already present ✅
+                },
+                ticks: {
+                  display: true,
+                  callback: function(value, index) {
+                    return `${data[index]}`; // Corrected template string
+                  },
+                  align: 'start',
+                  padding: 25,
+                  color: '#6B7280', // Tailwind slate-500
+                  font: {
+                    size: 14
+                  }
+                }
+              }
+            },
+            plugins: {
+              legend: {
+                display: false
+              },
+              tooltip: {
+                enabled: false
+              },
+              datalabels: {
+                anchor: 'center',
+                align: 'center',
+                color: '#ffffff',
+                font: {
+                  weight: 'bold',
+                  size: 14
+                },
+                formatter: function(value, context) {
+                  return context.chart.data.labels[context.dataIndex]; // Show name in center
+                }
+              }
+            }
+          },
+          plugins: [ChartDataLabels]
+        });
+      }
+        
+      // Load leaderboard data when the page content is loaded
+      window.addEventListener('DOMContentLoaded', loadLeaderboardData);
+            </script>
+      {% endif %}
+  
+  
+  
+      {% if qstn_status == "Closed" and is_poll_admin != "True" and show_leaderboard == "true" and is_shown_leaderboard == 1 %}
+      <!--user leaderboard show-->
+      <div id="points-feedback-section" style="text-align: center; margin-top:20% !important;  margin-left: auto; margin-right: auto;">
+       
+            <p id="point-feedback-congrts" style="font-size: 1.25rem; color: #2f855a; font-weight: 500;"> </p>
+  
+            <div id="userleaderboard" class="mt-2" style=" padding: 1rem; text-align: center; background: #f8f9fa; border-radius: 8px;">
+              
+              <h5 class="pt-2"><strong>Your are at <span style="color:rgb(219, 8, 8); font-size: 24px;">{{ position if position else 0 }}</span> position</strong></h5>
+              <p><strong><span style="color:rgb(219, 8, 8); font-size: 24px;">{{ user_total_points }}</span></strong> Points in total</p>
+              
+          </div>
+      </div>
+      {% endif %}
+  
+  </div> 
+      
+  <div id="nextt" style="display: none; color:black;">
+    <p>Qstn Ends in <span id="nextsec">15</span> Seconds</p>
+  </div>
+  
+   
+  
+  <!-- right after your Chart.js import, or anywhere in <head> before your inline scripts -->
+      <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.min.js"></script>
+  
+      <script>
+  
+        var next_question_url = "{{ next_question_url }}"
+        var is_poll_admin = "{{ is_poll_admin }}"
+        const hasShownQR = "{{ has_shown_qr }}"
+        var curQuest_url = "{{ current_question.name }}"
+        const pollId = "{{ name }}";
+        const RedirectionSeconds = "{{poll_start_seconds}}"
+        const loadingSection = document.getElementById("loading-section");
+  
+        const first = document.getElementById("poll-qr-sectionn")
+        const second = document.getElementById("qst-section-mainn")
+        const starts = document.getElementById("start-poll-button")
+        const nextbtn = document.getElementById('goto_next_qstn')
+        const countdownEl = document.getElementById("countdown");
+        const resbtn = document.getElementById("result-button");
+        const feedback_sec = document.getElementById("points-feedback-section");
+        const qstntimersection = document.getElementById("qstntimersection");
+        const qstnseconds = document.getElementById("qstn-seconds");
+        const goto_leaderboard = document.getElementById("goto_leaderboard");
+      
+        const testbc = document.getElementById("testbc");
+        const next_question_name = "{{next_question_name}}";
+  
+        frappe.ready(() => {
+          
+          frappe.realtime.init();        
+          const nextt = document.getElementById("nextt");       // outer timer div
+          const nextsec = document.getElementById("nextsec");   // countdown number span
+          
+          frappe.realtime.on('start_qstn_timer_next', (qst_id) => {
+              console.log("START NEXT QST TIMER");
+          
+              if (!nextt || !nextsec) {
+                  console.error("Timer section or countdown element not found!");
+                  return;
+              }
+          
+              console.log("Elements found!");
+          
+              // Delay the start by 2 seconds
+              setTimeout(() => {
+                  // Show the timer wrapper
+                  nextt.style.display = "block";
+          
+                  let secondsLeft = parseInt(nextsec.textContent) || 15;
+                  nextsec.textContent = secondsLeft;
+          
+                  const interval = setInterval(() => {
+                      secondsLeft--;
+                      nextsec.textContent = secondsLeft;
+          
+                      if (secondsLeft <= 0) {
+                          clearInterval(interval);
+                          nextt.style.display = "none";  // hide again after timeout
+                          console.log("QSTN TIME OUT");
+          
+                          frappe.call({
+                              method: "antpoll.antpoll.doctype.community_poll.community_poll.qstn_timeout_update",
+                              args: {
+                                  qst_id: curQuest_url,
+                                  poll_id: pollId
+                              },
+                              callback: function(response) {
+                                  if (response.message !== undefined) {
+                                      console.log("response", response.message);
+                                  }
+                              }
+                          });
+                      }
+                  }, 1000);
+              }, 2000); // start timer after 2 seconds
+          });
+          
+        
+              // Listen for next question URL and redirect users
+              frappe.realtime.on('start_qstn_timer', (qst_id) => {
+                console.log("\n\n\n START TIMER:: 666666666\n\n\n")
+                if (!qstntimersection || !qstnseconds) {
+                    console.error("Timer section or countdown element not found!");
+                    return;
+                }
+                // Delay the start by 4 seconds
+                setTimeout(() => {
+                    // Show timer section
+                    qstntimersection.style.display = "block";
+                    qstnseconds.style.display = "inline";
+            
+                    let secondsLeft = parseInt(qstnseconds.textContent) || 15;
+                    qstnseconds.textContent = secondsLeft;
+            
+                    const interval = setInterval(() => {
+                        secondsLeft--;
+                        qstnseconds.textContent = secondsLeft;
+            
+                        if (secondsLeft <= 0) {
+                            clearInterval(interval);
+                            qstntimersection.style.display = "none";
+                            qstnseconds.style.display = "none";
+                            console.log("QSTN TIME OUT");
+            
+                            frappe.call({
+                                method: "antpoll.antpoll.doctype.community_poll.community_poll.qstn_timeout_update",
+                                args: {
+                                    qst_id: curQuest_url,
+                                    poll_id: pollId
+                                },
+                                callback: function(response) {
+                                    if (response.message !== undefined) {
+                                        console.log("response", response.message);
+                                    }
+                                }
+                            });
+                        }
+                    }, 1000);
+                }, 2000); // 2 second delay
+            });
+  
+          // Listen for next question URL and redirect users
+          frappe.realtime.on('goto_next_question_event', (next_url) => {
+           alert(next_question_name)
+        
+            if (second) second.style.display = "none";
+            
+            // Show loading section
+            if (loadingSection) loadingSection.style.display = "block";
+            
+            // Start countdown
+            let secondsLeft = RedirectionSeconds || 5;  // Set fallback
+            countdownEl.textContent = secondsLeft;
+            
+            const interval = setInterval(() => {
+                secondsLeft--;
+                countdownEl.textContent = secondsLeft;
+                
+                if (secondsLeft <= 0) {
+                    clearInterval(interval);
+                    if (loadingSection) loadingSection.style.display = "none";
+                    countdownEl.style.display = "none";
+                    second.style.display = "block";
+        
+                    // Frappe API call to update the question status
+                    frappe.call({
+                        method: 'antpoll.antpoll.doctype.community_poll.community_poll.update_question_workflow_next',
+                        args: {
+                            qst_id: next_question_name,  // Example parameter
+                            poll_id: pollId  // Example status update
+                        },
+                        callback: function(response) {
+                            console.log("Frappe API response:", response.message);
+                            
+                            // After the API call succeeds, redirect to the next question
+                            window.location.href = next_url;
+                            console.log("redirected to next qstn", next_url);
+                        },
+                        error: function(error) {
+                            console.error("Error in Frappe API call:", error);
+                            // Proceed with redirection even if API call fails
+                            window.location.href = next_url;
+                            console.log("redirected to next qstn (API call failed)", next_url);
+                        }
+                    });
+                }
+            }, 1000);
+        });
+        
+  
+          frappe.realtime.on('goto_cur_question_event', (cur_url) => {
+            first.style.display = "none";
+            second.style.display = "none";
+            console.log("current qstn event called!!",cur_url);
+            if (loadingSection) loadingSection.style.display = "block";
+            let secondsLeft = RedirectionSeconds;
+              countdownEl.textContent = secondsLeft;
+  
+              const interval = setInterval(() => {
+                secondsLeft--;
+                countdownEl.textContent = secondsLeft;
+        
+                if (secondsLeft <= 0) {
+                    clearInterval(interval);
+                    if (loadingSection) loadingSection.style.display = "none";
+                      countdownEl.style.display = "none"
+                      if (second) second.style.display = "block";
+  
+                      frappe.call({
+                        method: 'antpoll.antpoll.doctype.community_poll.community_poll.update_question_workflow',
+                        args: {
+                            qst_id: curQuest_url,
+                            poll_id:pollId
+                        }
+                    });
+                     console.log("qstn element is available");
+                }
+            }, 1000);
+          });
+  
+          
+          frappe.realtime.on('update_qstn_leaderboard', (data) => {
+            console.log("777777777----2222222")
+            if (data) {
+              console.log("leaderboard show event called!!")
+                // Hide question and feedback immediately
+                if (feedback_sec) feedback_sec.style.display = 'none';
+               
+    
+                // Show loading section
+                if (loadingSection) loadingSection.style.display = "block";
+                if (countdownEl) countdownEl.style.display = "block";
+    
+              let secondsLeft = RedirectionSeconds || 5;  // Set fallback
+              if (countdownEl) countdownEl.textContent = secondsLeft;
+  
+              const interval = setInterval(() => {
+               
+                  secondsLeft--;
+                  if (countdownEl) countdownEl.textContent = secondsLeft;
+  
+                if (secondsLeft <= 0) {
+                    clearInterval(interval);
+                    // Hide loading section
+                    loadingSection.style.display = "none";
+                    countdownEl.style.display = "none";
+                    window.location.reload();
+                }
+            }, 1000);
+            }
+        });
+          
+            
+            frappe.realtime.on('view_count_updated', (data) => {
+                console.log("view count event called!!")
+                const { question, poll_id } = data
+                frappe.call({
+                  method: "antpoll.antpoll.doctype.community_poll.community_poll.get_total_views",   // Change this to your method path
+                  args: {
+                      q_name: question,
+                      poll_id: poll_id
+                  },
+                  callback: function(response) {
+                      if (response.message !== undefined) {
+                        console.log("response",response.message)
+                          document.getElementById('total-view-count').innerText = "PLAYERS: " + response.message;  
+                          document.getElementById('total-view-count-qst').innerText = "PLAYERS: " + response.message;
+                      }else{
+                        console.log("undefined view count")
+                      }
+                  }
+              });
+            }); 
+  
+          // Admin-only section
+          if (is_poll_admin == "True") { 
+            if(goto_leaderboard){
+              goto_leaderboard.addEventListener("click", () => { 
+               
+                console.log("leaderboard show button clicked!!")
+                let pollId = "{{ name }}";
+                let questId = "{{ current_question.name }}";
+            
+                // Call the API to fetch the question results
+                frappe.call({
+                    method: "antpoll.antpoll.doctype.community_poll.community_poll.leaderboard_status_update",
+                    args: {
+                        poll_id: pollId,
+                        qst_id: questId
+                    },
+                    callback: function (response) {
+                        console.log("Response:", response.message);
+                    }
+                });
+            });
+          }
+  
+            document.getElementById('start-poll-button').addEventListener('click', () => {
+              const curQuest = curQuest_url;
+              console.log("start button clicked!! cur qst url: ",curQuest)
+              if(curQuest){
+                frappe.call({
+                  method: 'antpoll.antpoll.doctype.community_poll.community_poll.send_cur_question_url',
+                  args: {
+                      cur_url: curQuest,
+                      poll_id:pollId
+                  },
+                  callback: function (r) {
+                      if (r.message.status === "success") {
+                          console.log("start button retun success")
+                         
+                      }
+                  },
+                  error: function (err) {
+                      frappe.msgprint("Error broadcasting cur question URL.");
+                  }
+              });
+              }
+             });
+            
+            if(nextbtn){
+              nextbtn.addEventListener('click', () => {
+                  const nextUrl = next_question_url;
+                  console.log("next button clicked!! next qstn url: ",nextUrl)
+                  if (nextUrl) {
+                      frappe.call({
+                          method: 'antpoll.antpoll.doctype.community_poll.community_poll.send_next_question_url',
+                          args: {
+                              next_url: nextUrl
+                          },
+                          callback: function (r) {
+                              if (r.message.status === "success") {
+                                  console.log("next btn return true!!")
+                                  
+                                 
+                              }
+                          },
+                          error: function (err) {
+                              frappe.msgprint("Error broadcasting next question URL.");
+                          }
+                      });
+  
+                      
+                  } 
+          });
+        }
+  
+      }
+    });
+    
+  
+    
+  
+      document.addEventListener("DOMContentLoaded", function () {
+        
+      const questionName = "{{ current_question.name }}";
+      const currentUser = "{{ frappe.session.user }}";
+      const questionOwner = "{{ current_question.owner }}";
+      const pollId = "{{ name }}";
+      const user = "{{ frappe.session.user }}";
+      const viewss = "{{ viewss }}"
+      const nextt = document.getElementById("nextt");
+      const nextsec = document.getElementById("nextsec");
+      var next_question_url = "{{ next_question_url }}"
+      var is_poll_admin = "{{ is_poll_admin }}"
+      var curQuest_url = "{{ current_question.name }}"
+      const hasShownQR = "{{ has_shown_qr }}"
+      const RedirectionSeconds = "{{poll_start_seconds}}"
+  
+      const loadingSection = document.getElementById("loading-section");
+  
+        const first = document.getElementById("poll-qr-sectionn")
+        const second = document.getElementById("qst-section-mainn")
+        const starts = document.getElementById("start-poll-button")
+        const nextbtn = document.getElementById('goto_next_qstn')
+        const countdownEl = document.getElementById("countdown");
+        const resbtn = document.getElementById("result-button");
+        var qstnstatus = "{{ qstn_status }}"
+  
+        const feedback_sec = document.getElementById("points-feedback-section");
+        console.log("DOM started with elements and variables:", {questionName,
+          currentUser,questionOwner,pollId,user,viewss,next_question_url,
+          is_poll_admin,curQuest_url,hasShownQR,RedirectionSeconds,loadingSection,
+          first,second,starts,nextbtn,countdownEl,resbtn,feedback_sec, qstnstatus});
+  
+      if (hasShownQR === "1") {
+        console.log("qr code shown! true!!")
+          if (first) first.style.display = "none";
+          if (second) second.style.display = "block";
+      } else {
+        console.log("qr code not shown!!")
+          if (first) first.style.display = "flex";
+          if (second) second.style.display = "none";
+      }
+  
+      const urlParams = new URLSearchParams(window.location.search);
+      if (!urlParams.get("quest")) {
+        const firstQuestion = "{{ doc.questions[0].question | urlencode }}";
+        const newUrl = `${window.location.origin}${window.location.pathname}?quest=${firstQuestion}`;
+        console.log("Redirecting to:", newUrl);
+        window.location.href = newUrl;
+      } else {
+        console.log("Already has quest param:", window.location.href);
+      }
+    
+      
+      // Check if the user is logged in
+      if (user === "Guest") {
+          alert("You must be logged in to vote.");
+          return;
+      } else {
+          // Track the user's view of the poll question (backend method)
+          frappe.call({
+              method: "antpoll.antpoll.doctype.community_poll.community_poll.track_poll_question_view",
+              args: {
+                  question_name: questionName,
+                  poll_id: pollId,
+              }
+          });
+      }
+  
+      
+  
+    
+  
+      // Function to show custom toast message
+      function showCustomToast(message) {
+          let toast = document.createElement("div");
+          toast.id = "custom-toast";
+          toast.style.position = "fixed";
+          toast.style.top = "40%";
+          toast.style.left = "50%";
+          toast.style.transform = "translateX(-50%)";
+          toast.style.backgroundColor = "#F8F8F8";
+          toast.style.color = "#000";
+          toast.style.padding = "40px 80px";
+          toast.style.borderRadius = "10px";
+          toast.style.boxShadow = "0px 4px 6px #F0F0F0";
+          toast.style.zIndex = "9999";
+          toast.style.fontSize = "16px";
+          toast.style.textAlign = "center";
+          toast.style.opacity = "1";
+          toast.style.transition = "opacity 0.5s ease-in-out";
+          toast.style.display = "flex";
+          toast.style.flexDirection = "column";
+          toast.style.alignItems = "center";
+          toast.style.justifyContent = "center";
+          toast.style.gap = "10px";
+  
+          let icon = document.createElement("img");
+          icon.src = "/assets/antpoll/images/righticon.svg"; 
+          icon.style.width = "34px";
+          icon.style.height = "34px";
+  
+          let text = document.createElement("span");
+          text.innerText = message;
+          toast.appendChild(icon);
+          toast.appendChild(text);
+          document.body.appendChild(toast);
+  
+           setTimeout(() => {
+          toast.style.opacity = "0";  
+          setTimeout(() => {
+              toast.remove();  
+              location.reload(); 
+          }, 500); 
+      }, 2000);  
+      }
+  
+      // Function to check if user has already voted
+     function checkIfUserHasVoted() {
+      console.log("calling  user voted check method!!!!!")
+      frappe.call({
+          method: "antpoll.antpoll.doctype.community_poll.community_poll.has_user_voted",
+          args: {
+              poll_id: pollId,
+              qst_id: questionName,
+              user: user
+          },
+          callback: function (response) {
+              if (response.message && response.message.has_voted) {
+                  console.log("current user is voted to this question as in response")
+                  // If user has voted, hide radio buttons and the submit button
+                  document.querySelectorAll('input[type="radio"]').forEach(function (radio) {
+                      radio.style.display = "none"; // Hide all radio buttons
+                  });
+                  document.getElementById("submit-vote-button").style.display = "none"; // Hide submit button
+                 
+              } 
+          }
+          });
+      }
+      // Call to check if the user has already voted
+      if (is_poll_admin != "True") {
+      checkIfUserHasVoted();
+      }
+  
+      const radioButtons = document.querySelectorAll('input[name="selected_option"]');
+      const submitButton = document.getElementById("submit-vote-button");
+  
+      if (submitButton) {
+        submitButton.style.display = "none"; // Hide initially
+  
+        radioButtons.forEach((radio) => {
+          radio.addEventListener("change", () => {
+            if (document.querySelector('input[name="selected_option"]:checked')) {
+              submitButton.style.display = "inline-block";
+            }
+          });
+        });
+      }
+  
+      if (is_poll_admin != "True") {
+      // Submit vote logic
+      document.getElementById("submit-vote-button").addEventListener("click", function () {
+        let selectedOption = document.querySelector('input[name="selected_option"]:checked');
+        let pollId = "{{ name }}";
+        let questId = "{{ current_question.name }}";
+        let user = "{{ frappe.session.user }}";
+  
+        console.log("submit vote clicked!! for",pollId,questId,"by ",user)
+        if (!selectedOption) {
+            alert("Please select an option to vote.");
+            return;
+        }
+        let optionName = selectedOption.value;
+  
+        frappe.call({
+            method: "antpoll.antpoll.doctype.community_poll.community_poll.cast_vote",
+            args: {
+                poll_id: pollId,
+                qst_id: questId,
+                option_name: optionName
+            },
+            callback: function (response) {
+                console.log("Response:", response);  // Log the response for debugging
+                if (response.message && response.message.VoteMsg) {
+                    const data = response.message;
+                    const voteMsg = data.VoteMsg;
+                    // Show the "Thank you" message (custom toast) upon successful vote
+                    console.log(voteMsg)
+                    showCustomToast(voteMsg);
+                } else {
+                    // Log and show an error message if something went wrong
+                    console.error("Error in response:", response);
+                    console("Something went wrong, please try again.");
+                }
+            }
+        });
+    });
+  }
+  
+      function pad(n) {
+        return n < 10 ? '0' + n : n;
+      }
+  
+      // Return "YYYY-MM-DD" for a Date
+      function formatDate(d) {
+        return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+      }
+  
+      async function loadUserPointsStatus() {
+        const currentUser = "{{ frappe.session.user }}";
+      
+        const today = new Date();
+        const todayStr = formatDate(today);
+      
+        const url = `/api/method/frappe.desk.leaderboard.get_energy_point_leaderboard`
+                  + `?date_range=["${todayStr}","${todayStr}"]`;
+        console.log("leader board func called! with",currentUser)
+        try {
+          const response = await fetch(url);
+      
+          if (!response.ok) {
+            console.log("leaderboard api response failed", response.status)
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+      
+          const result = await response.json();
+          const leaderboard = result.message || [];
+          console.log(leaderboard)
+          if (Array.isArray(leaderboard)) {
+            const userEntry = leaderboard.find(entry => {
+              const match = entry.formatted_name?.match(/user-profile\/(.*?)">/);
+              const email = match ? match[1] : null;
+      
+              return email && currentUser &&
+                     email.toLowerCase().trim() === currentUser.toLowerCase().trim();
+            });
+            const firstEntry = leaderboard[0];
+            let feedbackText = "🙁 No points recorded yet.";
+            let feedbackTextCngrts = document.getElementById("point-feedback-congrts")
+            if (userEntry) {
+              console.log("have user energy point")
+              if (userEntry.value > 0){
+                console.log("user has points greater than zero")
+              const match = userEntry.formatted_name?.match(/user-profile\/(.*?)">/);
+              const email = match ? match[1] : null;
+              const firstMatch = firstEntry.formatted_name?.match(/user-profile\/(.*?)">/);
+              const firstEmail = firstMatch ? firstMatch[1] : null;
+      
+              if (email === firstEmail) {
+                console.log("user email mateched with leaderboard user")
+                feedbackText = `🏆 You earned <strong>${userEntry.value}</strong> points!`;
+                feedbackTextCngrts.innerHTML="🎉 Congrats!"
+              }
+            }
+          }
+      
+    
+            const feedbackEl = document.getElementById("points-feedback");
+            if (feedbackEl) {
+              console.log("feedback field available!!")
+              feedbackEl.innerHTML = feedbackText;
+              document.getElementById("points-feedback-section").style.display = "block";
+              document.getElementById("card-qstn").style.display = "none";
+            }
+          } else {
+            console.log("Leaderboard is not an array:", leaderboard);
+          }
+        } catch (err) {
+          console.log("Failed to load leaderboard points:", err.message);
+        }
+      }
+      
+  if(qstnstatus == "Closed"){
+      loadUserPointsStatus()
+  }
+      });
+  
+  
+  
+  
+  
+  
+  </script>
+  </body>
+      {% endblock %}
+  

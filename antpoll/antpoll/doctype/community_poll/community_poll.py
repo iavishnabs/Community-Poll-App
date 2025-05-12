@@ -495,12 +495,32 @@ def update_question_workflow(qst_id, poll_id):
             print("qstn find!!!\n\n")
             if q.workflow_phase == "Pending":
                 q.workflow_phase = "Has Started"
-                
+
     poll.save(ignore_permissions=True)
     frappe.db.commit()
-    frappe.publish_realtime('start_qstn_timer', qst_id)
+    # frappe.publish_realtime('start_qstn_timer', qst_id)
     return {"status": "updated", "question": q.question}
 
+
+@frappe.whitelist()
+def update_question_workflow_next(qst_id, poll_id):
+    qst_id = qst_id
+    print("\n\nmethod called!!")
+    poll = frappe.get_doc("Community Poll", poll_id)
+    print(qst_id)
+    # Find the specific child row
+    for q in poll.questions:
+        print("\n\n\n\n",q.question, "==" ,qst_id,"\n\n\n\n")
+        if q.question == qst_id:
+
+            print("qstn find!!!\n\n")
+            if q.workflow_phase == "Pending":
+                q.workflow_phase = "Has Started"
+
+    poll.save(ignore_permissions=True)
+    frappe.db.commit()
+    # frappe.publish_realtime('start_qstn_timer_next', qst_id)
+    return {"status": "updated", "question": q.question}
 
            
 ########### qstn status updated after qstn timeout ###########
