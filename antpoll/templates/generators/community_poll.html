@@ -552,7 +552,7 @@
     <!-- Instruction and Timer -->
     {% if is_poll_admin == "True" %}
     <div class="instruction-side" id="qr-section">
-        <h1>Quick Quiz <br>
+        <h1>Quick Quiz/ Poll <br>
             <span class="">Ready to Guess? </span>
         </h1>
         {% if instructions %}
@@ -621,13 +621,14 @@
                    class="rounded-pill px-4  d-flex align-items-center gap-3 optionn form-check-label"
                    style="cursor: pointer; transition: all 0.2s ease; background:transparent; font-weight: bold;">
                 
-                  {% if is_poll_admin != "True"  %}
-                <input class="form-check-input m-0" type="radio" 
+                {% if is_poll_admin != "True" %}
+                <input style="{% if workflow_phase != 'Has Started' %}display: none;{% endif %}" class="form-check-input m-0 vote-option" type="radio" 
                        id="option{{ loop.index }}" 
                        name="selected_option" 
                        value="{{ opt.option }}" 
                        required>
                 {% endif %}
+             
                 <span>{{ opt.option }}</span>
             </label>
         </li>
@@ -642,7 +643,7 @@
         <!-- next_question_url -->
       {% if is_poll_admin == "True" %}
       <button type="button" id="result-button" class="result-button" style="padding: 8px 20px; cursor: pointer; width:100px">
-        Result
+        BEGIN
       </button>
 
     
@@ -1007,21 +1008,30 @@
       const starts = document.getElementById("start-poll-button")
       const nextbtn = document.getElementById('goto_next_qstn')
       const countdownEl = document.getElementById("countdown");
-      const resbtn = document.getElementById("result-button");
+      const starttimerbtn = document.getElementById("result-button");
       const feedback_sec = document.getElementById("points-feedback-section");
       const qstntimersection = document.getElementById("qstntimersection");
       const qstnseconds = document.getElementById("qstn-seconds");
       const goto_leaderboard = document.getElementById("goto_leaderboard");
       const testbc = document.getElementById("testbc");
       const next_question_name = "{{next_question_name}}";
+      const workflow_phase = "{{workflow_phase}}"
 
       frappe.ready(() => {
         
         frappe.realtime.init();        
 
-      
+        
+
+            frappe.realtime.on('show_results', (qst_id) => {
+              window.location.reload();
+            });
             // Listen for next question URL and redirect users
             frappe.realtime.on('start_qstn_timer', (qst_id) => {
+              const voteOptions = document.querySelectorAll('.vote-option');
+              voteOptions.forEach(option => {
+                  option.style.display = 'inline-block'; // Or 'inline' or '' depending on your layout
+              });
               console.log("\n\n\n START TIMER:: 666666666\n\n\n")
               if (!qstntimersection || !qstnseconds) {
                   console.error("Timer section or countdown element not found!");
@@ -1058,6 +1068,8 @@
                                   }
                               }
                           });
+                            
+                         
                       }
                   }, 1000);
               }, 2000); // 2 second delay
@@ -1065,7 +1077,7 @@
 
         // Listen for next question URL and redirect users
         frappe.realtime.on('goto_next_question_event', (next_url) => {
-         alert(next_question_name)
+         
       
           if (second) second.style.display = "none";
           
@@ -1085,19 +1097,10 @@
                   if (loadingSection) loadingSection.style.display = "none";
                   countdownEl.style.display = "none";
                   second.style.display = "block";
+                  window.location.href = next_url;
       
                   // Frappe API call to update the question status
-                  frappe.call({
-                      method: 'antpoll.antpoll.doctype.community_poll.community_poll.update_question_workflow',
-                      args: {
-                          qst_id: next_question_name,  // Example parameter
-                          poll_id: pollId  // Example status update
-                      },
-                      callback: function(response) {
-                          window.location.href = next_url;
-                      }
-                      
-                  });
+        
               }
           }, 1000);
       });
@@ -1121,13 +1124,7 @@
                     countdownEl.style.display = "none"
                     if (second) second.style.display = "block";
 
-                    frappe.call({
-                      method: 'antpoll.antpoll.doctype.community_poll.community_poll.update_question_workflow',
-                      args: {
-                          qst_id: curQuest_url,
-                          poll_id:pollId
-                      }
-                  });
+               
                    console.log("qstn element is available");
               }
           }, 1000);
@@ -1260,6 +1257,23 @@
         });
       }
 
+      if(starttimerbtn){
+        starttimerbtn.addEventListener('click', () => {
+          console.log("timer button clicked!!");
+              frappe.call({
+                  method: 'antpoll.antpoll.doctype.community_poll.community_poll.start_timer_forqstn',
+                  args: {
+                    poll_id:pollId,
+                    qst_id: curQuest_url
+                  },
+                  callback: function (r) {
+                      if(r.message.status === "success") {
+                          console.log("start timer btn return true!!")            
+                      }
+                  }
+              });
+            });
+          }
     }
   });
   
@@ -1280,6 +1294,7 @@
     var curQuest_url = "{{ current_question.name }}"
     const hasShownQR = "{{ has_shown_qr }}"
     const RedirectionSeconds = "{{poll_start_seconds}}"
+    const workflow_phase = "{{workflow_phase}}"
 
     const loadingSection = document.getElementById("loading-section");
 
@@ -1288,14 +1303,14 @@
       const starts = document.getElementById("start-poll-button")
       const nextbtn = document.getElementById('goto_next_qstn')
       const countdownEl = document.getElementById("countdown");
-      const resbtn = document.getElementById("result-button");
+      const starttimerbtn = document.getElementById("result-button");
       var qstnstatus = "{{ qstn_status }}"
 
       const feedback_sec = document.getElementById("points-feedback-section");
       console.log("DOM started with elements and variables:", {questionName,
         currentUser,questionOwner,pollId,user,viewss,next_question_url,
         is_poll_admin,curQuest_url,hasShownQR,RedirectionSeconds,loadingSection,
-        first,second,starts,nextbtn,countdownEl,resbtn,feedback_sec, qstnstatus});
+        first,second,starts,nextbtn,countdownEl,starttimerbtn,feedback_sec, qstnstatus});
 
     if (hasShownQR === "1") {
       console.log("qr code shown! true!!")
@@ -1392,16 +1407,23 @@
             user: user
         },
         callback: function (response) {
-            if (response.message && response.message.has_voted) {
-                console.log("current user is voted to this question as in response")
-                // If user has voted, hide radio buttons and the submit button
-                document.querySelectorAll('input[type="radio"]').forEach(function (radio) {
-                    radio.style.display = "none"; // Hide all radio buttons
-                });
-                document.getElementById("submit-vote-button").style.display = "none"; // Hide submit button
-               
-            } 
-        }
+          if (response.message && response.message.has_voted) {
+              console.log("current user has voted to this question");
+  
+              const submitBtn = document.getElementById("submit-vote-button");
+              if (submitBtn) {
+                  submitBtn.style.display = "none";
+              }
+  
+              document.querySelectorAll('input[type="radio"]').forEach(function (radio) {
+                  radio.style.display = "none";
+              });
+              document.querySelectorAll('input[type="radio"]').forEach(function (radio) {
+                radio.disabled = true;
+            });
+            
+          }
+      }
         });
     }
     // Call to check if the user has already voted
@@ -1422,6 +1444,7 @@
           }
         });
       });
+
     }
 
     if (is_poll_admin != "True") {

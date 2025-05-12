@@ -479,37 +479,26 @@ def  send_cur_question_url(cur_url,poll_id):
     frappe.db.set_value("Community Poll", poll_id, "has_shown_qr", True)
     return {"status": "success", "url": cur_url}
 
-
 ########## for qstn timer ###########
-@frappe.whitelist()
-def update_question_workflow(qst_id, poll_id):
-    qst_id = qst_id
-    print("\n\nmethod called!!")
-    poll = frappe.get_doc("Community Poll", poll_id)
-    print(qst_id)
-    # Find the specific child row
-    for q in poll.questions:
-        print("\n\n\n\n",q.question, "==" ,qst_id,"\n\n\n\n")
-        if q.question == qst_id:
 
+@frappe.whitelist()
+def start_timer_forqstn(poll_id,qst_id):
+    qst_id = qst_id
+    poll = frappe.get_doc("Community Poll", poll_id)
+    for q in poll.questions:
             print("qstn find!!!\n\n")
             if q.workflow_phase == "Pending":
                 q.workflow_phase = "Has Started"
                 poll.save(ignore_permissions=True)
                 frappe.db.commit()
-                # frappe.publish_realtime('start_qstn_timer', qst_id)
+                frappe.publish_realtime('start_qstn_timer', qst_id)
                 return {"status": "updated", "question": q.question}
-            else:
-                return {"status": "already_set", "question": q.question}
-        else:
-            print("not matching")
-            
 
            
 ########### qstn status updated after qstn timeout ###########
 @frappe.whitelist()
 def qstn_timeout_update(poll_id,qst_id):
-    print("\n\nuuuu")
+    print("\n\n TIME OUT METHOD CALLED !!!!")
     poll = frappe.get_doc("Community Poll", poll_id)
     for i in poll.questions:
         if i.question == qst_id:
@@ -518,6 +507,7 @@ def qstn_timeout_update(poll_id,qst_id):
                 i.qst_status = "Closed"
                 poll.save(ignore_permissions=True)
                 frappe.db.commit()
+                frappe.publish_realtime('show_results', qst_id)
                 return {"status": "successfully updated time out"}
     
 ########## qstn leaderboard status update ##############
