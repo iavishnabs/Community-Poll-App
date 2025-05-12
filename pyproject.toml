@@ -1,20 +1,21 @@
 [project]
 name = "antpoll"
 authors = [
-    { name = "avishna", email = "avishna@gmail.com"}
+    { name = "avishna", email = "avishna@gmail.com" }
 ]
 description = "Poll App"
 requires-python = ">=3.10"
 readme = "README.md"
 dynamic = ["version"]
+
 dependencies = [
-    # "frappe~=15.0.0" # Installed and managed by bench.
+    "qrcode==8.1"  # Note: Must be inside quotes
 ]
 
 [build-system]
 requires = ["flit_core >=3.4,<4"]
 build-backend = "flit_core.buildapi"
 
-# These dependencies are only installed when developer mode is enabled
 [tool.bench.dev-dependencies]
-# package_name = "~=1.1.0"
+# Add your dev dependencies here, e.g.:
+# black = "^23.3.0"
